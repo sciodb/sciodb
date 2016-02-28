@@ -1,4 +1,4 @@
-package org.sciodb;
+package org.sciodb.server;
 
 /**
  * Kernel.java - this is the point to start
@@ -12,12 +12,10 @@ package org.sciodb;
  */
 public class Kernel {
 
-    public static void main(String[] args) {
-        System.out.println("Hello world");
+    public static void main(String[] args) throws Exception {
+        final Runnable scioServer = new ServerSocket("127.0.0.1", 9090);
 
-        final Runtime runtime = Runtime.getRuntime();
-        runtime.addShutdownHook(new Thread());
-
+        new Thread(scioServer).start();
     }
 
 }
