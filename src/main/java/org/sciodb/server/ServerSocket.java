@@ -1,6 +1,9 @@
 package org.sciodb.server;
 
 import org.apache.log4j.Logger;
+import org.sciodb.server.services.Dispatcher;
+import org.sciodb.utils.CommandEncoder;
+import org.sciodb.utils.models.Command;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -24,9 +27,14 @@ public class ServerSocket implements Runnable {
     private Map<SocketChannel, List> dataMapper;
     private InetSocketAddress listenAddress;
 
+
+    private Dispatcher dispatcher;
+
     public ServerSocket(String address, int port) throws IOException {
         listenAddress = new InetSocketAddress(address, port);
         dataMapper = new HashMap<>();
+
+        dispatcher = new Dispatcher();
     }
 
     @Override
@@ -87,7 +95,7 @@ public class ServerSocket implements Runnable {
         channel.register(selector, SelectionKey.OP_READ);
     }
 
-    //read from the socket channel
+    //read from the socket channel OLD VERSION
     private void read(final SelectionKey key) throws IOException {
         final SocketChannel channel = (SocketChannel) key.channel();
         final ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -106,6 +114,12 @@ public class ServerSocket implements Runnable {
         byte[] data = new byte[numRead];
         System.arraycopy(buffer.array(), 0, data, 0, numRead);
         logger.info("Got: " + new String(data));
+
+        final Command command = CommandEncoder.decode(new String(data));
+
+        // do it asynchronously
+        dispatcher.getService(command);
+
     }
 
 }
