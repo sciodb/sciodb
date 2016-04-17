@@ -41,9 +41,6 @@
             </plugin>
         </plugins>
     </build>
-    <modules>
-        <module>../examples</module>
-    </modules>
 
     <name>sciodb</name>
 
