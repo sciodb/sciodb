@@ -1,0 +1,3 @@
+#! /bin/sh
+SCRIPT_DIR=`dirname $0`
+env LD_LIBRARY_PATH=$SCRIPT_DIR/../../.libs:$SCRIPT_DIR/.libs DYLD_LIBRARY_PATH=$SCRIPT_DIR/../../.libs JAVA_LIBRARY_PATH=$SCRIPT_DIR/.libs  com.wiredtiger.test.WiredTigerSuite

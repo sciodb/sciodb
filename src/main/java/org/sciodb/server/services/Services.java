@@ -7,6 +7,6 @@ import org.sciodb.utils.models.Command;
  */
 public interface Services {
 
-    void operation(final Command command);
+    byte[] operation(final Command command);
 
 }

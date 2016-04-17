@@ -9,6 +9,8 @@ public class Command {
 
     private String operationID;
 
+    private byte[] message;
+
     public String getMessageID() {
         return messageID;
     }
@@ -23,5 +25,13 @@ public class Command {
 
     public void setOperationID(String operationID) {
         this.operationID = operationID;
+    }
+
+    public byte[] getMessage() {
+        return message;
+    }
+
+    public void setMessage(byte[] message) {
+        this.message = message;
     }
 }
