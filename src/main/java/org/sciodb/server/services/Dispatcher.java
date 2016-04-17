@@ -13,7 +13,7 @@ public class Dispatcher {
         this.statusService = new StatusService();
     }
 
-    public void getService(final Command input) {
+    public byte[] getService(final Command input) {
         final Services s;
 
         switch (input.getOperationID()) {
@@ -24,7 +24,7 @@ public class Dispatcher {
                 throw new RuntimeException("Operation not allowed !!");
         }
 
-        s.operation(input);
+        return s.operation(input);
 
     }
 

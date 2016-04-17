@@ -30,4 +30,8 @@ public class CommandEncoder {
             return null;
         }
     }
+
+    public static void main(String[] args) {
+        String str = "";
+    }
 }

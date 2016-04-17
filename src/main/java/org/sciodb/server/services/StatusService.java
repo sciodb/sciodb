@@ -11,9 +11,11 @@ public class StatusService implements Services {
     private final static Logger logger = Logger.getLogger(StatusService.class.getName());
 
     @Override
-    public void operation(final Command command) {
+    public byte[] operation(final Command command) {
         logger.info("Status Sevice - executed !!!");
         logger.info("status - " + command.getOperationID());
+
+        return "hello world".getBytes();
     }
 
 }

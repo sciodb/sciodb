@@ -5,7 +5,7 @@
     <groupId>org.sciodb</groupId>
     <artifactId>sciodb</artifactId>
 
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <version>0.1-SNAPSHOT</version>
     <build>
@@ -41,6 +41,9 @@
             </plugin>
         </plugins>
     </build>
+    <modules>
+        <module>../examples</module>
+    </modules>
 
     <name>sciodb</name>
 
