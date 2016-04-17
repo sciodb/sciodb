@@ -26,7 +26,6 @@ public class ServerSocket implements Runnable {
     private Map<SocketChannel, List> dataMapper;
     private InetSocketAddress listenAddress;
 
-
     private Dispatcher dispatcher;
 
     public ServerSocket(String address, int port) throws IOException {
@@ -71,6 +70,16 @@ public class ServerSocket implements Runnable {
                     }
                     else if (key.isReadable()) {
                         readBuffer(key);
+                    } else if (key.isWritable()) {
+
+                        SocketChannel client = (SocketChannel) key.channel();
+                        ByteBuffer bb1 = ByteBuffer.allocate(10000);
+
+                        String s = "server data";
+                        byte[] array1 = s.getBytes();
+                        bb1.put(array1);
+                        bb1.flip();
+                        client.write(bb1);
                     }
                 }
             }
