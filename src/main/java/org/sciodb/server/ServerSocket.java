@@ -2,6 +2,8 @@ package org.sciodb.server;
 
 import org.apache.log4j.Logger;
 import org.sciodb.server.services.Dispatcher;
+import org.sciodb.utils.CommandEncoder;
+import org.sciodb.utils.models.Command;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -27,12 +29,14 @@ public class ServerSocket implements Runnable {
     private InetSocketAddress listenAddress;
 
     private Dispatcher dispatcher;
+//    private SocketsThreadPool pool;
 
     public ServerSocket(String address, int port) throws IOException {
         listenAddress = new InetSocketAddress(address, port);
         dataMapper = new HashMap<>();
 
         dispatcher = new Dispatcher();
+//        pool = new SocketsThreadPool();
     }
 
     @Override
@@ -67,20 +71,13 @@ public class ServerSocket implements Runnable {
 
                     if (key.isAcceptable()) {
                         accept(key);
-                    }
-                    else if (key.isReadable()) {
+                    } else if (key.isReadable()) {
                         readBuffer(key);
-                    } else if (key.isWritable()) {
-
-                        SocketChannel client = (SocketChannel) key.channel();
-                        ByteBuffer bb1 = ByteBuffer.allocate(10000);
-
-                        String s = "server data";
-                        byte[] array1 = s.getBytes();
-                        bb1.put(array1);
-                        bb1.flip();
-                        client.write(bb1);
+//                        pool.run(key);
                     }
+//                    else if (key.isWritable()) {
+//                        logger.debug("writable...");
+//                    }
                 }
             }
         } catch (IOException e) {
@@ -103,88 +100,43 @@ public class ServerSocket implements Runnable {
         channel.register(selector, SelectionKey.OP_READ);
     }
 
-    //read from the socket channel OLD VERSION
-    private void read(final SelectionKey key) throws IOException {
-        logger.info("size of the pool --> " + dataMapper.size());
-        try {
-
-            final SocketChannel channel = (SocketChannel) key.channel();
-
-            final List<String> messages = new ArrayList<>();
-
-            while (true) {
-                final ByteBuffer buffer = ByteBuffer.allocate(HEADER_SIZE);
-                int bufferSize = channel.read(buffer);
-
-                if (bufferSize == -1) {
-                    dataMapper.remove(channel);
-                    Socket socket = channel.socket();
-                    SocketAddress remoteAddr = socket.getRemoteSocketAddress();
-                    logger.info("Connection closed by client: " + remoteAddr);
-                    channel.close();
-                    key.cancel();
-                    return;
-                }
-
-                byte[] data = new byte[bufferSize];
-                System.arraycopy(buffer.array(), 0, data, 0, bufferSize);
-
-                final String msg = new String(data);
-
-                if (msg != null && msg.length() > 0) {
-                    logger.info("Size: " + msg);
-                    int size = Integer.valueOf(msg);
-                    final ByteBuffer messageBuffer = ByteBuffer.allocate(size);
-                    bufferSize = channel.read(messageBuffer);
-
-                    if (bufferSize == -1) {
-                        dataMapper.remove(channel);
-                        Socket socket = channel.socket();
-                        SocketAddress remoteAddr = socket.getRemoteSocketAddress();
-                        logger.info("Connection closed by client: " + remoteAddr);
-                        channel.close();
-                        key.cancel();
-                        return;
-                    }
-
-                    data = new byte[bufferSize];
-                    System.arraycopy(messageBuffer.array(), 0, data, 0, bufferSize);
-
-                    logger.info("Got: " + new String(data));
-                    messages.add(new String(data));
-                }
-
-            }
-        } catch (Exception e) {
-            logger.error("There was an error reading the buffer: " + e.getLocalizedMessage());
-        }
-
-
-//
-//        final Command command = CommandEncoder.decode(""); //new String(data));
-//
-//        // do it asynchronously
-//        if (command != null && command.getOperationID() != null) {
-//            dispatcher.getService(command);
-//        }
-
-    }
-
     public void readBuffer(final SelectionKey key) {
         try {
             final SocketChannel channel = (SocketChannel) key.channel();
-
                 int msgSize = readHeader(channel);
 
                 if (msgSize == 0) {
                     key.cancel();
                 } else {
                     final String message = readMessage(channel, msgSize);
-//                    if (msgSize != message.length()) {
-//                        logger.info("Size: " + msgSize);
+                    if (msgSize != message.length()) {
+                        logger.debug("Size: " + msgSize);
+
+                    }
+                        logger.debug(" message --> " + message);
+                    //
+                    final Command command = CommandEncoder.decode(message);
+
+                    // do it a?-synchronously
+                    if (command != null && command.getOperationID() != null) {
+                        final byte [] response = dispatcher.getService(command);
+//                        String address = (new StringBuilder(channel.socket().getInetAddress().toString() )).append(":").append(channel.socket().getPort() ).toString();
 //
-//                    }
-//                        logger.info(" message --> " + message);
+//                        channel.configureBlocking(false);
+//                        channel.register(selector, SelectionKey.OP_READ, address);
+//                        final ByteBuffer bbResponse = ByteBuffer.wrap(response);
+//                        channel.write(bbResponse);
+//                        bbResponse.rewind();
+//                        System.out.println("accepted connection from: "+address);
+
+//                        channel.register(selector, SelectionKey.OP_WRITE);
+
+                        if (key.isWritable() && response != null) {
+                            final ByteBuffer bbResponse = ByteBuffer.wrap(response);
+                            channel.write(ByteBuffer.wrap((response.length + "").getBytes()));
+                            channel.write(bbResponse);
+                        }
+                    }
                 }
 
         } catch (Exception e) {
@@ -202,7 +154,7 @@ public class ServerSocket implements Runnable {
                 dataMapper.remove(channel);
                 final Socket socket = channel.socket();
                 final SocketAddress remoteAddr = socket.getRemoteSocketAddress();
-                logger.info("Connection closed by client: " + remoteAddr);
+                logger.debug("Connection closed by client: " + remoteAddr);
                 channel.close();
                 bufferSize = 0;
             } else {
@@ -212,7 +164,7 @@ public class ServerSocket implements Runnable {
                 final String msg = new String(data);
 
                 if (msg != null && msg.length() > 0) {
-//                    logger.info("Size: " + msg);
+                    logger.info("Size: " + msg);
                     bufferSize = Integer.valueOf(msg);
                 }
             }
@@ -238,7 +190,7 @@ public class ServerSocket implements Runnable {
                     dataMapper.remove(channel);
                     Socket socket = channel.socket();
                     SocketAddress remoteAddr = socket.getRemoteSocketAddress();
-                    logger.info("Connection closed by client: " + remoteAddr);
+                    logger.debug("Connection closed by client: " + remoteAddr);
                     channel.close();
 //                    key.cancel();
 //                    return;
@@ -249,9 +201,9 @@ public class ServerSocket implements Runnable {
                 total += currentSize;
 
                 final String str = new String(data);
-//                if (str.length() < msgSize) {
-//                    logger.info("Got: " + str);
-//                }
+                if (str.length() < msgSize) {
+                    logger.info("Got: " + str);
+                }
                 result.append(str);
                 if (total == msgSize) {
                     repeat = false;
