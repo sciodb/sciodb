@@ -34,13 +34,13 @@ public class SocketsThreadPool {
 
     public void run(final SelectionKey key) {
 
-        final MessageReader message = new MessageReader(key);
-        final String msg = message.getContent();
+        final MessageReader reader = new MessageReader(key);
+        final String msg = reader.getContent();
 
-        service.execute(() -> execute(key, msg) );
+        service.execute(() -> execute(reader, msg) );
     }
 
-    private void execute(SelectionKey key, String message) {
+    private void execute(final MessageReader reader, final String message) {
         logger.debug(" message --> " + message);
         //
         if (message != null) {
@@ -70,6 +70,7 @@ public class SocketsThreadPool {
 //                        logger.error("Not possible to write in the socket", e);
 //                    }
 //                }
+                reader.close();
             }
         }
     }

@@ -66,11 +66,7 @@ public class ServerSocket implements Runnable {
                         accept(key);
                     } else if (key.isReadable()) {
                         pool.run(key);
-                        logger.info(" - - - ");
                     }
-//                    else if (key.isWritable()) {
-//                        logger.debug("writable...");
-//                    }
                 }
             }
         } catch (IOException e) {

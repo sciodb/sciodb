@@ -18,7 +18,9 @@ public class MessageReader {
 
     final static private int HEADER_SIZE = 4;
 
-    final SelectionKey key;
+    final private SelectionKey key;
+
+    private boolean closeChannel;
 
     public MessageReader(final SelectionKey key) {
         this.key = key;
@@ -63,6 +65,7 @@ public class MessageReader {
                     channel.close();
                     key.cancel();
                     empty = true;
+                    closeChannel = true;
                     break;
                 }
 
@@ -71,8 +74,8 @@ public class MessageReader {
                 total += currentSize;
 
                 final String str = new String(data);
-                if (str.length() < msgSize) {
-                    logger.info("Got: " + str);
+                if (str.length() < msgSize && str.length() != 0) {
+                    logger.debug("Got: " + str);
                 }
                 result.append(str);
 
@@ -82,6 +85,18 @@ public class MessageReader {
             }
         }
         return result.toString();
+    }
+
+    public void close() {
+        try {
+            if (closeChannel) {
+                final SocketChannel channel = (SocketChannel) key.channel();
+                channel.close();
+                key.cancel();
+            }
+        } catch (final IOException e) {
+            logger.error("Error closing channel socket", e);
+        }
     }
 
 }
