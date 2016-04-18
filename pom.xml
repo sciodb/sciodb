@@ -72,18 +72,18 @@
             <version>2.5.3</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.facebook</groupId>
-            <artifactId>rocksdbjni</artifactId>
-            <version>4.6.0-osx</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.facebook</groupId>-->
+            <!--<artifactId>rocksdbjni</artifactId>-->
+            <!--<version>4.6.0-osx</version>-->
+        <!--</dependency>-->
 
         <!-- TODO try this official one not the manual compilation from master !! -->
-        <!--<dependency>-->
-        <!--<groupId>org.rocksdb</groupId>-->
-        <!--<artifactId>rocksdbjni</artifactId>-->
-        <!--<version>4.4.1</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.rocksdb</groupId>
+            <artifactId>rocksdbjni</artifactId>
+            <version>4.4.1</version>
+        </dependency>
 
     </dependencies>
 </project>
