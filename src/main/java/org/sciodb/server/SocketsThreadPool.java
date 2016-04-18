@@ -35,12 +35,7 @@ public class SocketsThreadPool {
     public void run(final SelectionKey key) {
 
         final MessageReader message = new MessageReader(key);
-        String msg = message.getContent();
-//        logger.debug(" -- " + msg);
-
-//        final Runnable runnable = new ConnectionHandler(key);
-//        logger.error("runnable hashcode -- " + runnable.hashCode());
-//        service.execute(runnable);
+        final String msg = message.getContent();
 
         service.execute(() -> execute(key, msg) );
     }
@@ -51,7 +46,6 @@ public class SocketsThreadPool {
         if (message != null) {
             final Command command = CommandEncoder.decode(message);
 
-            // do it a?-synchronously
             if (command != null && command.getOperationID() != null) {
                 final byte [] response = dispatcher.getService(command);
     //                        String address = (new StringBuilder(channel.socket().getInetAddress().toString() )).append(":").append(channel.socket().getPort() ).toString();
@@ -87,17 +81,4 @@ public class SocketsThreadPool {
         service.shutdown();
     }
 
-    class ConnectionHandler implements Runnable {
-        final SelectionKey key;
-
-        public ConnectionHandler(SelectionKey key) {
-            this.key = key;
-        }
-
-        @Override
-        public void run() {
-            final MessageReader message = new MessageReader(key);
-            logger.debug(" -- " + message.getContent());
-        }
-    }
 }
