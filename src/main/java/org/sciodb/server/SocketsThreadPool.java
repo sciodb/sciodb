@@ -5,10 +5,7 @@ import org.sciodb.server.services.Dispatcher;
 import org.sciodb.utils.CommandEncoder;
 import org.sciodb.utils.models.Command;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,13 +35,14 @@ public class SocketsThreadPool {
     public void run(final SelectionKey key) {
 
         final MessageReader message = new MessageReader(key);
-        logger.debug(" -- " + message.getContent());
+        String msg = message.getContent();
+//        logger.debug(" -- " + msg);
 
 //        final Runnable runnable = new ConnectionHandler(key);
 //        logger.error("runnable hashcode -- " + runnable.hashCode());
 //        service.execute(runnable);
 
-//        service.execute(() -> execute(key, message.getContent()) );
+        service.execute(() -> execute(key, msg) );
     }
 
     private void execute(SelectionKey key, String message) {
@@ -67,17 +65,17 @@ public class SocketsThreadPool {
 
     //                        channel.register(selector, SelectionKey.OP_WRITE);
 
-                if (key.isWritable() && response != null) {
-                    final ByteBuffer bbResponse = ByteBuffer.wrap(response);
-                    final SocketChannel channel = (SocketChannel) key.channel();
-
-                    try {
-                        channel.write(ByteBuffer.wrap((response.length + "").getBytes()));
-                        channel.write(bbResponse);
-                    } catch (IOException e) {
-                        logger.error("Not possible to write in the socket", e);
-                    }
-                }
+//                if (key.isWritable() && response != null) {
+//                    final ByteBuffer bbResponse = ByteBuffer.wrap(response);
+//                    final SocketChannel channel = (SocketChannel) key.channel();
+//
+//                    try {
+//                        channel.write(ByteBuffer.wrap((response.length + "").getBytes()));
+//                        channel.write(bbResponse);
+//                    } catch (IOException e) {
+//                        logger.error("Not possible to write in the socket", e);
+//                    }
+//                }
             }
         }
     }
