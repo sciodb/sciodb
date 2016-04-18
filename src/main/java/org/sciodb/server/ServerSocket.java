@@ -1,7 +1,6 @@
 package org.sciodb.server;
 
 import org.apache.log4j.Logger;
-import org.sciodb.server.services.Dispatcher;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -20,19 +19,16 @@ public class ServerSocket implements Runnable {
 
     final static private Logger logger = Logger.getLogger(ServerSocket.class);
 
-    final static private int HEADER_SIZE = 4;
     private Selector selector;
     private Map<SocketChannel, List> dataMapper;
     private InetSocketAddress listenAddress;
 
-    private Dispatcher dispatcher;
     private SocketsThreadPool pool;
 
-    public ServerSocket(String address, int port) throws IOException {
+    public ServerSocket(final String address, final int port) throws IOException {
         listenAddress = new InetSocketAddress(address, port);
         dataMapper = new HashMap<>();
 
-        dispatcher = new Dispatcher();
         pool = SocketsThreadPool.getInstance();
     }
 

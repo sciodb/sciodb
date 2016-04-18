@@ -4,6 +4,7 @@ package org.sciodb.utils;
  * @author jenaiz on 10/04/16.
  */
 public class StorageException extends Exception {
+
     public StorageException() {
         super();
     }
@@ -23,4 +24,5 @@ public class StorageException extends Exception {
     protected StorageException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+
 }

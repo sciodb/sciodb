@@ -21,10 +21,8 @@ public class Configuration {
     public Configuration() {
         properties = new Properties();
 
-        InputStream input = null;
-
         try {
-            input = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE);
+            final InputStream input = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE);
 
             properties.load(input);
 

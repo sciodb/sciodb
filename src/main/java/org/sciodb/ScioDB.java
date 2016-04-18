@@ -7,8 +7,17 @@ import org.sciodb.utils.Configuration;
 
 import java.io.IOException;
 
+
 /**
+ * Starter of the database based on the parameters of the command line.
+ *
  * @author jesus.navarrete  (21/02/16)
+ *
+ * Copyright (C) 2016 Jesús Navarrete <jenaiz@alblang.org>
+ *
+ * This source code is licensed under the GNU General Public License,
+ * Version 2.  See the file COPYING for more details.
+ *
  */
 public class ScioDB {
 
