@@ -9,6 +9,8 @@ public class Dispatcher {
 
     private StatusService statusService;
 
+    private EchoService echoService;
+
     public Dispatcher() {
         this.statusService = new StatusService();
     }
@@ -19,6 +21,9 @@ public class Dispatcher {
         switch (input.getOperationID()) {
             case "status":
                 s = statusService;
+                break;
+            case "echo":
+                s = echoService;
                 break;
             default:
                 throw new RuntimeException("Operation not allowed !!");
