@@ -9,14 +9,14 @@ import org.sciodb.utils.models.EchoCommand;
 public class EchoService implements Services {
 
     @Override
-    public byte[] operation(Command command) {
+    public byte[] operation(final Command command) {
         final String result = "time: " + System.currentTimeMillis();
 
         final EchoCommand echo = new EchoCommand();
 
 //        echo.setMessage(command.getMessageID() + "-result");
         echo.setOperationID(command.getOperationID());
-//        echo.setMessage(result);
+        echo.setMessage(result.getBytes());
 
         return null;
 
