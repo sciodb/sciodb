@@ -60,9 +60,6 @@ public class SocketsThreadPool {
                         final ByteBuffer dummyResponse = ByteBuffer.wrap(response);
 
                         channel.write(dummyResponse);
-                        if (dummyResponse.remaining() > 0) {
-                            logger.debug("Filled UP");
-                        }
 
                         reader.getKey().interestOps(SelectionKey.OP_READ);
                     }

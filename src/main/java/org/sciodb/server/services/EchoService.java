@@ -14,9 +14,10 @@ public class EchoService implements Services {
 
         final EchoCommand echo = new EchoCommand();
 
-//        echo.setMessage(command.getMessageID() + "-result");
+        echo.setMessageID(command.getMessageID() + "-result");
         echo.setOperationID(command.getOperationID());
-//        echo.setMessage(result);
+        echo.setMessage(result.getBytes());
+
 
         return null;
 

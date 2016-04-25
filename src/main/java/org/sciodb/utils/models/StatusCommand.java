@@ -5,4 +5,6 @@ package org.sciodb.utils.models;
  */
 public class StatusCommand extends Command {
 
+    // ???
+
 }

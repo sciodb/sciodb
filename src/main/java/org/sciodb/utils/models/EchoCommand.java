@@ -5,4 +5,5 @@ package org.sciodb.utils.models;
  */
 public class EchoCommand extends Command {
 
+    // ???
 }
