@@ -43,8 +43,8 @@ public class EncoderTest {
 
         byte[] result = e.container();
 
-        assertEquals(text.length(), result.length);
-        assertEquals(text, new String(ByteBuffer.wrap(result).array()));
+        assertEquals(text.length() + 4, result.length);
+        assertEquals(text, new String(ByteBuffer.wrap(result, 4, text.length()-4).array()));
     }
 
     @Test

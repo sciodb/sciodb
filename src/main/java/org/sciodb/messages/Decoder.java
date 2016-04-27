@@ -15,10 +15,6 @@ public class Decoder {
         position = 0;
     }
 
-    public byte[] decode() {
-        return null;
-    }
-
     public int outInt() {
         System.out.println("position - " + container.position());
         final int result = container.getInt(position);
@@ -33,5 +29,14 @@ public class Decoder {
         position += 8;
         container.position(position);
         return result;
+    }
+
+    public String outString() {
+        int size = outInt();
+
+        System.out.println("position - " + container.position());
+        byte[] data = new byte[size];
+        container.get(data, position, size);
+        return new String(data);
     }
 }

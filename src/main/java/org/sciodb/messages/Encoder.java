@@ -40,6 +40,7 @@ public class Encoder {
         final ByteBuffer bb = ByteBuffer.allocate(s.length())
                                         .order(ByteOrder.BIG_ENDIAN)
                                         .put(s.getBytes());
+        in(s.length());
         container.add(bb);
     }
 

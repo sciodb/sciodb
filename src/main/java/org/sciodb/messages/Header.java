@@ -5,13 +5,13 @@ package org.sciodb.messages;
  */
 public class Header implements Message {
 
-    private int id;
+    private String id;
     private int length;
 
     private int operationId;
 
     public static void main(String[] args) {
-        final Header h = new Header(123, 100, 2);
+        final Header h = new Header("123", 100, 2);
 
         byte[] headerBytes = h.encode();
 
@@ -33,7 +33,7 @@ public class Header implements Message {
 //        this.operationId = decoder.outInt();
 //    }
 
-    public Header(int id, int length, int operationId) {
+    public Header(String id, int length, int operationId) {
         this.id = id;
         this.length = length;
         this.operationId = operationId;
@@ -53,7 +53,7 @@ public class Header implements Message {
     @Override
     public void decode(byte[] input) {
         final Decoder decoder = new Decoder(input);
-        this.id = decoder.outInt();
+        this.id = decoder.outString();
         this.length = decoder.outInt();
         this.operationId = decoder.outInt();
     }
@@ -66,11 +66,11 @@ public class Header implements Message {
         this.length = length;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

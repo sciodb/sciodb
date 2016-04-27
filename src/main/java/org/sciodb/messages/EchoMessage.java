@@ -1,5 +1,7 @@
 package org.sciodb.messages;
 
+import java.util.UUID;
+
 /**
  * @author jenaiz on 23/04/16.
  */
@@ -12,7 +14,9 @@ public class EchoMessage {
     public static void main(String[] args) {
         final EchoMessage echo = new EchoMessage();
 
-        echo.getHeader().setId(123);
+        final UUID uuid = UUID.randomUUID();
+
+        echo.getHeader().setId(uuid.toString());
         echo.setMsg("Hello world!");
 
         echo.getHeader().setLength(1234);
