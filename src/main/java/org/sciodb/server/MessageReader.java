@@ -39,6 +39,7 @@ public class MessageReader {
                     key.cancel();
                 } else {
                     result = readMessage(channel, msgSize);
+                    channel.register(key.selector(), SelectionKey.OP_WRITE);
                 }
             }
 
@@ -99,4 +100,7 @@ public class MessageReader {
         }
     }
 
+    public SelectionKey getKey() {
+        return key;
+    }
 }

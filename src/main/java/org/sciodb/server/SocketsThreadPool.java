@@ -5,7 +5,10 @@ import org.sciodb.server.services.Dispatcher;
 import org.sciodb.utils.CommandEncoder;
 import org.sciodb.utils.models.Command;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
+import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -48,28 +51,22 @@ public class SocketsThreadPool {
 
             if (command != null && command.getOperationID() != null) {
                 final byte [] response = dispatcher.getService(command);
-    //                        String address = (new StringBuilder(channel.socket().getInetAddress().toString() )).append(":").append(channel.socket().getPort() ).toString();
-    //
-    //                        channel.configureBlocking(false);
-    //                        channel.register(selector, SelectionKey.OP_READ, address);
-    //                        final ByteBuffer bbResponse = ByteBuffer.wrap(response);
-    //                        channel.write(bbResponse);
-    //                        bbResponse.rewind();
-    //                        System.out.println("accepted connection from: "+address);
 
-    //                        channel.register(selector, SelectionKey.OP_WRITE);
+                final SocketChannel channel = (SocketChannel)reader.getKey().channel();
+                try {
+                    channel.register(reader.getKey().selector(), SelectionKey.OP_WRITE);
 
-//                if (key.isWritable() && response != null) {
-//                    final ByteBuffer bbResponse = ByteBuffer.wrap(response);
-//                    final SocketChannel channel = (SocketChannel) key.channel();
-//
-//                    try {
-//                        channel.write(ByteBuffer.wrap((response.length + "").getBytes()));
-//                        channel.write(bbResponse);
-//                    } catch (IOException e) {
-//                        logger.error("Not possible to write in the socket", e);
-//                    }
-//                }
+                    if (reader.getKey().isWritable()) {
+                        final ByteBuffer dummyResponse = ByteBuffer.wrap(response);
+
+                        channel.write(dummyResponse);
+
+                        reader.getKey().interestOps(SelectionKey.OP_READ);
+                    }
+                } catch (IOException e) {
+                    logger.error("Not possible to write in socket", e);
+                }
+
                 reader.close();
             }
         }
