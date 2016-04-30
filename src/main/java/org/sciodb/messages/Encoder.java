@@ -57,19 +57,4 @@ public class Encoder {
         }
     }
 
-//    public static void main(String[] args) {
-//        final Encoder e = new Encoder();
-//        e.in(100);
-//        e.in(100L);
-//        e.in("helloworld");
-//
-//        byte[] result = e.container();
-//
-//        System.out.println(result.length == 26);
-//
-//        final Decoder d = new Decoder(result);
-//        System.out.println(d.outInt());
-//        System.out.println(d.outLong());
-//        System.out.println(d.outString());
-//    }
 }
