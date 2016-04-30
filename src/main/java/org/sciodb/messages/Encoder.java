@@ -1,6 +1,5 @@
 package org.sciodb.messages;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -25,7 +24,7 @@ public class Encoder {
         final ByteBuffer bb = ByteBuffer.allocate(8)
                                         .order(ByteOrder.BIG_ENDIAN)
                                         .putLong(l);
-//        container.add(ByteBuffer.allocate(1).putInt(1));
+//        container.add(ByteBuffer.allocate(1).putInt(1)); // idea to mark the type
         container.add(bb);
     }
 
@@ -46,33 +45,31 @@ public class Encoder {
 
     public byte[] container() {
         try {
-            return concat(container);
+            final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            if (container != null) {
+                for (ByteBuffer bb : container) {
+                    outputStream.write(bb.array());
+                }
+            }
+            return outputStream.toByteArray();
         } catch (IOException e) {
-//            e.printStackTrace();
             return new byte[0];
         }
     }
 
-
-    private byte[] concat(final List<ByteBuffer> input) throws IOException {
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        if (input != null) {
-            for (ByteBuffer bb : input) {
-                outputStream.write(bb.array());
-            }
-        }
-
-        return outputStream.toByteArray();
-    }
-
-    public static void main(String[] args) {
-        final Encoder e = new Encoder();
-        e.in(100);
-        e.in(100L);
-        e.in("helloworld");
-
-        byte[] result = e.container();
-
-        System.out.println(result.length == 22);
-    }
+//    public static void main(String[] args) {
+//        final Encoder e = new Encoder();
+//        e.in(100);
+//        e.in(100L);
+//        e.in("helloworld");
+//
+//        byte[] result = e.container();
+//
+//        System.out.println(result.length == 26);
+//
+//        final Decoder d = new Decoder(result);
+//        System.out.println(d.outInt());
+//        System.out.println(d.outLong());
+//        System.out.println(d.outString());
+//    }
 }

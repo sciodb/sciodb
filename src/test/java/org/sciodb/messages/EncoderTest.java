@@ -42,14 +42,29 @@ public class EncoderTest {
         e.in(text);
 
         byte[] result = e.container();
-
         assertEquals(text.length() + 4, result.length);
-        assertEquals(text, new String(ByteBuffer.wrap(result, 4, text.length()-4).array()));
+
+        final ByteBuffer bb = ByteBuffer.wrap(result);
+        assertEquals(text.length(), bb.getInt());
+
+        byte[] textEncoded = new byte[text.length()];
+        bb.position(4);
+        bb.get(textEncoded).array();
+        final String str = new String(textEncoded);
+        assertEquals(text.length(), str.length());
+        assertEquals(text, str);
     }
 
     @Test
     public void container() throws Exception {
-        fail("not tested yet");
+        final Encoder e = new Encoder();
+        e.in(100);
+        e.in(100L);
+        e.in("helloworld");
+
+        byte[] result = e.container();
+
+        assertEquals(26, result.length);
     }
 
 }
