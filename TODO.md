@@ -30,7 +30,7 @@
 
 
 - query language
-    * sql or json/javascript
+    * sql or javascript (with some json properties...)
 
 
 - interpreter query language
@@ -48,16 +48,7 @@ RocksDB:
 - backup using BackupEngine... research
 - bulk operation
 
-_--_
+...?
 
-Log Structure Merge tree
-
-- read/write amplification
-- multithreaded compaction
-- thread aware compaction
-- universal style compaction
-- blooms filters for range scans
-- MergeRecord
-- memtable ,, sstable
-- no replication, no failover
-- you have to do something extra to backup data and to replicate data
+- support for big amounts of data, terabytes
+- isolation, atomicity...?

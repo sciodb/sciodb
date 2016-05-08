@@ -24,21 +24,33 @@ public class HeaderTest {
 
     @Test
     public void encode() throws Exception {
-        final Header h = new Header("123", 100, 2);
+        final String id = "123";
+        final int length = 100;
+        final int operationId = 2;
+
+        final Header h = new Header(id, length, operationId);
 
         byte[] headerBytes = h.encode();
 
-        final Header h2 = new Header();
-        h2.decode(headerBytes);
+        final ByteBuffer bb = ByteBuffer.wrap(headerBytes);
+        int size = bb.getInt();
 
-        assertEquals("123", new String(ByteBuffer.wrap(headerBytes, 0, 4).array()));
-        assertEquals(100, ByteBuffer.wrap(headerBytes, 4, 4).getInt());
-        assertEquals(2, ByteBuffer.wrap(headerBytes, 8, 4).getInt());
+        assertEquals(id.length(), size);
+
+        byte[] textEncoded = new byte[size];
+        bb.get(textEncoded);
+        bb.position(size + 4); // + 4 for the first integer
+
+        final String str = new String(textEncoded);
+        assertEquals(id, str);
+
+        assertEquals(length, bb.getInt());
+        assertEquals(operationId, bb.getInt());
     }
 
     @Test
     public void decode() throws Exception {
-        byte[] headerBytes = {};
+        byte[] headerBytes = {0, 0, 0, 3, 49, 50, 51, 0, 0, 0, 100, 0, 0, 0, 2};
 
         final Header h2 = new Header();
         h2.decode(headerBytes);

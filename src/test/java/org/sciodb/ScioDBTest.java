@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * @author jesus.navarrete  (16/02/16)
  */
-public class KernelTest {
+public class ScioDBTest {
 
     @Before
     public void setUp() throws Exception {
