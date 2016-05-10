@@ -22,9 +22,9 @@ public class Header implements Message {
         final Header h2 = new Header();
         h2.decode(headerBytes);
 
-        System.out.println(" h2 - id -" + h2.getId());
-        System.out.println(" h2 - length -" + h2.getLength());
-        System.out.println(" h2 - op. id -" + h2.getOperationId());
+        System.out.println(" h2 - id - " + h2.getId());
+        System.out.println(" h2 - length - " + h2.getLength());
+        System.out.println(" h2 - op. id - " + h2.getOperationId());
     }
 
     public Header() {
