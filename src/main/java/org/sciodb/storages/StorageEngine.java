@@ -1,7 +1,8 @@
 package org.sciodb.storages;
 
-import java.util.List;
 import org.sciodb.utils.StorageException;
+
+import java.util.List;
 
 /**
  * @author jenaiz on 03/04/16.
@@ -9,25 +10,29 @@ import org.sciodb.utils.StorageException;
 public interface StorageEngine {
 
     void init() throws StorageException;
-
-    void createDatabase(final String name) throws StorageException;
-
-    void createCollection(final String name) throws StorageException;
-
-    void persist(final byte[] key, final byte[] value);
-
-    byte[] find(final byte[] key);
-
     void close();
 
-    void create();
 
+    void createDatabase(final String name) throws StorageException;
+    void useDatabase(final String name) throws StorageException;
     // Database functions
     void createDatabase(final byte[] database);
     byte[] databaseInfo();
 
+
+    void createCollection(final String name) throws StorageException;
     void createCollection(final byte[] collection);
     void dropCollection();
+
+
+    void persist(final byte[] key, final byte[] value);
+    byte[] find(final byte[] query);
+    void delete(final byte[] query) throws StorageException;
+
+
+//    void create();
+
+
 
     // data operations
     /*void store();
@@ -41,6 +46,6 @@ public interface StorageEngine {
     List<byte[]> bulkOperation(final byte[] query);
     List<byte[]> getIndexes();
 
-    void getStatistics();
+    void getStatistics() throws StorageException;
 
 }

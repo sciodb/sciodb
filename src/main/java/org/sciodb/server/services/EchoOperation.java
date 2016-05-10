@@ -6,7 +6,7 @@ import org.sciodb.utils.models.EchoCommand;
 /**
  * @author jesus.navarrete  (24/03/16)
  */
-public class EchoService implements Services {
+public class EchoOperation implements Operations {
 
     @Override
     public byte[] operation(final Command command) {

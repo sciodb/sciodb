@@ -1,13 +1,13 @@
 package org.sciodb.storages.impl;
 
 import org.apache.log4j.Logger;
-import org.rocksdb.DBOptions;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
 import org.sciodb.storages.StorageEngine;
 import org.sciodb.utils.StorageException;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -21,7 +21,8 @@ public class RocksDBEngine implements StorageEngine {
 
     private Options options;
 
-    private final static String DATABASE_PATH = "/Users/jenaiz/sciodb/sciodb/data/rocksdb";
+//    private final static String DATABASE_PATH = "/Users/jesus.navarrete/projects/database/sciodb/data/rocksdb";
+    private final static String DATABASE_PATH = "/Users/jesus.navarrete/projects/database/sciodb/data";
     private RocksDB db;
 
     public RocksDBEngine() {
@@ -31,50 +32,48 @@ public class RocksDBEngine implements StorageEngine {
                 .setCreateIfMissing(true);
     }
 
-
     public static void main(String[] args) {
-
-        final StorageEngine se = new RocksDBEngine();
-
-        String key1 = "j";
-        String value1 = "The rocksdb library provides a persistent key value store. Keys and values are arbitrary " +
-                "byte arrays. The keys are ordered within the key value store according to a user-specified comparator " +
-                "function.";
-
-        String key2 = "k";
-        String value2 = "The library is maintained by the Facebook Database Engineering Team, and is based on leveldb, " +
-                "by Sanjay Ghemawat and Jeff Dean at Google.\n";
-
-
-//        se.persist(key1, value1);
-//        se.persist(key2, value2);
-
-        if (value1.equals(se.find(key1.getBytes()))) {
-            System.out.println("Read value 1 correctly");
+        RocksDBEngine engine = new RocksDBEngine();
+        for (int i = 0; i < 100; i++) {
+            try {
+                engine.createDatabase("x-" + i);
+            } catch (StorageException e) {
+                System.out.println("error - i : " + i);
+                e.printStackTrace();
+            }
         }
-        if (value2.equals(se.find(key2.getBytes()))) {
-            System.out.println("Read value 2 correctly");
-        }
-
-        se.close();
-
-        // the Options class contains a set of configurable DB options
-        // that determines the behavior of a database.
     }
 
     @Override
     public void init() throws StorageException {
         try {
-            db = RocksDB.open(options, DATABASE_PATH);
-            DBOptions dbOptions = new DBOptions();
+            db = RocksDB.open(options, DATABASE_PATH); // takes between 1-5 ms to read or create it
+//            final DBOptions dbOptions = new DBOptions();
         } catch (RocksDBException e) {
             throw new StorageException("Error initialising Storage", e);
         }
     }
 
     @Override
-    public void createDatabase(String name) throws StorageException {
-        throw new StorageException("METHOD NOT IMPLEMENTED");
+    public void createDatabase(final String name) throws StorageException {
+        try {
+            long init = System.currentTimeMillis();
+            db = RocksDB.open(options, DATABASE_PATH + File.separator + name); // takes between 1-5 ms to read or create it
+            long finished = System.currentTimeMillis() - init;
+            logger.info(" creation time of the database :: " + finished);
+        } catch (RocksDBException e) {
+            throw new StorageException("Error initialising Storage", e);
+        }
+    }
+
+    @Override
+    public void useDatabase(String name) throws StorageException {
+
+    }
+
+    @Override
+    public void createDatabase(byte[] database) {
+
     }
 
     @Override
@@ -111,15 +110,6 @@ public class RocksDBEngine implements StorageEngine {
         }
     }
 
-    public void stats() throws StorageException {
-        try {
-            final String str = db.getProperty("rocksdb.stats");
-            logger.debug(str);
-        } catch (RocksDBException ex) {
-            throw new StorageException("Error while trying to print RocksDB statistics");
-        }
-    }
-
     @Override
     public void close() {
         if (db != null) db.close();
@@ -127,15 +117,7 @@ public class RocksDBEngine implements StorageEngine {
         options.dispose();
     }
 
-    @Override
-    public void create() {
 
-    }
-
-    @Override
-    public void createDatabase(byte[] database) {
-
-    }
 
     @Override
     public byte[] databaseInfo() {
@@ -168,7 +150,12 @@ public class RocksDBEngine implements StorageEngine {
     }
 
     @Override
-    public void getStatistics() {
-
+    public void getStatistics() throws StorageException {
+        try {
+            final String str = db.getProperty("rocksdb.stats");
+            logger.debug(str);
+        } catch (RocksDBException ex) {
+            throw new StorageException("Error while trying to print RocksDB statistics");
+        }
     }
 }
