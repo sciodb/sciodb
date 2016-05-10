@@ -21,6 +21,11 @@ public class InMemoryStorage implements StorageEngine {
     }
 
     @Override
+    public void useDatabase(String name) throws StorageException {
+
+    }
+
+    @Override
     public void createCollection(String name) throws StorageException {
 
     }
@@ -36,12 +41,12 @@ public class InMemoryStorage implements StorageEngine {
     }
 
     @Override
-    public void close() {
+    public void delete(byte[] query) {
 
     }
 
     @Override
-    public void create() {
+    public void close() {
 
     }
 
@@ -62,7 +67,6 @@ public class InMemoryStorage implements StorageEngine {
 
     @Override
     public void dropCollection() {
-
     }
 
     @Override

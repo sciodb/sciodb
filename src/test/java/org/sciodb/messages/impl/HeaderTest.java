@@ -1,4 +1,4 @@
-package org.sciodb.messages;
+package org.sciodb.messages.impl;
 
 import org.junit.After;
 import org.junit.Before;
@@ -6,12 +6,13 @@ import org.junit.Test;
 
 import java.nio.ByteBuffer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author jenaiz on 24/04/16.
  */
 public class HeaderTest {
+
     @Before
     public void setUp() throws Exception {
 

@@ -7,23 +7,23 @@ import org.sciodb.utils.models.Command;
  */
 public class Dispatcher {
 
-    private StatusService statusService;
+    private StatusOperation statusOperation;
 
-    private EchoService echoService;
+    private EchoOperation echoOperation;
 
     public Dispatcher() {
-        this.statusService = new StatusService();
+        this.statusOperation = new StatusOperation();
     }
 
     public byte[] getService(final Command input) {
-        final Services s;
+        final Operations s;
 
         switch (input.getOperationID()) {
             case "status":
-                s = statusService;
+                s = statusOperation;
                 break;
             case "echo":
-                s = echoService;
+                s = echoOperation;
                 break;
             default:
                 throw new RuntimeException("Operation not allowed !!");

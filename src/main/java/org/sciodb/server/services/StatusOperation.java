@@ -6,9 +6,9 @@ package org.sciodb.server.services;
 /**
  * @author jesus.navarrete  (09/03/16)
  */
-public class StatusService implements Services {
+public class StatusOperation implements Operations {
 
-    private final static Logger logger = Logger.getLogger(StatusService.class.getName());
+    private final static Logger logger = Logger.getLogger(StatusOperation.class.getName());
 
     @Override
     public byte[] operation(final Command command) {

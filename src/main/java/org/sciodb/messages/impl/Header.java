@@ -1,4 +1,8 @@
-package org.sciodb.messages;
+package org.sciodb.messages.impl;
+
+import org.sciodb.messages.Decoder;
+import org.sciodb.messages.Encoder;
+import org.sciodb.messages.Message;
 
 /**
  * @author jenaiz on 23/04/16.
@@ -26,13 +30,6 @@ public class Header implements Message {
     public Header() {
     }
 
-//    public Header(final byte[] input) {
-//        final Decoder decoder = new Decoder(input);
-//        this.id = decoder.outInt();
-//        this.length = decoder.outInt();
-//        this.operationId = decoder.outInt();
-//    }
-
     public Header(String id, int length, int operationId) {
         this.id = id;
         this.length = length;
@@ -43,6 +40,7 @@ public class Header implements Message {
     public byte[] encode() {
         final Encoder encoder = new Encoder();
 
+        // Order it's really important
         encoder.in(id);
         encoder.in(length);
         encoder.in(operationId);
@@ -53,6 +51,7 @@ public class Header implements Message {
     @Override
     public void decode(byte[] input) {
         final Decoder decoder = new Decoder(input);
+        // Order it's really important
         this.id = decoder.outString();
         this.length = decoder.outInt();
         this.operationId = decoder.outInt();
@@ -81,4 +80,5 @@ public class Header implements Message {
     public void setOperationId(int operationId) {
         this.operationId = operationId;
     }
+
 }
