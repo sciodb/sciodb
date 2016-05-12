@@ -66,6 +66,8 @@ public class ServerSocket implements Runnable {
                         accept(key);
                     } else if (key.isReadable()) {
                         pool.run(key);
+                    } else if (key.isWritable()) {
+                        key.interestOps(SelectionKey.OP_READ);
                     }
                 }
             }

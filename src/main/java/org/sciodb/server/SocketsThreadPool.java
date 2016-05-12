@@ -24,7 +24,7 @@ public class SocketsThreadPool {
     private static SocketsThreadPool instance;
 
     private SocketsThreadPool() {
-        this.service = Executors.newFixedThreadPool(10);
+        this.service = Executors.newFixedThreadPool(100);
         this.dispatcher = new Dispatcher();
     }
 
@@ -55,13 +55,17 @@ public class SocketsThreadPool {
                 final SocketChannel channel = (SocketChannel)reader.getKey().channel();
                 try {
                     channel.register(reader.getKey().selector(), SelectionKey.OP_WRITE);
+                    while(true) {
+                        if (reader.getKey().isWritable()) {
+                            final ByteBuffer dummyResponse = ByteBuffer.wrap(response);
 
-                    if (reader.getKey().isWritable()) {
-                        final ByteBuffer dummyResponse = ByteBuffer.wrap(response);
+                            channel.write(dummyResponse);
 
-                        channel.write(dummyResponse);
-
-                        reader.getKey().interestOps(SelectionKey.OP_READ);
+                            reader.getKey().interestOps(SelectionKey.OP_READ);
+                            break;
+                        } else {
+                            logger.error("THE SOCKET WILL BE IN WRITE MODE FOREVER !!!");
+                        }
                     }
                 } catch (IOException e) {
                     logger.error("Not possible to write in socket", e);
