@@ -1,6 +1,8 @@
 ScioDB
 =====
 
+[![Build Status](https://travis-ci.org/sciodb/sciodb.svg?branch=master)](https://travis-ci.org/sciodb/sciodb)
+
 How to compile:
 
 ```
