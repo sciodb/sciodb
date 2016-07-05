@@ -91,7 +91,6 @@ public class NodeCommunicationReader {
             }
         }
         return buffer.array();
-//        return result.toString();
     }
 
     public void close() {

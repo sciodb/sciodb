@@ -6,7 +6,6 @@ import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.Header;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.messages.impl.NodeMessage;
-import org.sciodb.utils.Configuration;
 import org.sciodb.utils.SocketClient;
 
 import java.util.UUID;
@@ -43,26 +42,26 @@ public class NodeOperations {
     }
 
     public static boolean checkRoot(final Node root) {
-        boolean result = false;
-        try {
-            final NodeMessage message = new NodeMessage();
-
-            final Header header = new Header();
-            header.setOperationId(Operations.CHECK_NODE_STATUS.getValue());
-            header.setId(UUID.randomUUID().toString());
-
-            message.setHeader(header);
-            message.setNode(root);
-
-            SocketClient.sendToSocket(Configuration.getInstance().getRootHostNessyTopology(),
-                    Configuration.getInstance().getRootPortNessyTopology(),
-                    message.encode(),
-                    false);
-            logger.info("Root status ok!");
-            result = true;
-        } catch (CommunicationException e) {
-            logger.error(" Error communicating with root - ", e);
-        }
+        boolean result = true;
+//        try {
+//            final NodeMessage message = new NodeMessage();
+//
+//            final Header header = new Header();
+//            header.setOperationId(Operations.CHECK_NODE_STATUS.getValue());
+//            header.setId(UUID.randomUUID().toString());
+//
+//            message.setHeader(header);
+//            message.setNode(root);
+//
+////            SocketClient.sendToSocket(Configuration.getInstance().getRootHostNessyTopology(),
+////                    Configuration.getInstance().getRootPortNessyTopology(),
+////                    message.encode(),
+////                    false);
+//            logger.info("Root status ok!");
+//            result = true;
+//        } catch (CommunicationException e) {
+//            logger.error(" Error communicating with root - ", e);
+//        }
 
         return result;
     }
