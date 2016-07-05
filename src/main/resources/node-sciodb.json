@@ -1,0 +1,21 @@
+{
+    "database" : {
+        "port": "9092",
+        "host": "127.0.0.1",
+        "temp.folder" : "/tmp/sciodb-logs/",
+
+        "topology": {
+            "type": "nessy",
+            "role": "root",
+            "root_host": "127.0.0.1",
+            "root_port": "9092",
+            "master_check.time": "1000",
+            "nodes_check.time": "1000",
+            "nodes_persist.time": "3000"
+        }
+
+    },
+    "role": "root",
+    "port": "9092",
+    "host": "127.0.0.1"
+}
