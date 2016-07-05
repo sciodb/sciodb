@@ -32,7 +32,6 @@ public class NodeOperations {
 
             SocketClient.sendToSocket(root.getHost(),
                     root.getPort(),
-//                    me.encode());
                     message.encode(),
                     false);
             logger.info("Node added to Root!");

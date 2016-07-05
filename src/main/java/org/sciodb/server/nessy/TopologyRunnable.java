@@ -41,8 +41,6 @@ public class TopologyRunnable implements Runnable {
             final Node root = new Node(Configuration.getInstance().getRootHostNessyTopology(),
                     Configuration.getInstance().getRootPortNessyTopology(), Roles.root.name());
 
-            final NodeOperations operation = new NodeOperations();
-
             logger.info("Starting node as [" + Roles.chunker.name() + "]");
             boolean execute = false;
             for (int i = 0; i < 3; i++) {
