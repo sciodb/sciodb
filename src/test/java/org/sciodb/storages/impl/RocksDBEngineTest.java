@@ -2,11 +2,10 @@ package org.sciodb.storages.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.sciodb.storages.impl.RocksDBEngine;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author jenaiz on 03/04/16.
@@ -22,7 +21,7 @@ public class RocksDBEngineTest {
 
     @Test
     public void createDatabase() throws Exception {
-        storage.createDatabase("/tmp/rocksdb/test");
+        storage.createDatabase("test");
 
         assert (true);
     }

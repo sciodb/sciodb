@@ -1,6 +1,6 @@
 package org.sciodb.storages;
 
-import org.sciodb.utils.StorageException;
+import org.sciodb.exceptions.StorageException;
 
 import java.util.List;
 

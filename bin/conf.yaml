@@ -1,0 +1,9 @@
+topology:
+  nessy:
+    role : root
+    root_host : 127.0.0.1
+    root_port : 9010
+  master_check.time  : 10000
+  nodes_check.time   : 10000
+  nodes_persist.time : 30000
+

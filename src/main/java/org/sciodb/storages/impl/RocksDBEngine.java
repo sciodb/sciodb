@@ -5,7 +5,7 @@ import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
 import org.sciodb.storages.StorageEngine;
-import org.sciodb.utils.StorageException;
+import org.sciodb.exceptions.StorageException;
 
 import java.io.File;
 import java.util.List;

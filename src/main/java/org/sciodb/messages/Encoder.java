@@ -12,26 +12,31 @@ import java.util.List;
  */
 public class Encoder {
 
-    private List<ByteBuffer> container;
+    public final static int INT_BYTES = 4;
+    public final static int LONG_BYTES = 8;
 
-    private final static int LONG_TYPE = 1;
+    private int length = 0;
+
+    private List<ByteBuffer> container;
 
     public Encoder() {
         this.container = new ArrayList<>();
     }
 
     public void in(final long l) {
-        final ByteBuffer bb = ByteBuffer.allocate(8)
+        final ByteBuffer bb = ByteBuffer.allocate(LONG_BYTES)
                                         .order(ByteOrder.BIG_ENDIAN)
                                         .putLong(l);
 //        container.add(ByteBuffer.allocate(1).putInt(1)); // idea to mark the type
+        length += LONG_BYTES;
         container.add(bb);
     }
 
-    public void in(int i) {
-        final ByteBuffer bb = ByteBuffer.allocate(4)
+    public void in(final int i) {
+        final ByteBuffer bb = ByteBuffer.allocate(INT_BYTES)
                                         .order(ByteOrder.BIG_ENDIAN)
                                         .putInt(i);
+        length += INT_BYTES;
         container.add(bb);
     }
 
@@ -40,7 +45,22 @@ public class Encoder {
                                         .order(ByteOrder.BIG_ENDIAN)
                                         .put(s.getBytes());
         in(s.length());
+        length += s.length();
         container.add(bb);
+    }
+
+    public void in(final byte[] b) {
+        final ByteBuffer bb = ByteBuffer.allocate(b.length)
+                .order(ByteOrder.BIG_ENDIAN)
+                .put(b);
+        in(b.length);
+        length += b.length;
+        container.add(bb);
+    }
+
+    public void add(final byte[] input) {
+        in(input.length);
+        container.add(ByteBuffer.wrap(input));
     }
 
     public byte[] container() {
