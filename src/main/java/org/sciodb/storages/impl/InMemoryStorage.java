@@ -1,6 +1,8 @@
 package org.sciodb.storages.impl;
 
 import org.sciodb.storages.StorageEngine;
+import org.sciodb.storages.models.CollectionInfo;
+import org.sciodb.storages.models.DatabaseInfo;
 import org.sciodb.exceptions.StorageException;
 
 import java.util.List;
@@ -16,57 +18,43 @@ public class InMemoryStorage implements StorageEngine {
     }
 
     @Override
-    public void createDatabase(String name) throws StorageException {
-
-    }
-
-    @Override
-    public void useDatabase(String name) throws StorageException {
-
-    }
-
-    @Override
-    public void createCollection(String name) throws StorageException {
-
-    }
-
-    @Override
-    public void persist(byte[] key, byte[] value) {
-
-    }
-
-    @Override
-    public byte[] find(byte[] key) {
-        return new byte[0];
-    }
-
-    @Override
-    public void delete(byte[] query) {
-
-    }
-
-    @Override
     public void close() {
 
     }
 
     @Override
-    public void createDatabase(byte[] database) {
+    public DatabaseInfo getDatabaseStats(String name) throws StorageException {
+        return null;
+    }
+
+    @Override
+    public void createCollection(String databaseName, String collectionName) throws StorageException {
 
     }
 
     @Override
-    public byte[] databaseInfo() {
+    public CollectionInfo getCollectionInfo(String name) {
+        return null;
+    }
+
+    @Override
+    public List<byte[]> getIndexes(String collectionName) {
+        return null;
+    }
+
+    @Override
+    public void dropCollection(String databaseName, String name) throws StorageException {
+
+    }
+
+    @Override
+    public void store(byte[] key, byte[] value) {
+
+    }
+
+    @Override
+    public byte[] find(byte[] query) {
         return new byte[0];
-    }
-
-    @Override
-    public void createCollection(byte[] collection) {
-
-    }
-
-    @Override
-    public void dropCollection() {
     }
 
     @Override
@@ -75,18 +63,22 @@ public class InMemoryStorage implements StorageEngine {
     }
 
     @Override
+    public void update(byte[] key, byte[] value) {
+
+    }
+
+    @Override
+    public void update(byte[] query) {
+
+    }
+
+    @Override
     public List<byte[]> bulkOperation(byte[] query) {
         return null;
     }
 
     @Override
-    public List<byte[]> getIndexes() {
-        return null;
-    }
-
-    @Override
-    public void getStatistics() {
+    public void delete(byte[] query) throws StorageException {
 
     }
-
 }

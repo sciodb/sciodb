@@ -1,13 +1,15 @@
 package org.sciodb.storages.impl;
 
 import org.apache.log4j.Logger;
-import org.rocksdb.Options;
-import org.rocksdb.RocksDB;
-import org.rocksdb.RocksDBException;
+import org.rocksdb.*;
 import org.sciodb.storages.StorageEngine;
+import org.sciodb.exceptions.StorageException;
+import org.sciodb.storages.models.CollectionInfo;
+import org.sciodb.storages.models.DatabaseInfo;
 import org.sciodb.exceptions.StorageException;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,73 +22,130 @@ public class RocksDBEngine implements StorageEngine {
     private static final Logger logger = Logger.getLogger(RocksDBEngine.class);
 
     private Options options;
+    private DBOptions dbOptions;
 
-//    private final static String DATABASE_PATH = "/Users/jesus.navarrete/projects/database/sciodb/data/rocksdb";
-    private final static String DATABASE_PATH = "/Users/jesus.navarrete/projects/database/sciodb/data";
+    private static String dataPath;
+
     private RocksDB db;
+    private List<ColumnFamilyHandle> collections;
+    private List<ColumnFamilyDescriptor> descriptors;
 
-    public RocksDBEngine() {
+    public RocksDBEngine(final String dataFolder) {
+        dataPath = dataFolder;
+
         // loads the RocksDB C++ library
         RocksDB.loadLibrary();
         options = new Options()
                 .setCreateIfMissing(true);
     }
 
-    public static void main(String[] args) {
-        RocksDBEngine engine = new RocksDBEngine();
-        for (int i = 0; i < 100; i++) {
-            try {
-                engine.createDatabase("x-" + i);
-            } catch (StorageException e) {
-                System.out.println("error - i : " + i);
-                e.printStackTrace();
-            }
-        }
-    }
+//    public static void main(String[] args) {
+//        final String data = "/tmp/f" + System.currentTimeMillis();
+//        RocksDBEngine engine = new RocksDBEngine(data);
+//        for (int i = 0; i < 100; i++) {
+//            try {
+//                engine.createDatabase("x-" + i);
+//            } catch (StorageException e) {
+//                System.out.println("error - i : " + i);
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     @Override
     public void init() throws StorageException {
         try {
-            db = RocksDB.open(options, DATABASE_PATH); // takes between 1-5 ms to read or create it
-//            final DBOptions dbOptions = new DBOptions();
+            collections = new ArrayList<>();
+            descriptors = new ArrayList<>();
+
+            final File f = new File(dataPath);
+            boolean newDB = !f.exists();
+            if (newDB) {
+                f.mkdirs();
+                logger.info("Created database folder : " + dataPath);
+                descriptors.add(new ColumnFamilyDescriptor(
+                        RocksDB.DEFAULT_COLUMN_FAMILY, new ColumnFamilyOptions()));
+
+            } else {
+                final List<byte[]> columns = RocksDB.listColumnFamilies(options, dataPath);
+                if (columns != null) {
+                    for(byte[] column: columns) {
+                        descriptors.add(new ColumnFamilyDescriptor(
+                                        column, new ColumnFamilyOptions()));
+                    }
+                }
+
+            }
+
+            dbOptions = new DBOptions()
+                            .setCreateIfMissing(true);
+
+            db = RocksDB.open(dbOptions, dataPath, descriptors, collections);
+
         } catch (RocksDBException e) {
             throw new StorageException("Error initialising Storage", e);
         }
     }
 
+//    @Override
+//    public void createDatabase(final String name) throws StorageException {
+//        try {
+//            long init = System.currentTimeMillis();
+//            collections.clear();
+//            // TODO check how much time take to open this takes between 1-5 ms to read or create it
+//            db = RocksDB.open(dbOptions, dataPath + File.separator + name, descriptors, collections);
+//            long finished = System.currentTimeMillis() - init;
+//            logger.info(" creation time of the database :: " + finished);
+//        } catch (RocksDBException e) {
+//            throw new StorageException("Error initialising Storage", e);
+//        }
+//    }
+
     @Override
-    public void createDatabase(final String name) throws StorageException {
+    public void createCollection(final String databaseName, final String collectionName) throws StorageException {
         try {
-            long init = System.currentTimeMillis();
-            db = RocksDB.open(options, DATABASE_PATH + File.separator + name); // takes between 1-5 ms to read or create it
-            long finished = System.currentTimeMillis() - init;
-            logger.info(" creation time of the database :: " + finished);
+            final ColumnFamilyHandle column = db.createColumnFamily(new ColumnFamilyDescriptor(collectionName
+                    .getBytes()));
+
+            collections.add(column);
+
         } catch (RocksDBException e) {
-            throw new StorageException("Error initialising Storage", e);
+            throw new StorageException("Collection not created", e);
         }
     }
 
     @Override
-    public void useDatabase(String name) throws StorageException {
-
+    public CollectionInfo getCollectionInfo(final String name) {
+        return null;
     }
 
     @Override
-    public void createDatabase(byte[] database) {
-
+    public List<byte[]> getIndexes(final String collectionName) {
+        return null;
     }
 
     @Override
-    public void createCollection(String name) throws StorageException {
-        throw new StorageException("METHOD NOT IMPLEMENTED");
+    public void dropCollection(final String databaseName, final String collectionName) throws StorageException {
+        try {
+            final List<byte[]> l = RocksDB.listColumnFamilies(options, dataPath);
+            for (byte[] b : l) {
+                if (collectionName.getBytes() == b) {
+                    db.dropColumnFamily(null);
+                }
+            }
+//            final ColumnFamilyHandle column = new ColumnFamilyHandle(db, 0L);
+//            db.dropColumnFamily();
+        } catch (RocksDBException e) {
+            throw new StorageException("Not possible to delete collection", e);
+        }
     }
 
     @Override
-    public void persist(byte[] key, byte[] value) {
+    public void store(byte[] key, byte[] value) {
         try {
             db.put(key, value);
         } catch (RocksDBException e) {
-            logger.error("It is not possible to persist the data", e);
+            logger.error("It is not possible to store the data", e);
         }
     }
 
@@ -102,6 +161,7 @@ public class RocksDBEngine implements StorageEngine {
         return result;
     }
 
+    @Override
     public void delete(byte[] key) throws StorageException {
         try {
             db.remove(key);
@@ -117,26 +177,19 @@ public class RocksDBEngine implements StorageEngine {
         options.dispose();
     }
 
-
-
-    @Override
-    public byte[] databaseInfo() {
-        return new byte[0];
-    }
-
-    @Override
-    public void createCollection(byte[] collection) {
-
-    }
-
-    @Override
-    public void dropCollection() {
-
-    }
-
     @Override
     public List<byte[]> query(byte[] query) {
         return null;
+    }
+
+    @Override
+    public void update(byte[] key, byte[] value) {
+
+    }
+
+    @Override
+    public void update(byte[] query) {
+
     }
 
     @Override
@@ -145,15 +198,12 @@ public class RocksDBEngine implements StorageEngine {
     }
 
     @Override
-    public List<byte[]> getIndexes() {
-        return null;
-    }
-
-    @Override
-    public void getStatistics() throws StorageException {
+    public DatabaseInfo getDatabaseStats(final String name) throws StorageException {
         try {
             final String str = db.getProperty("rocksdb.stats");
             logger.debug(str);
+
+            return new DatabaseInfo();
         } catch (RocksDBException ex) {
             throw new StorageException("Error while trying to print RocksDB statistics");
         }

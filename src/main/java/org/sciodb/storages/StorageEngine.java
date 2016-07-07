@@ -1,6 +1,9 @@
 package org.sciodb.storages;
 
 import org.sciodb.exceptions.StorageException;
+import org.sciodb.storages.models.CollectionInfo;
+import org.sciodb.storages.models.DatabaseInfo;
+import org.sciodb.utils.StorageException;
 
 import java.util.List;
 
@@ -9,43 +12,40 @@ import java.util.List;
  */
 public interface StorageEngine {
 
+    // Storage methods
     void init() throws StorageException;
+
     void close();
 
-
-    void createDatabase(final String name) throws StorageException;
-    void useDatabase(final String name) throws StorageException;
     // Database functions
-    void createDatabase(final byte[] database);
-    byte[] databaseInfo();
+//     void createDatabase(final String name) throws StorageException;
+
+    DatabaseInfo getDatabaseStats(final String name) throws StorageException;
 
 
-    void createCollection(final String name) throws StorageException;
-    void createCollection(final byte[] collection);
-    void dropCollection();
+    // Collection functions
+    void createCollection(final String databaseName, final String collectionName) throws StorageException;
 
+    CollectionInfo getCollectionInfo(final String name);
 
-    void persist(final byte[] key, final byte[] value);
-    byte[] find(final byte[] query);
-    void delete(final byte[] query) throws StorageException;
+    List<byte[]> getIndexes(final String collectionName);
 
-
-//    void create();
-
+    void dropCollection(final String databaseName, final String name) throws StorageException;
 
 
     // data operations
-    /*void store();
-    void get();
-    void update();
-    void delete();*/
-    // is there any sense for particular operations?
+    void store(final byte[] key, final byte[] value);
 
+    byte[] find(final byte[] query);
 
     List<byte[]> query(final byte[] query);
-    List<byte[]> bulkOperation(final byte[] query);
-    List<byte[]> getIndexes();
 
-    void getStatistics() throws StorageException;
+    void update(final byte[] key, final byte[] value);
+
+    void update(final byte[] query);
+
+    List<byte[]> bulkOperation(final byte[] query);
+
+    void delete(final byte[] query) throws StorageException;
 
 }
