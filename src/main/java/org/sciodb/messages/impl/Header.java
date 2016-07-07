@@ -80,5 +80,5 @@ public class Header implements Message {
     public void setOperationId(int operationId) {
         this.operationId = operationId;
     }
-
+    
 }

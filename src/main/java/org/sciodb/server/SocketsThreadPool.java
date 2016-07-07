@@ -40,8 +40,8 @@ public class SocketsThreadPool {
         // TODO parse the message, decide between priority task or normal task and queue
 
         final MessageReader reader = new MessageReader(key);
-        final String msg = reader.getContent();
-        service.execute(() -> execute(reader, msg) );
+//        final String msg = reader.getContent();
+//        service.execute(() -> execute(reader, msg) );
 
 //        final NodeCommunicationReader r = new NodeCommunicationReader(key);
 //        final byte[] result = r.getMessage();

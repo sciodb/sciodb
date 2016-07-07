@@ -50,10 +50,6 @@ public class NodeMessage implements Message {
 
         header.decode(d.getByteArray());
         node.decode(d.getByteArray());
-//        final byte[] rest = ByteUtils.split(input, h.getLength(), input.length);
-
-//        final Node node = new Node();
-//        node.decode(rest);
-//        this.node = node;
     }
+
 }

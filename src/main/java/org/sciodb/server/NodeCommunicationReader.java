@@ -90,7 +90,11 @@ public class NodeCommunicationReader {
                 logger.debug("total : " + total + " - msgSize : " + msgSize);
             }
         }
-        return buffer.array();
+        if (total == msgSize) {
+            return buffer.array();
+        } else {
+            return new byte[0];
+        }
     }
 
     public void close() {

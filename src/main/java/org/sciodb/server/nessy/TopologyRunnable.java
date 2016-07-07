@@ -43,7 +43,7 @@ public class TopologyRunnable implements Runnable {
 
             logger.info("Starting node as [" + Roles.chunker.name() + "]");
             boolean execute = false;
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 100; i++) {
                 if (NodeOperations.addToRoot(me, root)) {
                     execute = true;
                     break;
