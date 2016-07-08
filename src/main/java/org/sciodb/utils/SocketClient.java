@@ -54,7 +54,7 @@ public class SocketClient {
         } finally {
             long end = System.currentTimeMillis() - init;
 
-            logger.info(" Connection [" + host + ":" + port + "] took " + end + "ms");
+            logger.debug(" Connection [" + host + ":" + port + "] took " + end + "ms");
         }
     }
 

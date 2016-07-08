@@ -4,13 +4,11 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.*;
+import java.util.Iterator;
 
 /**
  * @author jesus.navarrete  (30/05/16)
@@ -76,12 +74,7 @@ public abstract class AbstractSocket implements Runnable {
         final SocketChannel channel = serverChannel.accept();
         channel.configureBlocking(false);
 
-        final Socket socket = channel.socket();
-        final SocketAddress remoteAddr = socket.getRemoteSocketAddress();
-        logger.info("Connected to: " + remoteAddr);
 
-        // register channel with selector for further IO
-//        dataMapper.put(channel, new ArrayList());
         channel.register(selector, SelectionKey.OP_READ);
     }
 

@@ -37,7 +37,7 @@ public class TopologySocket extends AbstractSocket {
             if (node.getHeader().getOperationId() == Operations.ADD_SLAVE_NODE.getValue()) {
                 TopologyContainer.getInstance().addNode(node.getNode());
             } else if (node.getHeader().getOperationId() == Operations.CHECK_NODE_STATUS.getValue()) {
-                logger.info("Root OK - checked by" + node.getNode().url());
+                logger.info("Root OK - checked by " + node.getNode().url());
             }
         }
         reader.close();
