@@ -43,4 +43,47 @@ public class Configuration {
     public String getHost() {
         return properties.getProperty("database.host");
     }
+
+    public String getTempFolder() {
+        return properties.getProperty("temp.folder");
+    }
+
+
+    // Properties for Nessy Topology
+
+    public String getRoleNessyTopology() {
+        return properties.getProperty("topology.nessy.role");
+    }
+
+    public String getRootHostNessyTopology() {
+        return properties.getProperty("topology.nessy.root_host");
+    }
+
+    public int getRootPortNessyTopology() {
+        return Integer.valueOf(properties.getProperty("topology.nessy.root_port"));
+    }
+
+    public int getMasterCheckTimeNessyTopology() {
+        return Integer.valueOf(properties.getProperty("topology.nessy.master_check.time"));
+    }
+
+    public int getNodesCheckTimeNessyTopology() {
+        return Integer.valueOf(properties.getProperty("topology.nessy.nodes_check.time"));
+    }
+
+    public int getNodesPersistTimeNessyTopology() {
+        return Integer.valueOf(properties.getProperty("topology.nessy.nodes_persist.time"));
+    }
+
+
+    @Deprecated
+    public String getValue(final String property) {
+        return properties.getProperty(property);
+    }
+
+    @Deprecated
+    public int getInt(final String property) {
+        return Integer.valueOf(properties.getProperty(property));
+    }
+
 }

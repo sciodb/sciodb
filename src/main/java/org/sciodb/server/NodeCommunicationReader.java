@@ -11,11 +11,11 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 
 /**
- * @author jesus.navarrete  (07/04/16)
+ * @author jesus.navarrete  (30/05/16)
  */
-public class MessageReader {
+public class NodeCommunicationReader {
 
-    final static private Logger logger = Logger.getLogger(MessageReader.class);
+    final static private Logger logger = Logger.getLogger(NodeCommunicationReader.class);
 
     final static private int HEADER_SIZE = 4;
 
@@ -23,18 +23,20 @@ public class MessageReader {
 
     private boolean closeChannel;
 
-    public MessageReader(final SelectionKey key) {
+    public NodeCommunicationReader(final SelectionKey key) {
         this.key = key;
     }
 
-    public String getContent() {
-        String result = null;
+    public byte[] getMessage() {
+        byte[] result = null;
         try {
             final SocketChannel channel = (SocketChannel) key.channel();
-            final String size = readMessage(channel, HEADER_SIZE);
+            final byte[] size = readMessage(channel, HEADER_SIZE);
             int msgSize;
-            if (size != null && size.length() == 4) {
-                msgSize = Integer.valueOf(size);
+
+            if (size != null && size.length == 4) {
+                final String msg = new String(size);
+                msgSize = Integer.valueOf(msg);
 
                 if (msgSize == 0) {
                     key.cancel();
@@ -50,8 +52,9 @@ public class MessageReader {
         return result;
     }
 
-    private String readMessage(final SocketChannel channel, int msgSize) throws IOException {
-        final StringBuilder result = new StringBuilder();
+    private byte[] readMessage(final SocketChannel channel, int msgSize) throws IOException {
+        final ByteBuffer buffer = ByteBuffer.allocate(msgSize);
+
         int total = 0;
         boolean empty = false;
         if (msgSize > 0) {
@@ -61,8 +64,8 @@ public class MessageReader {
                 int currentSize = channel.read(messageBuffer);
 
                 if (currentSize == -1) {
-                    Socket socket = channel.socket();
-                    SocketAddress remoteAddr = socket.getRemoteSocketAddress();
+                    final Socket socket = channel.socket();
+                    final SocketAddress remoteAddr = socket.getRemoteSocketAddress();
                     logger.debug("Connection closed by client: " + remoteAddr);
                     channel.close();
                     key.cancel();
@@ -79,14 +82,19 @@ public class MessageReader {
                 if (str.length() < msgSize && str.length() != 0) {
                     logger.debug("Got: " + str);
                 }
-                result.append(str);
+
+                buffer.put(data);
 
             }
             if (!empty) {
                 logger.debug("total : " + total + " - msgSize : " + msgSize);
             }
         }
-        return result.toString();
+        if (total == msgSize) {
+            return buffer.array();
+        } else {
+            return new byte[0];
+        }
     }
 
     public void close() {

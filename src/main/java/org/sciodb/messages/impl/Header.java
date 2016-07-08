@@ -52,9 +52,9 @@ public class Header implements Message {
     public void decode(byte[] input) {
         final Decoder decoder = new Decoder(input);
         // Order it's really important
-        this.id = decoder.outString();
-        this.length = decoder.outInt();
-        this.operationId = decoder.outInt();
+        this.id = decoder.getString();
+        this.length = decoder.getInt();
+        this.operationId = decoder.getInt();
     }
 
     public int getLength() {
@@ -80,5 +80,5 @@ public class Header implements Message {
     public void setOperationId(int operationId) {
         this.operationId = operationId;
     }
-
+    
 }

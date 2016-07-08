@@ -3,7 +3,7 @@ package org.sciodb.storages.impl;
 import org.sciodb.storages.StorageEngine;
 import org.sciodb.storages.models.CollectionInfo;
 import org.sciodb.storages.models.DatabaseInfo;
-import org.sciodb.utils.StorageException;
+import org.sciodb.exceptions.StorageException;
 
 import java.util.List;
 

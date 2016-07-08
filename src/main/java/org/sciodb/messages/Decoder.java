@@ -1,5 +1,7 @@
 package org.sciodb.messages;
 
+import org.sciodb.utils.ByteUtils;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -15,26 +17,26 @@ public class Decoder {
         position = 0;
     }
 
-    public int outInt() {
+    public int getInt() {
         final int result = container.getInt(position);
-        position += 4;
+        position += Encoder.INT_BYTES;
         container.position(position);
 
         return result;
     }
 
-    public long outLong() {
+    public long getLong() {
         final long result = container.getLong(position);
-        position += 8;
+        position += Encoder.LONG_BYTES;
         container.position(position);
 
         return result;
     }
 
-    public String outString() {
-        final int size = outInt();
+    public String getString() {
+        final int size = getInt();
 
-        final byte[] data = new byte[size];
+        final byte[] data = ByteUtils.newArray(size);
         container.get(data);
 
         final String result = new String(data);
@@ -42,5 +44,23 @@ public class Decoder {
         container.position(position);
 
         return result;
+    }
+
+    public byte getByte() {
+        position += 1;
+        container.position(position);
+
+        return container.get();
+    }
+
+    public byte[] getByteArray() {
+        int length = this.getInt();
+        byte[] dst = ByteUtils.newArray(length);
+        container.get(dst);
+
+        position += length;
+        container.position(position);
+
+        return dst;
     }
 }

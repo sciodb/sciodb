@@ -12,10 +12,9 @@ public class StatusOperation implements Operations {
 
     @Override
     public byte[] operation(final Command command) {
-        logger.info("Status Sevice - executed !!!");
-        logger.info("status - " + command.getOperationID());
+        logger.debug("Status Sevice - executed ! - " + command.getOperationID());
 
-        return "hello world".getBytes();
+        return "status operation executed!".getBytes();
     }
 
 }

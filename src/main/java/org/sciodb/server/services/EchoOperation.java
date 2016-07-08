@@ -1,5 +1,6 @@
 package org.sciodb.server.services;
 
+import org.sciodb.messages.impl.EchoMessage;
 import org.sciodb.utils.models.Command;
 import org.sciodb.utils.models.EchoCommand;
 
@@ -16,10 +17,12 @@ public class EchoOperation implements Operations {
 
         echo.setMessageID(command.getMessageID() + "-result");
         echo.setOperationID(command.getOperationID());
-        echo.setMessage(result.getBytes());
+        echo.setMessage(command.getMessage());
 
-        return null;
+        final EchoMessage msg = new EchoMessage();
 
+        msg.setMsg("");
+        return msg.encode();
     }
 
 }

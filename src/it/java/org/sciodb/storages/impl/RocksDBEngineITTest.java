@@ -3,17 +3,12 @@ package org.sciodb.storages.impl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.rocksdb.RocksDB;
+import org.sciodb.exceptions.StorageException;
 import org.sciodb.storages.StorageEngine;
-import org.sciodb.storages.models.DatabaseInfo;
-import org.sciodb.utils.StorageException;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author jenaiz on 26/05/16.

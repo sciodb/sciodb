@@ -18,7 +18,7 @@ public class DecoderTest {
         final ByteBuffer bb = ByteBuffer.allocate(4).putInt(i);
 
         final Decoder d = new Decoder(bb.array());
-        assertEquals(i, d.outInt());
+        assertEquals(i, d.getInt());
     }
 
     @Test
@@ -27,7 +27,7 @@ public class DecoderTest {
         final ByteBuffer bb = ByteBuffer.allocate(8).putLong(l);
 
         final Decoder d = new Decoder(bb.array());
-        assertEquals(l, d.outLong());
+        assertEquals(l, d.getLong());
     }
 
     @Test
@@ -40,7 +40,10 @@ public class DecoderTest {
                 .put(str.getBytes());
 
         final Decoder d = new Decoder(bb.array());
-        assertEquals(str, d.outString());
+        assertEquals(str, d.getString());
     }
+
+    @Test
+    public void outByte() {}
 
 }

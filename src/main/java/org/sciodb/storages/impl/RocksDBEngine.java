@@ -3,9 +3,10 @@ package org.sciodb.storages.impl;
 import org.apache.log4j.Logger;
 import org.rocksdb.*;
 import org.sciodb.storages.StorageEngine;
+import org.sciodb.exceptions.StorageException;
 import org.sciodb.storages.models.CollectionInfo;
 import org.sciodb.storages.models.DatabaseInfo;
-import org.sciodb.utils.StorageException;
+import org.sciodb.exceptions.StorageException;
 
 import java.io.File;
 import java.util.ArrayList;
