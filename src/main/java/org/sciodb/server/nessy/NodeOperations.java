@@ -38,7 +38,7 @@ public class NodeOperations {
             logger.info("Node added to Root!");
             result = true;
         } catch (CommunicationException e) {
-           logger.error("Error connecting with the node " + me.url(), e);
+           logger.error("Add to Root failing because: " + e.getLocalizedMessage());
         }
         return result;
     }
@@ -62,7 +62,7 @@ public class NodeOperations {
             logger.info("Root status ok!");
             result = true;
         } catch (CommunicationException e) {
-            logger.error(" Error communicating with root - ", e);
+            logger.error(" Error communicating with root - " + e.getMessage());
         }
 
         return result;
