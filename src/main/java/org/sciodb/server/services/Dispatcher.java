@@ -1,35 +1,38 @@
 package org.sciodb.server.services;
 
-import org.sciodb.utils.models.Command;
+import org.sciodb.messages.Operations;
+import org.sciodb.messages.impl.ContainerMessage;
 
 /**
  * @author jesus.navarrete  (29/02/16)
  */
 public class Dispatcher {
 
-    private StatusOperation statusOperation;
+    private StatusCommand statusCommand;
 
-    private EchoOperation echoOperation;
+    private EchoCommand echoCommand;
 
     public Dispatcher() {
-        this.statusOperation = new StatusOperation();
+        this.echoCommand = new EchoCommand();
+        this.statusCommand = new StatusCommand();
     }
 
-    public byte[] getService(final Command input) {
-        final Operations s;
+    public byte[] getService(final ContainerMessage message) {
+        final Command s;
 
-        switch (input.getOperationID()) {
-            case "status":
-                s = statusOperation;
+        final Operations op = Operations.values()[message.getHeader().getOperationId()];
+        switch (op) {
+            case ECHO:
+                s = echoCommand;
                 break;
-            case "echo":
-                s = echoOperation;
+            case STATUS:
+                s = statusCommand;
                 break;
             default:
                 throw new RuntimeException("Operation not allowed !!");
         }
 
-        return s.operation(input);
+        return s.operation(message.getContent());
 
     }
 

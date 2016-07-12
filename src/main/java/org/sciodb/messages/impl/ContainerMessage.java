@@ -3,40 +3,41 @@ package org.sciodb.messages.impl;
 import org.sciodb.messages.Decoder;
 import org.sciodb.messages.Encoder;
 import org.sciodb.messages.Message;
-import org.sciodb.messages.Operations;
 
 /**
- * @author jenaiz on 23/04/16.
+ * @author jesus.navarrete  (27/06/16)
  */
-public class EchoMessage implements Message {
+public class ContainerMessage implements Message {
 
     private Header header;
 
-    private String msg;
+    private byte[] content;
 
-    public EchoMessage() {
+    public ContainerMessage() {
         header = new Header();
-        header.setOperationId(Operations.ECHO.getValue());
     }
 
     public Header getHeader() {
         return header;
     }
 
-    public String getMsg() {
-        return msg;
+    public void setHeader(Header header) {
+        this.header = header;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public byte[] getContent() {
+        return content;
+    }
+
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 
     @Override
     public byte[] encode() {
         final Encoder encoder = new Encoder();
-
         encoder.in(header.encode());
-        encoder.in(msg);
+        encoder.in(content);
 
         return encoder.container();
     }
@@ -46,7 +47,6 @@ public class EchoMessage implements Message {
         final Decoder d = new Decoder(input);
 
         header.decode(d.getByteArray());
-        msg = new String(d.getByteArray());
+        content = d.getByteArray();
     }
-
 }

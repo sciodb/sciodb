@@ -4,8 +4,6 @@ import org.apache.log4j.Logger;
 import org.sciodb.utils.ByteUtils;
 
 import java.io.IOException;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
@@ -64,9 +62,6 @@ public class NodeCommunicationReader {
                 int currentSize = channel.read(messageBuffer);
 
                 if (currentSize == -1) {
-                    final Socket socket = channel.socket();
-                    final SocketAddress remoteAddr = socket.getRemoteSocketAddress();
-//                    logger.debug("Connection closed by client: " + remoteAddr);
                     channel.close();
                     key.cancel();
                     empty = true;

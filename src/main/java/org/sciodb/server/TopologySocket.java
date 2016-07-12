@@ -12,17 +12,15 @@ import java.nio.channels.SelectionKey;
 /**
  * @author jesus.navarrete  (30/05/16)
  */
+@Deprecated
 public class TopologySocket extends AbstractSocket {
 
     private final static Logger logger = Logger.getLogger(NodeOperations.class);
-
-    private OneMasterTopology oneMaster;
 
     public TopologySocket(final String address, final int port, final String type) throws IOException {
         super(address, port);
         logger.info("Starting Topology :: " + type);
 
-        oneMaster = new OneMasterTopology();
     }
 
     @Override
@@ -37,7 +35,8 @@ public class TopologySocket extends AbstractSocket {
             if (node.getHeader().getOperationId() == Operations.ADD_SLAVE_NODE.getValue()) {
                 TopologyContainer.getInstance().addNode(node.getNode());
             } else if (node.getHeader().getOperationId() == Operations.CHECK_NODE_STATUS.getValue()) {
-                logger.info("Root OK - checked by " + node.getNode().url());
+//                logger.info("Root OK - checked by " + node.getNode().url());
+                // TODO send back information of the other nodes
             }
         }
         reader.close();

@@ -27,11 +27,9 @@ public class SocketClient {
         long init = System.currentTimeMillis();
 
         try (SocketChannel client = SocketChannel.open(hostAddress)) {
-            final String headerSize = String.format("%04d", input.length);
-            final ByteBuffer header = ByteBuffer.wrap(headerSize.getBytes());
             final ByteBuffer buffer = ByteBuffer.wrap(input);
 
-            client.write(header);
+            client.write(messageLength(input.length));
             client.write(buffer);
 
             buffer.clear();
@@ -56,6 +54,13 @@ public class SocketClient {
 
             logger.debug(" Connection [" + host + ":" + port + "] took " + end + "ms");
         }
+    }
+
+    public static ByteBuffer messageLength(final int length) {
+        final String headerSize = String.format("%04d", length);
+        final ByteBuffer header = ByteBuffer.wrap(headerSize.getBytes());
+
+        return header;
     }
 
 }

@@ -3,14 +3,12 @@ package org.sciodb;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.server.TopologySocket;
-import org.sciodb.server.nessy.NodeMapper;
+import org.sciodb.server.ServerSocket;
 import org.sciodb.server.nessy.TopologyRunnable;
 import org.sciodb.utils.Configuration;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 
 
 /**
@@ -28,9 +26,7 @@ public class ScioDB {
 
     private final static Logger logger = Logger.getLogger(ScioDB.class);
 
-    private String host;
     private int port;
-    private int topologyPort;
 
     public static void main(String[] args) {
 
@@ -63,38 +59,40 @@ public class ScioDB {
             } else {
                 final String p = cmd.getOptionValue("p");
                 port = p != null? Integer.valueOf(p) : Configuration.getInstance().getPort();
-//                topologyPort = port + 1; TODO remove??
-                // properties without option in the command line yet
-                host = Configuration.getInstance().getHost();
-
 
                 // TODO temporal reading for testing: decide where, when and how to do it !
                 final String confFile = cmd.getOptionValue("c");
 
-                final InputStream stream = ScioDB.class.getClassLoader().getResourceAsStream(confFile);
-
-                final Scanner s = new Scanner(stream).useDelimiter("\\A");
-                final String text = s.hasNext() ? s.next() : "";
-                final Node node = NodeMapper.toNode(text);
-                topologyPort = node.getPort();
+//                if (confFile != null && !"".equals(confFile)) {
+//
+//                    final InputStream stream = ScioDB.class.getClassLoader().getResourceAsStream(confFile);
+//
+//                    final Scanner s = new Scanner(stream).useDelimiter("\\A");
+//                    final String text = s.hasNext() ? s.next() : "";
+//                    node = NodeMapper.toNode(text);
+//                }
+                final Node node = new Node();
+                try {
+                    node.setHost(Inet4Address.getLocalHost().getHostAddress());
+//                    System.out.println(Inet4Address.getLocalHost().getHostName());
+                } catch (UnknownHostException e) {
+                    node.setHost(Configuration.getInstance().getHost()); // TODO by default, should we use this IP?
+                }
+                node.setPort(port);
 
                 starting(node);
             }
 
         } catch (ParseException e) {
             logger.error("Error parsing command line options", e);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
     public void starting(final Node node) {
-        logger.info(host + " - " + port);
+        logger.info(node.getHost() + " - " + node.getPort());
         try {
 
-//            new Thread(new ServerSocket(host, port)).start();
-            new Thread(new TopologySocket(host, topologyPort, "type")).start();
-//            new Thread(new TopologyRunnable(new Node(host, topologyPort))).start();
+            new Thread(new ServerSocket(node.getHost(), node.getPort())).start();
             new Thread(new TopologyRunnable(node)).start();
 
         } catch (Exception e) {
