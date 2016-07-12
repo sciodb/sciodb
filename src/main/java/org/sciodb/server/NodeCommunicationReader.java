@@ -32,7 +32,7 @@ public class NodeCommunicationReader {
             final byte[] size = readMessage(channel, HEADER_SIZE);
             int msgSize;
 
-            if (size != null && size.length == 4) {
+            if (size != null && size.length == HEADER_SIZE) {
                 final String msg = new String(size);
                 msgSize = Integer.valueOf(msg);
 
