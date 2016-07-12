@@ -3,7 +3,6 @@ package org.sciodb.server;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
-import org.sciodb.messages.impl.Header;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.messages.impl.NodeListMessage;
 import org.sciodb.server.nessy.TopologyContainer;
@@ -44,12 +43,6 @@ public class SocketsThreadPool {
 
     public void run(final SelectionKey key) {
 
-//        final MessageReader reader = new MessageReader(key);
-//        final String msg = reader.getContent();
-
-//        service.execute(() -> execute(reader, msg));
-
-        // new implementation
         final NodeCommunicationReader reader = new NodeCommunicationReader(key);
         byte[] result = reader.getMessage();
 
@@ -64,16 +57,16 @@ public class SocketsThreadPool {
             } else if (message.getHeader().getOperationId() == Operations.CHECK_NODE_STATUS.getValue()) {
                 // TODO response with all the nodes in the local network
                 final List<Node> nodes = TopologyContainer.getInstance().getNodes();
+
                 final NodeListMessage msg = new NodeListMessage();
-
-                final Header h = new Header();
-                h.setId(UUID.randomUUID().toString());
-                h.setOperationId(Operations.CHECK_NODE_STATUS.getValue());
-
-                msg.setHeader(h);
                 msg.setNodes(nodes);
 
-//                sendResponse(reader, msg.encode());
+                final ContainerMessage container = new ContainerMessage();
+                container.getHeader().setId(UUID.randomUUID().toString());
+                container.getHeader().setOperationId(Operations.CHECK_NODE_STATUS.getValue());
+                container.setContent(msg.encode());
+
+//                sendResponse(reader, container.encode());
             } else if (message.getHeader().getOperationId() == Operations.ECHO.getValue()) {
 
                 service.execute(() -> execute(reader, message));

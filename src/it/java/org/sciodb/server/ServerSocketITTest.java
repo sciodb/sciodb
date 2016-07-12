@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.sciodb.messages.Operations;
+import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.EchoMessage;
 
 import java.io.IOException;
@@ -107,12 +108,14 @@ public class ServerSocketITTest {
 
     private static byte[] createMessage(final String name) {
         final EchoMessage echo = new EchoMessage();
+        echo.setMsg("test message - " + name);
 
-        echo.getHeader().setId(UUID.randomUUID().toString());
-        echo.getHeader().setOperationId(Operations.ECHO.getValue());
+        final ContainerMessage container = new ContainerMessage();
+        container.getHeader().setId(UUID.randomUUID().toString());
+        container.getHeader().setOperationId(Operations.ECHO.getValue());
 
-        echo.setMsg("test message " + name);
+        container.setContent(echo.encode());
 
-        return echo.encode();
+        return container.encode();
     }
 }

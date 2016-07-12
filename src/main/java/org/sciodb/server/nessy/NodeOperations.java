@@ -3,7 +3,7 @@ package org.sciodb.server.nessy;
 import org.apache.log4j.Logger;
 import org.sciodb.exceptions.CommunicationException;
 import org.sciodb.messages.Operations;
-import org.sciodb.messages.impl.Header;
+import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.messages.impl.NodeMessage;
 import org.sciodb.utils.Configuration;
@@ -22,18 +22,18 @@ public class NodeOperations {
         boolean result = false;
         try {
             final NodeMessage message = new NodeMessage();
-
-            final Header header = new Header();
-            header.setLength(0);
-            header.setOperationId(Operations.ADD_SLAVE_NODE.getValue());
-            header.setId(UUID.randomUUID().toString());
-
-            message.setHeader(header);
             message.setNode(me);
+
+            final ContainerMessage container = new ContainerMessage();
+            container.getHeader().setLength(0);
+            container.getHeader().setOperationId(Operations.ADD_SLAVE_NODE.getValue());
+            container.getHeader().setId(UUID.randomUUID().toString());
+
+            container.setContent(message.encode());
 
             SocketClient.sendToSocket(root.getHost(),
                     root.getPort(),
-                    message,
+                    container,
                     false);
             logger.info("Node added to Root!");
             result = true;
@@ -47,17 +47,17 @@ public class NodeOperations {
         boolean result = false;
         try {
             final NodeMessage message = new NodeMessage();
-
-            final Header header = new Header();
-            header.setOperationId(Operations.CHECK_NODE_STATUS.getValue());
-            header.setId(UUID.randomUUID().toString());
-
-            message.setHeader(header);
             message.setNode(root);
+
+            final ContainerMessage container = new ContainerMessage();
+            container.getHeader().setOperationId(Operations.CHECK_NODE_STATUS.getValue());
+            container.getHeader().setId(UUID.randomUUID().toString());
+
+            container.setContent(message.encode());
 
             SocketClient.sendToSocket(Configuration.getInstance().getRootHostNessyTopology(),
                     Configuration.getInstance().getRootPortNessyTopology(),
-                    message,
+                    container,
                     false);
             logger.info("Root status ok!");
             result = true;
@@ -70,16 +70,16 @@ public class NodeOperations {
 
     public static boolean isAlife(final Node node) {
         final NodeMessage message = new NodeMessage();
-
-        final Header header = new Header();
-        header.setOperationId(Operations.CHECK_NODE_STATUS.getValue());
-        header.setId(UUID.randomUUID().toString());
-
-        message.setHeader(header);
         message.setNode(node);
 
+        final ContainerMessage container = new ContainerMessage();
+        container.getHeader().setOperationId(Operations.CHECK_NODE_STATUS.getValue());
+        container.getHeader().setId(UUID.randomUUID().toString());
+
+        container.setContent(container.encode());
+
         try {
-            SocketClient.sendToSocket(node.getHost(), node.getPort(), message, false);
+            SocketClient.sendToSocket(node.getHost(), node.getPort(), container, false);
             return true;
         } catch (CommunicationException e) {
             return false;

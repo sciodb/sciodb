@@ -13,14 +13,6 @@ public class NodeMessageTest {
     public void encode() throws Exception {
         final NodeMessage nm = new NodeMessage();
 
-        final Header h = new Header();
-        h.setId("id");
-        h.setLength(0);
-        h.setOperationId(31);
-        nm.setHeader(h);
-
-        assertEquals(14, h.encode().length);
-
         final Node node = new Node();
         node.setHost("host");
         node.setPort(200);
@@ -32,16 +24,13 @@ public class NodeMessageTest {
         final NodeMessage result = new NodeMessage();
 
         byte[] b = nm.encode();
-        assertEquals(42, b.length);
+        assertEquals(24, b.length);
 
         result.decode(b);
 
         assertEquals(node.getHost(), result.getNode().getHost());
         assertEquals(node.getRole(), result.getNode().getRole());
         assertEquals(node.getPort(), result.getNode().getPort());
-
-        assertEquals(h.getId(), result.getHeader().getId());
-        assertEquals(h.getOperationId(), result.getHeader().getOperationId());
     }
 
     @Test
