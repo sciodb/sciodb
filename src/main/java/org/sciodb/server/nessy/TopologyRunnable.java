@@ -3,11 +3,7 @@ package org.sciodb.server.nessy;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.utils.Configuration;
-import org.sciodb.utils.FileUtils;
 import org.sciodb.utils.ServerException;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * @author jesus.navarrete  (24/09/14)
@@ -22,78 +18,77 @@ public class TopologyRunnable implements Runnable {
 
     private Node me;
 
-    private static long lastUpdate;
+    private TopologyContainer container;
 
-    public TopologyRunnable(final Node node) throws ServerException {
+    public TopologyRunnable(final Node node, final String[] seeds) throws ServerException {
         waitingTime = Configuration.getInstance().getNodesCheckTimeNessyTopology();
         persistTime = Configuration.getInstance().getNodesPersistTimeNessyTopology();
 
         masterCheckingTime = Configuration.getInstance().getMasterCheckTimeNessyTopology();
 
         me = node;
+        parseSeeds(seeds);
+        container = TopologyContainer.getInstance();
+
     }
 
     @Override
     public void run() {
 
-        if (Roles.chunker.name().equals(me.getRole())) {
+        logger.info("Starting node [" + me.url() + "]");
 
-            final Node root = new Node(Configuration.getInstance().getRootHostNessyTopology(),
-                    Configuration.getInstance().getRootPortNessyTopology(), Roles.root.name());
+        while (true) {
 
-            logger.info("Starting node as [" + Roles.chunker.name() + "]");
-            boolean execute = false;
-            for (int i = 0; i < 3; i++) {
-                if (NodeOperations.addToRoot(me, root)) {
-                    execute = true;
-                    break;
-                }
-                try {
-                    logger.info(String.format("Connecting with Root, try %d", i));
-                    Thread.sleep(masterCheckingTime);
-                } catch (InterruptedException ie) { /*not important*/ }
-            }
-            if (!execute) throw new RuntimeException("Imposible to communicate with root"); // TODO stop the world !!!!!
+            container.checkNodes(me);
 
-            while (execute) {
-                NodeOperations.checkRoot(root);
-                try {
-                    Thread.sleep(masterCheckingTime);
-                } catch (InterruptedException ie) { /*not important*/ }
-            }
-        } else if (Roles.root.name().equals(me.getRole())) {
-            final String fileName = Configuration.getInstance().getTempFolder() + FileUtils.OUTPUT_FILE;
+        }
 
-            lastUpdate = System.currentTimeMillis();
-            final TopologyContainer t = TopologyContainer.getInstance();
 
-            try {
-                final String previousInfo = FileUtils.read(fileName, FileUtils.ENCODING);
-                if (previousInfo != null && !"".equals(previousInfo)) {
-                    final List<Node> previousNodes = NodeMapper.fromString(previousInfo);
+//            final String fileName = Configuration.getInstance().getTempFolder() + FileUtils.OUTPUT_FILE;
+//
+//            lastUpdate = System.currentTimeMillis();
+//            final TopologyContainer t = TopologyContainer.getInstance();
+//
+//            try {
+//                final String previousInfo = FileUtils.read(fileName, FileUtils.ENCODING);
+//                if (previousInfo != null && !"".equals(previousInfo)) {
+//                    final List<Node> previousNodes = NodeMapper.fromString(previousInfo);
+//
+//                    for (final Node node : previousNodes) {
+//                        t.addNode(node);
+//                    }
+//                }
+//
+//            } catch (IOException e) {
+//                logger.error("Error reading the file", e);
+//            }
+//
+    }
 
-                    for (final Node node : previousNodes) {
-                        t.addNode(node);
-                    }
-                }
-
-            } catch (IOException e) {
-                logger.error("Error reading the file", e);
-            }
-
-            logger.info("Starting node as [" + Roles.root.name() + "]");
-            while (true) {
-                t.checkNodes();
-
-                if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
-                    FileUtils.persistNodes(t);
-                }
-
-                try {
-                    Thread.sleep(waitingTime);
-                } catch (InterruptedException e) { /* not important */ }
+    private void parseSeeds(final String[] seeds) {
+        for (final String s : seeds) {
+            final String[] parts = s.split(":");
+            if (parts.length == 2 && isInteger(parts[1])) {
+                final Node node = new Node(parts[0], new Integer(parts[1].trim()));
+                TopologyContainer.getInstance().addNode(node);
             }
         }
+    }
+
+
+    public static boolean isInteger(final String str) {
+        return str != null && str.trim().matches("-?\\d+");  //match a number with optional '-' and decimal.
+    }
+
+    public static void main(String[] args) {
+        System.out.println(isInteger("he12") == false);
+        System.out.println(isInteger("   1") == true);
+        System.out.println(isInteger("12") == true);
+        System.out.println(isInteger("12mmm") == false);
+        System.out.println(isInteger("1.2") == false);
+        System.out.println(isInteger("1 2") == false);
+        System.out.println(isInteger("") == false);
+        System.out.println(isInteger(null) == false);
     }
 
 }

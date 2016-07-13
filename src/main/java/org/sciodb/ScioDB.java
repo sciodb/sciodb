@@ -44,6 +44,7 @@ public class ScioDB {
         options.addOption("h", "help", false, "help, show this message");
         options.addOption("v", "version", false, "current version of the software");
         options.addOption("p", "port", true, "port for the database");
+        options.addOption("s", "seeds", true, "seeds nodes to connect"); // idea from cassandra !!
         options.addOption("c", "conf", true, "configuration by file");
 
         try {
@@ -80,7 +81,15 @@ public class ScioDB {
                 }
                 node.setPort(port);
 
-                starting(node);
+                final String s = cmd.getOptionValue("s");
+
+                String[] seeds;
+                if (s != null) {
+                    seeds = s.split(",");
+                } else {
+                    seeds = new String[0];
+                }
+                starting(node, seeds);
             }
 
         } catch (ParseException e) {
@@ -88,12 +97,12 @@ public class ScioDB {
         }
     }
 
-    public void starting(final Node node) {
+    public void starting(final Node node, final String[] seeds) {
         logger.info(node.getHost() + " - " + node.getPort());
         try {
 
             new Thread(new ServerSocket(node.getHost(), node.getPort())).start();
-            new Thread(new TopologyRunnable(node)).start();
+            new Thread(new TopologyRunnable(node, seeds)).start();
 
         } catch (Exception e) {
             logger.error("Impossible to start the database", e);

@@ -16,20 +16,18 @@ public class NodeMessageTest {
         final Node node = new Node();
         node.setHost("host");
         node.setPort(200);
-        node.setRole("role");
         nm.setNode(node);
 
-        assertEquals(20, node.encode().length);
+        assertEquals(16, node.encode().length);
 
         final NodeMessage result = new NodeMessage();
 
         byte[] b = nm.encode();
-        assertEquals(24, b.length);
+        assertEquals(20, b.length);
 
         result.decode(b);
 
         assertEquals(node.getHost(), result.getNode().getHost());
-        assertEquals(node.getRole(), result.getNode().getRole());
         assertEquals(node.getPort(), result.getNode().getPort());
     }
 

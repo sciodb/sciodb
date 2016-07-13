@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.StandardSocketOptions;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -80,6 +81,9 @@ public class ServerSocket implements Runnable {
     private void accept(final SelectionKey key) throws IOException {
         final ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
         final SocketChannel channel = serverChannel.accept();
+
+        channel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
+
         channel.configureBlocking(false);
 
         final Socket socket = channel.socket();

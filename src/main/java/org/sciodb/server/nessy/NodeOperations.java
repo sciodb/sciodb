@@ -6,7 +6,6 @@ import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.messages.impl.NodeMessage;
-import org.sciodb.utils.Configuration;
 import org.sciodb.utils.SocketClient;
 
 import java.util.UUID;
@@ -26,7 +25,7 @@ public class NodeOperations {
 
             final ContainerMessage container = new ContainerMessage();
             container.getHeader().setLength(0);
-            container.getHeader().setOperationId(Operations.ADD_SLAVE_NODE.getValue());
+            container.getHeader().setOperationId(Operations.DISCOVERY_PEERS.getValue());
             container.getHeader().setId(UUID.randomUUID().toString());
 
             container.setContent(message.encode());
@@ -43,40 +42,40 @@ public class NodeOperations {
         return result;
     }
 
-    public static boolean checkRoot(final Node root) {
-        boolean result = false;
-        try {
-            final NodeMessage message = new NodeMessage();
-            message.setNode(root);
+//    public static boolean checkRoot(final Node root) {
+//        boolean result = false;
+//        try {
+//            final NodeMessage message = new NodeMessage();
+//            message.setNode(root);
+//
+//            final ContainerMessage container = new ContainerMessage();
+//            container.getHeader().setOperationId(Operations.CHECK_NODE_STATUS.getValue());
+//            container.getHeader().setId(UUID.randomUUID().toString());
+//
+//            container.setContent(message.encode());
+//
+//            SocketClient.sendToSocket(Configuration.getInstance().getRootHostNessyTopology(),
+//                    Configuration.getInstance().getRootPortNessyTopology(),
+//                    container,
+//                    false);
+//            logger.info("Root status ok!");
+//            result = true;
+//        } catch (CommunicationException e) {
+//            logger.error(" Error communicating with root - " + e.getMessage());
+//        }
+//
+//        return result;
+//    }
 
-            final ContainerMessage container = new ContainerMessage();
-            container.getHeader().setOperationId(Operations.CHECK_NODE_STATUS.getValue());
-            container.getHeader().setId(UUID.randomUUID().toString());
-
-            container.setContent(message.encode());
-
-            SocketClient.sendToSocket(Configuration.getInstance().getRootHostNessyTopology(),
-                    Configuration.getInstance().getRootPortNessyTopology(),
-                    container,
-                    false);
-            logger.info("Root status ok!");
-            result = true;
-        } catch (CommunicationException e) {
-            logger.error(" Error communicating with root - " + e.getMessage());
-        }
-
-        return result;
-    }
-
-    public static boolean isAlife(final Node node) {
+    public static boolean isAlife(final Node me, final Node node) {
         final NodeMessage message = new NodeMessage();
-        message.setNode(node);
+        message.setNode(me);
 
         final ContainerMessage container = new ContainerMessage();
-        container.getHeader().setOperationId(Operations.CHECK_NODE_STATUS.getValue());
+        container.getHeader().setOperationId(Operations.DISCOVERY_PEERS.getValue());
         container.getHeader().setId(UUID.randomUUID().toString());
 
-        container.setContent(container.encode());
+        container.setContent(message.encode());
 
         try {
             SocketClient.sendToSocket(node.getHost(), node.getPort(), container, false);

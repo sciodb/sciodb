@@ -3,8 +3,7 @@ package org.sciodb.server;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
-import org.sciodb.messages.impl.Node;
-import org.sciodb.messages.impl.NodeListMessage;
+import org.sciodb.messages.impl.NodeMessage;
 import org.sciodb.server.nessy.TopologyContainer;
 import org.sciodb.server.services.Dispatcher;
 import org.sciodb.utils.SocketClient;
@@ -13,8 +12,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -50,22 +47,23 @@ public class SocketsThreadPool {
             final ContainerMessage message = new ContainerMessage();
             message.decode(result);
 
-            if (message.getHeader().getOperationId() == Operations.ADD_SLAVE_NODE.getValue()) {
-                final Node node = new Node();
-                node.decode(message.getContent());
-                TopologyContainer.getInstance().addNode(node);
-            } else if (message.getHeader().getOperationId() == Operations.CHECK_NODE_STATUS.getValue()) {
-                // TODO response with all the nodes in the local network
-                final List<Node> nodes = TopologyContainer.getInstance().getNodes();
+            if (message.getHeader().getOperationId() == Operations.DISCOVERY_PEERS.getValue()) {
+                final NodeMessage nodeMessage = new NodeMessage();
+                nodeMessage.decode(message.getContent());
+                TopologyContainer.getInstance().addNode(nodeMessage.getNode());
 
-                final NodeListMessage msg = new NodeListMessage();
-                msg.setNodes(nodes);
-
-                final ContainerMessage container = new ContainerMessage();
-                container.getHeader().setId(UUID.randomUUID().toString());
-                container.getHeader().setOperationId(Operations.CHECK_NODE_STATUS.getValue());
-                container.setContent(msg.encode());
-
+//            } else if (message.getHeader().getOperationId() == Operations.CHECK_NODE_STATUS.getValue()) {
+//                // TODO response with all the nodes in the local network
+//                final List<Node> nodes = TopologyContainer.getInstance().getNodes();
+//
+//                final NodeListMessage msg = new NodeListMessage();
+//                msg.setNodes(nodes);
+//
+//                final ContainerMessage container = new ContainerMessage();
+//                container.getHeader().setId(UUID.randomUUID().toString());
+//                container.getHeader().setOperationId(Operations.CHECK_NODE_STATUS.getValue());
+//                container.setContent(msg.encode());
+//
 //                sendResponse(reader, container.encode());
             } else if (message.getHeader().getOperationId() == Operations.ECHO.getValue()) {
 

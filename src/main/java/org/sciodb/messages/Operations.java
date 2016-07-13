@@ -5,9 +5,9 @@ package org.sciodb.messages;
  */
 public enum Operations {
     ECHO(1), STATUS(2),
-    MASTER_SLAVE_TOPOLOGY(20), MASTER_SLAVE_TOPOLOGY_STATUS(21),
-    CHECK_NODE_STATUS(30), ADD_SLAVE_NODE(31)
-    ;
+//    MASTER_SLAVE_TOPOLOGY(20), MASTER_SLAVE_TOPOLOGY_STATUS(21),
+//    CHECK_NODE_STATUS(30),
+    DISCOVERY_PEERS(31);
 
     private final int value;
 
@@ -19,6 +19,4 @@ public enum Operations {
         return value;
     }
 
-    public class STATUS {
-    }
 }
