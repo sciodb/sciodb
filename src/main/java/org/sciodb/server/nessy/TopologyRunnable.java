@@ -3,7 +3,11 @@ package org.sciodb.server.nessy;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.utils.Configuration;
+import org.sciodb.utils.FileUtils;
 import org.sciodb.utils.ServerException;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author jesus.navarrete  (24/09/14)
@@ -37,32 +41,35 @@ public class TopologyRunnable implements Runnable {
 
         logger.info("Starting node [" + me.url() + "]");
 
-        while (true) {
+        parseHistoricalNodes();
+        long lastUpdate = System.currentTimeMillis();
 
+        while (true) {
             container.checkNodes(me);
 
+            if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
+                FileUtils.persistNodes(container);
+                lastUpdate = System.currentTimeMillis();
+            }
         }
+    }
 
+    private void parseHistoricalNodes() {
+        final String fileName = Configuration.getInstance().getTempFolder() + FileUtils.OUTPUT_FILE;
 
-//            final String fileName = Configuration.getInstance().getTempFolder() + FileUtils.OUTPUT_FILE;
-//
-//            lastUpdate = System.currentTimeMillis();
-//            final TopologyContainer t = TopologyContainer.getInstance();
-//
-//            try {
-//                final String previousInfo = FileUtils.read(fileName, FileUtils.ENCODING);
-//                if (previousInfo != null && !"".equals(previousInfo)) {
-//                    final List<Node> previousNodes = NodeMapper.fromString(previousInfo);
-//
-//                    for (final Node node : previousNodes) {
-//                        t.addNode(node);
-//                    }
-//                }
-//
-//            } catch (IOException e) {
-//                logger.error("Error reading the file", e);
-//            }
-//
+        try {
+            final String previousInfo = FileUtils.read(fileName, FileUtils.ENCODING);
+            if (previousInfo != null && !"".equals(previousInfo)) {
+                final List<Node> previousNodes = NodeMapper.fromString(previousInfo);
+
+                for (final Node node : previousNodes) {
+                    container.addNode(node);
+                }
+            }
+
+        } catch (IOException e) {
+            logger.error("Error reading the file", e);
+        }
     }
 
     private void parseSeeds(final String[] seeds) {

@@ -119,4 +119,7 @@ public class TopologyContainer {
         return nodes;
     }
 
+    public List<Node> getAvailableNodes() {
+        return availableNodes;
+    }
 }

@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -50,7 +51,9 @@ public class FileUtils {
     }
 
     public static void persistNodes(final TopologyContainer t) {
-        final List<Node> nodes = t.getNodes();
+        final List<Node> nodes = new ArrayList<>(t.getNodes());
+        nodes.addAll(t.getAvailableNodes());
+
         try {
             if (nodes.size() > 0) {
                 final String output = NodeMapper.toString(nodes);

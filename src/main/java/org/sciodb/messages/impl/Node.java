@@ -70,6 +70,25 @@ public class Node implements Message {
         this.status = decoder.getInt();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node node = (Node) o;
+
+        if (port != node.port) return false;
+        return host.equals(node.host);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = host.hashCode();
+        result = 31 * result + port;
+        return result;
+    }
+
     public int getStatus() {
         return status;
     }
