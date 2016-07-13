@@ -1,4 +1,4 @@
-package org.sciodb.server.nessy;
+package org.sciodb.topology;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;

@@ -2,8 +2,8 @@ package org.sciodb.utils;
 
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.server.nessy.NodeMapper;
-import org.sciodb.server.nessy.TopologyContainer;
+import org.sciodb.topology.NodeMapper;
+import org.sciodb.topology.TopologyContainer;
 
 import java.io.BufferedWriter;
 import java.io.File;

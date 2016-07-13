@@ -4,7 +4,7 @@ import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.server.ServerSocket;
-import org.sciodb.server.nessy.TopologyRunnable;
+import org.sciodb.topology.TopologyRunnable;
 import org.sciodb.utils.Configuration;
 
 import java.net.Inet4Address;

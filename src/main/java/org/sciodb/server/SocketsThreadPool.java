@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.NodeMessage;
-import org.sciodb.server.nessy.TopologyContainer;
+import org.sciodb.topology.TopologyContainer;
 import org.sciodb.server.services.Dispatcher;
 import org.sciodb.utils.SocketClient;
 

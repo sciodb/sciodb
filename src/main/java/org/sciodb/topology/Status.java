@@ -1,4 +1,4 @@
-package org.sciodb.server.nessy;
+package org.sciodb.topology;
 
 /**
  * @author jesus.navarrete  (13/07/16)
