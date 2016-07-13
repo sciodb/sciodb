@@ -5,18 +5,16 @@ import org.sciodb.messages.impl.Node;
 import org.sciodb.utils.Configuration;
 import org.sciodb.utils.ThreadUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author jesus.navarrete  (22/09/14)
  */
 public class TopologyContainer {
 
-    private final List<Node> nodes;
-    private final List<Node> availableNodes;
+    private final Queue<Node> nodes;
+    private final Queue<Node> availableNodes;
 
     private static final TopologyContainer instance = new TopologyContainer();
 
@@ -27,8 +25,8 @@ public class TopologyContainer {
     private Logger logger = Logger.getLogger(TopologyContainer.class);
 
     private TopologyContainer() {
-        nodes = Collections.synchronizedList(new ArrayList<>());
-        availableNodes = Collections.synchronizedList(new ArrayList<>());
+        nodes = new ConcurrentLinkedQueue<>();
+        availableNodes = new ConcurrentLinkedQueue<>();
 
         waitingTime = Configuration.getInstance().getNodesCheckTimeNessyTopology();
         persistTime = Configuration.getInstance().getNodesPersistTimeNessyTopology();
@@ -41,20 +39,16 @@ public class TopologyContainer {
     }
 
     public void addNode(final Node node) {
-        synchronized (this) {
-            if (!nodes.contains(node)) {
-                logger.info("Discovered node - " + node.url());
-                nodes.add(node);
-            }
+        if (!nodes.contains(node)) {
+            logger.info("Discovered node - " + node.url());
+            nodes.add(node);
         }
     }
 
     public void addAvailableNode(final Node node) {
-        synchronized (this) {
-            if (!availableNodes.contains(node)) {
-                logger.info("New node available - " + node.url());
-                availableNodes.add(node);
-            }
+        if (!availableNodes.contains(node)) {
+            logger.info("New node available - " + node.url());
+            availableNodes.add(node);
         }
     }
 
@@ -115,11 +109,11 @@ public class TopologyContainer {
         }
         return execute;
     }
-    public List<Node> getNodes() {
+    public Queue<Node> getNodes() {
         return nodes;
     }
 
-    public List<Node> getAvailableNodes() {
+    public Queue<Node> getAvailableNodes() {
         return availableNodes;
     }
 }

@@ -50,7 +50,7 @@ public class FileUtils {
         }
     }
 
-    public static void persistNodes(final TopologyContainer t) {
+    public static void persistNodes(final TopologyContainer t, final int number) {
         final List<Node> nodes = new ArrayList<>(t.getNodes());
         nodes.addAll(t.getAvailableNodes());
 
@@ -58,7 +58,7 @@ public class FileUtils {
             if (nodes.size() > 0) {
                 final String output = NodeMapper.toString(nodes);
 
-                final String fileName = Configuration.getInstance().getTempFolder() + OUTPUT_FILE;
+                final String fileName = Configuration.getInstance().getTempFolder() + number + "_" + OUTPUT_FILE;
 
                 FileUtils.write(fileName, output, ENCODING);
             }
