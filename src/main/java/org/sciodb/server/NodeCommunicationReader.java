@@ -4,8 +4,6 @@ import org.apache.log4j.Logger;
 import org.sciodb.utils.ByteUtils;
 
 import java.io.IOException;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
@@ -34,7 +32,7 @@ public class NodeCommunicationReader {
             final byte[] size = readMessage(channel, HEADER_SIZE);
             int msgSize;
 
-            if (size != null && size.length == 4) {
+            if (size != null && size.length == HEADER_SIZE) {
                 final String msg = new String(size);
                 msgSize = Integer.valueOf(msg);
 
@@ -42,12 +40,12 @@ public class NodeCommunicationReader {
                     key.cancel();
                 } else {
                     result = readMessage(channel, msgSize);
-                    channel.register(key.selector(), SelectionKey.OP_WRITE);
+//                    channel.register(key.selector(), SelectionKey.OP_WRITE);
                 }
             }
 
         } catch (Exception e) {
-            logger.error("There was an error reading the buffer: " + e.getLocalizedMessage());
+            logger.error("There was an error reading the buffer: " + e.getLocalizedMessage(), e);
         }
         return result;
     }
@@ -64,9 +62,6 @@ public class NodeCommunicationReader {
                 int currentSize = channel.read(messageBuffer);
 
                 if (currentSize == -1) {
-                    final Socket socket = channel.socket();
-                    final SocketAddress remoteAddr = socket.getRemoteSocketAddress();
-//                    logger.debug("Connection closed by client: " + remoteAddr);
                     channel.close();
                     key.cancel();
                     empty = true;

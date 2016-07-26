@@ -26,12 +26,12 @@ public class SocketClient {
 
         long init = System.currentTimeMillis();
 
-        try (SocketChannel client = SocketChannel.open(hostAddress)) {
-            final String headerSize = String.format("%04d", input.length);
-            final ByteBuffer header = ByteBuffer.wrap(headerSize.getBytes());
+        SocketChannel client = null;
+        try {
+            client = SocketChannel.open(hostAddress);
             final ByteBuffer buffer = ByteBuffer.wrap(input);
 
-            client.write(header);
+            client.write(messageLength(input.length));
             client.write(buffer);
 
             buffer.clear();
@@ -50,12 +50,21 @@ public class SocketClient {
             return data;
 
         } catch (IOException e) {
+            try { if (client != null) client.close(); } catch (IOException e1) {}
+
             throw new CommunicationException("Error connecting with node " + host + ":" + port, e);
         } finally {
             long end = System.currentTimeMillis() - init;
 
             logger.debug(" Connection [" + host + ":" + port + "] took " + end + "ms");
         }
+    }
+
+    public static ByteBuffer messageLength(final int length) {
+        final String headerSize = String.format("%04d", length);
+        final ByteBuffer header = ByteBuffer.wrap(headerSize.getBytes());
+
+        return header;
     }
 
 }

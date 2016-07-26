@@ -18,6 +18,7 @@ public class Decoder {
     }
 
     public int getInt() {
+        if (position >= container.limit()) return 0;
         final int result = container.getInt(position);
         position += Encoder.INT_BYTES;
         container.position(position);
@@ -26,6 +27,7 @@ public class Decoder {
     }
 
     public long getLong() {
+        if (position >= container.limit()) return 0;
         final long result = container.getLong(position);
         position += Encoder.LONG_BYTES;
         container.position(position);

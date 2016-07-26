@@ -3,14 +3,10 @@ package org.sciodb;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.server.TopologySocket;
-import org.sciodb.server.nessy.NodeMapper;
-import org.sciodb.server.nessy.TopologyRunnable;
+import org.sciodb.rox.NioServerBeta;
+import org.sciodb.rox.Worker;
+import org.sciodb.topology.TopologyRunnable;
 import org.sciodb.utils.Configuration;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
 
 
 /**
@@ -28,9 +24,7 @@ public class ScioDB {
 
     private final static Logger logger = Logger.getLogger(ScioDB.class);
 
-    private String host;
     private int port;
-    private int topologyPort;
 
     public static void main(String[] args) {
 
@@ -48,6 +42,7 @@ public class ScioDB {
         options.addOption("h", "help", false, "help, show this message");
         options.addOption("v", "version", false, "current version of the software");
         options.addOption("p", "port", true, "port for the database");
+        options.addOption("s", "seeds", true, "seeds nodes to connect"); // idea from cassandra !!
         options.addOption("c", "conf", true, "configuration by file");
 
         try {
@@ -63,40 +58,56 @@ public class ScioDB {
             } else {
                 final String p = cmd.getOptionValue("p");
                 port = p != null? Integer.valueOf(p) : Configuration.getInstance().getPort();
-//                topologyPort = port + 1; TODO remove??
-                // properties without option in the command line yet
-                host = Configuration.getInstance().getHost();
-
 
                 // TODO temporal reading for testing: decide where, when and how to do it !
                 final String confFile = cmd.getOptionValue("c");
 
-                final InputStream stream = ScioDB.class.getClassLoader().getResourceAsStream(confFile);
+//                if (confFile != null && !"".equals(confFile)) {
+//
+//                    final InputStream stream = ScioDB.class.getClassLoader().getResourceAsStream(confFile);
+//
+//                    final Scanner s = new Scanner(stream).useDelimiter("\\A");
+//                    final String text = s.hasNext() ? s.next() : "";
+//                    node = NodeMapper.toNode(text);
+//                }
+                final Node node = new Node();
+//                try {
+//                    final String ip = cmd.getOptionValue("i");
+//                    if (ip != null) {
+//                        node.setHost(ip);
+//                    } else {
+                        node.setHost("0.0.0.0"); //Inet4Address.getLocalHost().getHostAddress());
+//                    }
+//                } catch (UnknownHostException e) {
+//                    node.setHost(Configuration.getInstance().getHost()); // TODO by default, should we use this IP?
+//                }
+                node.setPort(port);
 
-                final Scanner s = new Scanner(stream).useDelimiter("\\A");
-                final String text = s.hasNext() ? s.next() : "";
-                final Node node = NodeMapper.toNode(text);
-                topologyPort = node.getPort();
+                final String s = cmd.getOptionValue("s");
 
-                starting(node);
+                String[] seeds;
+                if (s != null) {
+                    seeds = s.split(",");
+                } else {
+                    seeds = new String[0];
+                }
+                starting(node, seeds);
             }
 
         } catch (ParseException e) {
             logger.error("Error parsing command line options", e);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public void starting(final Node node) {
-        logger.info(host + " - " + port);
+    public void starting(final Node node, final String[] seeds) {
+        logger.info(node.getHost() + " - " + node.getPort());
         try {
+//            final Worker worker = new Worker();
+//            new Thread(worker).start();
+            new Thread(new NioServerBeta(null, node.getPort())).start();
 
-//            new Thread(new ServerSocket(host, port)).start();
-            new Thread(new TopologySocket(host, topologyPort, "type")).start();
-//            new Thread(new TopologyRunnable(new Node(host, topologyPort))).start();
-            new Thread(new TopologyRunnable(node)).start();
-
+//            new Thread(new ServerSocket(node.getHost(), node.getPort())).start();
+            new Thread(new TopologyRunnable(node, seeds)).start();
         } catch (Exception e) {
             logger.error("Impossible to start the database", e);
         }

@@ -2,8 +2,8 @@ package org.sciodb.utils;
 
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.server.nessy.NodeMapper;
-import org.sciodb.server.nessy.TopologyContainer;
+import org.sciodb.topology.NodeMapper;
+import org.sciodb.topology.TopologyContainer;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -49,13 +50,15 @@ public class FileUtils {
         }
     }
 
-    public static void persistNodes(final TopologyContainer t) {
-        final List<Node> nodes = t.getNodes();
+    public static void persistNodes(final TopologyContainer t, final int number) {
+        final List<Node> nodes = new ArrayList<>(t.getNodes());
+        nodes.addAll(t.getAvailableNodes());
+
         try {
             if (nodes.size() > 0) {
                 final String output = NodeMapper.toString(nodes);
 
-                final String fileName = Configuration.getInstance().getTempFolder() + OUTPUT_FILE;
+                final String fileName = Configuration.getInstance().getTempFolder() + number + "_" + OUTPUT_FILE;
 
                 FileUtils.write(fileName, output, ENCODING);
             }

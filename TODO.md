@@ -24,16 +24,16 @@
 
 - background jobs (expensive jobs):
     * not realtime calculations
+    * map reduce jobs or similar technology
     * posibility to use mapreduce
     * machine learning libraries
     * solr queries ...
 
 
 - query language
-    * sql or javascript (with some json properties...)
+    * sql-based or javascript/json query language
+    * script language
 
-
-- interpreter query language
 
 - build output
     * darwin, linux: build/darwin and build/linux

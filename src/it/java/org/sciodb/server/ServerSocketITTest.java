@@ -4,13 +4,15 @@ import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.sciodb.utils.CommandEncoder;
-import org.sciodb.utils.models.StatusCommand;
+import org.sciodb.messages.Operations;
+import org.sciodb.messages.impl.ContainerMessage;
+import org.sciodb.messages.impl.EchoMessage;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.UUID;
 
 /**
  * @author jesus.navarrete  (10/05/16)
@@ -79,9 +81,8 @@ public class ServerSocketITTest {
                 super.start();
                 try {
 
-                    final StatusCommand status = createCommand(this.getName());
+                    final byte [] message = createMessage(this.getName());
 
-                    final byte [] message = CommandEncoder.encode(status).getBytes();
                     final ByteBuffer buffer = ByteBuffer.wrap(message);
                     final String headerSize = String.format("%04d", message.length);
                     final ByteBuffer header = ByteBuffer.wrap(headerSize.getBytes());
@@ -105,10 +106,16 @@ public class ServerSocketITTest {
 
     }
 
-    private static StatusCommand createCommand(final String id) {
-        final StatusCommand status = new StatusCommand();
-        status.setOperationID("status");
-        status.setMessageID(id);
-        return status;
+    private static byte[] createMessage(final String name) {
+        final EchoMessage echo = new EchoMessage();
+        echo.setMsg("test message - " + name);
+
+        final ContainerMessage container = new ContainerMessage();
+        container.getHeader().setId(UUID.randomUUID().toString());
+        container.getHeader().setOperationId(Operations.ECHO.getValue());
+
+        container.setContent(echo.encode());
+
+        return container.encode();
     }
 }

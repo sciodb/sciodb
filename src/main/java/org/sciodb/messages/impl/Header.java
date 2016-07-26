@@ -14,19 +14,6 @@ public class Header implements Message {
 
     private int operationId;
 
-    public static void main(String[] args) {
-        final Header h = new Header("123", 100, 2);
-
-        byte[] headerBytes = h.encode();
-
-        final Header h2 = new Header();
-        h2.decode(headerBytes);
-
-        System.out.println(" h2 - id - " + h2.getId());
-        System.out.println(" h2 - length - " + h2.getLength());
-        System.out.println(" h2 - op. id - " + h2.getOperationId());
-    }
-
     public Header() {
     }
 

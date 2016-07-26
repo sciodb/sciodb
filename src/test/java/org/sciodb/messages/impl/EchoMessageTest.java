@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.UUID;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author jesus.navarrete  (30/04/16)
@@ -25,16 +25,14 @@ public class EchoMessageTest {
     public void encode() throws Exception {
         final EchoMessage echo = new EchoMessage();
 
-        final UUID uuid = UUID.randomUUID();
-
-        echo.getHeader().setId(uuid.toString());
         echo.setMsg("Hello world!");
-
-        echo.getHeader().setLength(1234);
 
         byte[] encode = echo.encode();
 
-//        final EchoMessage echoDecode = new EchoMessage(encode);
+        final EchoMessage result = new EchoMessage();
+        result.decode(encode);
+
+        assertEquals(echo.getMsg(), result.getMsg());
     }
 
     @Test

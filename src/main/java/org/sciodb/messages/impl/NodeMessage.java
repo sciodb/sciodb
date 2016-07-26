@@ -7,23 +7,13 @@ import org.sciodb.messages.Message;
 /**
  * @author jesus.navarrete  (09/06/16)
  */
+// TODO extends from node
 public class NodeMessage implements Message {
-
-    private Header header;
 
     private Node node;
 
     public NodeMessage() {
-        header = new Header();
         node = new Node();
-    }
-
-    public Header getHeader() {
-        return header;
-    }
-
-    public void setHeader(Header header) {
-        this.header = header;
     }
 
     public Node getNode() {
@@ -38,7 +28,6 @@ public class NodeMessage implements Message {
     public byte[] encode() {
         final Encoder encoder = new Encoder();
 
-        encoder.in(header.encode());
         encoder.in(node.encode());
 
         return encoder.container();
@@ -48,7 +37,6 @@ public class NodeMessage implements Message {
     public void decode(byte[] input) {
         final Decoder d = new Decoder(input);
 
-        header.decode(d.getByteArray());
         node.decode(d.getByteArray());
     }
 
