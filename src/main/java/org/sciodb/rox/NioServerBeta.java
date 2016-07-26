@@ -56,7 +56,7 @@ public class NioServerBeta implements Runnable {
 		this.port = port;
 		this.selector = this.initSelector();
 //		this.worker = worker;
-
+		this.dispatcher = new Dispatcher();
         this.service = Executors.newFixedThreadPool(100);
     }
 
