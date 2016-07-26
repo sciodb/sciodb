@@ -22,24 +22,21 @@ import java.util.concurrent.Executors;
 public class ServerSocket implements Runnable {
 
     final static private Logger logger = Logger.getLogger(ServerSocket.class);
+    final static private int HEADER_SIZE = 4;
 
-    // The host:port combination to listen on
     private InetAddress hostAddress;
     private int port;
 
-    // The channel on which we'll accept connections
     private ServerSocketChannel serverChannel;
 
     // The selector we'll be monitoring
     private Selector selector;
 
-    private ExecutorService service;
-
     // A list of PendingChange instances
-    private List pendingChanges = new LinkedList();
+    final private List<ChangeRequest> pendingChanges = new LinkedList<>();
 
     // Maps a SocketChannel to a list of ByteBuffer instances
-    private Map pendingData = new HashMap();
+    final private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<>();
 
     private SocketsThreadPool pool;
 
@@ -47,7 +44,6 @@ public class ServerSocket implements Runnable {
         this.hostAddress = hostAddress;
         this.port = port;
         this.selector = this.initSelector();
-        this.service = Executors.newFixedThreadPool(100);
 
         pool = SocketsThreadPool.getInstance();
     }
@@ -59,9 +55,9 @@ public class ServerSocket implements Runnable {
 
             // And queue the data we want written
             synchronized (this.pendingData) {
-                List queue = (List) this.pendingData.get(socket);
+                List<ByteBuffer> queue = this.pendingData.get(socket);
                 if (queue == null) {
-                    queue = new ArrayList();
+                    queue = new ArrayList<>();
                     this.pendingData.put(socket, queue);
                 }
                 queue.add(ByteBuffer.wrap(data));
@@ -78,9 +74,9 @@ public class ServerSocket implements Runnable {
             try {
                 // Process any pending changes
                 synchronized (this.pendingChanges) {
-                    Iterator changes = this.pendingChanges.iterator();
+                    final Iterator changes = this.pendingChanges.iterator();
                     while (changes.hasNext()) {
-                        ChangeRequest change = (ChangeRequest) changes.next();
+                        final ChangeRequest change = (ChangeRequest) changes.next();
                         switch (change.type) {
                             case ChangeRequest.CHANGEOPS:
                                 SelectionKey key = change.socket.keyFor(this.selector);
@@ -94,9 +90,9 @@ public class ServerSocket implements Runnable {
                 this.selector.select();
 
                 // Iterate over the set of keys for which events are available
-                Iterator selectedKeys = this.selector.selectedKeys().iterator();
+                final Iterator selectedKeys = this.selector.selectedKeys().iterator();
                 while (selectedKeys.hasNext()) {
-                    SelectionKey key = (SelectionKey) selectedKeys.next();
+                    final SelectionKey key = (SelectionKey) selectedKeys.next();
                     selectedKeys.remove();
 
                     if (!key.isValid()) {
@@ -113,26 +109,20 @@ public class ServerSocket implements Runnable {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Problems with the socket server", e);
             }
         }
     }
 
-    private void accept(SelectionKey key) throws IOException {
-        // For an accept to be pending the channel must be a server socket channel.
-        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
+    private void accept(final SelectionKey key) throws IOException {
+        final ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
 
-        // Accept the connection and make it non-blocking
-        SocketChannel socketChannel = serverSocketChannel.accept();
-//		Socket socket = socketChannel.socket();
+        final SocketChannel socketChannel = serverSocketChannel.accept();
         socketChannel.configureBlocking(false);
 
-        // Register the new SocketChannel with our Selector, indicating
-        // we'd like to be notified when there's data waiting to be read
         socketChannel.register(this.selector, SelectionKey.OP_READ);
     }
 
-    final static private int HEADER_SIZE = 4;
 
     private void read(final SelectionKey key) throws IOException {
         try {
@@ -149,8 +139,6 @@ public class ServerSocket implements Runnable {
                     final byte[] result = read(key, msgSize, true);
                     final SocketChannel channel = (SocketChannel) key.channel();
 
-//                    final Worker worker = new Worker(this, channel, result);
-//                    service.execute(worker);
                     pool.run(this, channel, result);
                 }
             }
@@ -158,7 +146,6 @@ public class ServerSocket implements Runnable {
         } catch (Exception e) {
             logger.error("There was an error reading the buffer: " + e.getLocalizedMessage(), e);
         }
-
 
     }
 
@@ -202,11 +189,11 @@ public class ServerSocket implements Runnable {
         }
     }
 
-    private void write(SelectionKey key) throws IOException {
-        SocketChannel socketChannel = (SocketChannel) key.channel();
+    private void write(final SelectionKey key) throws IOException {
+        final SocketChannel socketChannel = (SocketChannel) key.channel();
 
         synchronized (this.pendingData) {
-            List queue = (List) this.pendingData.get(socketChannel);
+            final List queue = (List) this.pendingData.get(socketChannel);
 
             // Write until there's not more data ...
             while (!queue.isEmpty()) {
@@ -229,31 +216,17 @@ public class ServerSocket implements Runnable {
     }
 
     private Selector initSelector() throws IOException {
-        // Create a new selector
-        Selector socketSelector = SelectorProvider.provider().openSelector();
+        final Selector socketSelector = SelectorProvider.provider().openSelector();
 
-        // Create a new non-blocking server socket channel
         this.serverChannel = ServerSocketChannel.open();
         serverChannel.configureBlocking(false);
 
-        // Bind the server socket to the specified address and port
-        InetSocketAddress isa = new InetSocketAddress(this.hostAddress, this.port);
+        final InetSocketAddress isa = new InetSocketAddress(this.hostAddress, this.port);
         serverChannel.socket().bind(isa);
 
-        // Register the server socket channel, indicating an interest in
-        // accepting new connections
         serverChannel.register(socketSelector, SelectionKey.OP_ACCEPT);
 
         return socketSelector;
     }
 
-    public static void main(String[] args) {
-        try {
-//			final Worker worker = new Worker();
-//			new Thread(worker).start();
-            new Thread(new ServerSocket(null, 9090)).start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
