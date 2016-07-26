@@ -4,18 +4,18 @@ import org.sciodb.messages.Decoder;
 import org.sciodb.messages.Encoder;
 import org.sciodb.messages.Message;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author jesus.navarrete  (11/07/16)
  */
-public class NodeListMessage implements Message {
+public class NodesMessage implements Message {
 
-    private List<Node> nodes;
+    private Queue<Node> nodes;
 
-    public NodeListMessage() {
-        nodes = new ArrayList<>();
+    public NodesMessage() {
+        nodes = new ConcurrentLinkedQueue<>();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class NodeListMessage implements Message {
     }
 
     @Override
-    public void decode(byte[] input) {
+    public void decode(final byte[] input) {
         final Decoder d = new Decoder(input);
 
         byte[] bytes = d.getByteArray();
@@ -42,11 +42,11 @@ public class NodeListMessage implements Message {
         }
     }
 
-    public List<Node> getNodes() {
+    public Queue<Node> getNodes() {
         return nodes;
     }
 
-    public void setNodes(List<Node> nodes) {
+    public void setNodes(final Queue<Node> nodes) {
         this.nodes = nodes;
     }
 }

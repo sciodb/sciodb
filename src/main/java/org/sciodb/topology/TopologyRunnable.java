@@ -7,7 +7,9 @@ import org.sciodb.utils.FileUtils;
 import org.sciodb.utils.ServerException;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author jesus.navarrete  (24/09/14)
@@ -25,6 +27,8 @@ public class TopologyRunnable implements Runnable {
     private TopologyContainer container;
 
     public TopologyRunnable(final Node node, final String[] seeds) throws ServerException {
+        container = TopologyContainer.getInstance();
+
         waitingTime = Configuration.getInstance().getNodesCheckTimeNessyTopology();
         persistTime = Configuration.getInstance().getNodesPersistTimeNessyTopology();
 
@@ -32,7 +36,6 @@ public class TopologyRunnable implements Runnable {
 
         me = node;
         parseSeeds(seeds);
-        container = TopologyContainer.getInstance();
 
     }
 
@@ -73,12 +76,18 @@ public class TopologyRunnable implements Runnable {
     }
 
     private void parseSeeds(final String[] seeds) {
+        final Set<Node> foundNodes = new HashSet<>();
         for (final String s : seeds) {
             final String[] parts = s.split(":");
             if (parts.length == 2 && isInteger(parts[1])) {
                 final Node node = new Node(parts[0], new Integer(parts[1].trim()));
-                TopologyContainer.getInstance().addNode(node);
+                final List<Node> nodes = NodeOperations.discoverPeer(me, node);
+                foundNodes.addAll(nodes);
+                foundNodes.add(node);
             }
+        }
+        for (final Node n : foundNodes) {
+            container.addNode(n);
         }
     }
 

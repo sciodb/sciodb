@@ -5,7 +5,8 @@ import org.sciodb.messages.impl.Node;
 import org.sciodb.utils.Configuration;
 import org.sciodb.utils.ThreadUtils;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**

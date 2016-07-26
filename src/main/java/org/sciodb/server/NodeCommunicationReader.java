@@ -40,12 +40,12 @@ public class NodeCommunicationReader {
                     key.cancel();
                 } else {
                     result = readMessage(channel, msgSize);
-                    channel.register(key.selector(), SelectionKey.OP_WRITE);
+//                    channel.register(key.selector(), SelectionKey.OP_WRITE);
                 }
             }
 
         } catch (Exception e) {
-            logger.error("There was an error reading the buffer: " + e.getLocalizedMessage());
+            logger.error("There was an error reading the buffer: " + e.getLocalizedMessage(), e);
         }
         return result;
     }
