@@ -1,4 +1,4 @@
-package org.sciodb.rox;
+package org.sciodb.server;
 
 import java.nio.channels.SocketChannel;
 

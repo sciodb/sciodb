@@ -3,8 +3,7 @@ package org.sciodb;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.rox.NioServerBeta;
-import org.sciodb.rox.Worker;
+import org.sciodb.server.ServerSocket;
 import org.sciodb.topology.TopologyRunnable;
 import org.sciodb.utils.Configuration;
 
@@ -102,11 +101,7 @@ public class ScioDB {
     public void starting(final Node node, final String[] seeds) {
         logger.info(node.getHost() + " - " + node.getPort());
         try {
-//            final Worker worker = new Worker();
-//            new Thread(worker).start();
-            new Thread(new NioServerBeta(null, node.getPort())).start();
-
-//            new Thread(new ServerSocket(node.getHost(), node.getPort())).start();
+            new Thread(new ServerSocket(null, node.getPort())).start();
             new Thread(new TopologyRunnable(node, seeds)).start();
         } catch (Exception e) {
             logger.error("Impossible to start the database", e);
