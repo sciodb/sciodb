@@ -39,19 +39,6 @@ public class RocksDBEngine implements StorageEngine {
                 .setCreateIfMissing(true);
     }
 
-//    public static void main(String[] args) {
-//        final String data = "/tmp/f" + System.currentTimeMillis();
-//        RocksDBEngine engine = new RocksDBEngine(data);
-//        for (int i = 0; i < 100; i++) {
-//            try {
-//                engine.createDatabase("x-" + i);
-//            } catch (StorageException e) {
-//                System.out.println("error - i : " + i);
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
     @Override
     public void init() throws StorageException {
         try {
