@@ -4,14 +4,14 @@ import org.apache.log4j.Logger;
 
 import java.nio.ByteBuffer;
 
+import static org.sciodb.utils.ScioDBConstants.MAX_SIZE;
+
 /**
  * @author jesus.navarrete  (08/06/16)
  */
 public class ByteUtils {
 
     final static private Logger logger = Logger.getLogger(ByteUtils.class);
-
-    public final static  int MAX_SIZE = 16777216;
 
     public static byte[] split(final byte[] source, final int from, final int to) {
 

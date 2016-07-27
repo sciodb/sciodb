@@ -14,13 +14,14 @@ import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
 import java.util.*;
 
+import static org.sciodb.utils.ScioDBConstants.HEADER_SIZE;
+
 /**
  * @author jesus.navarrete  (24/02/16)
  */
 public class ServerSocket implements Runnable {
 
     final static private Logger logger = Logger.getLogger(ServerSocket.class);
-    final static private int HEADER_SIZE = 4;
 
     private InetAddress hostAddress;
     private int port;

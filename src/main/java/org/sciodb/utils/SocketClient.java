@@ -11,12 +11,12 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.sciodb.utils.ScioDBConstants.MAX_ANSWER_BYTES;
+
 /**
  * @author jesus.navarrete  (08/06/16)
  */
 public class SocketClient {
-
-    final public static int MAX_ANSWER_BYTES = 1024;
 
     final static private Logger logger = Logger.getLogger(SocketClient.class);
 
