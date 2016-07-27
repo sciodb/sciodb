@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author jesus.navarrete  (08/06/16)
@@ -18,17 +20,17 @@ public class SocketClient {
 
     final static private Logger logger = Logger.getLogger(SocketClient.class);
 
+    final static Map<String, SocketChannel> cache = new HashMap<>();
+
     public static byte[] sendToSocket(final String host, final int port, final Message message, final boolean responseRequired) throws CommunicationException {
 
         final byte[] input = message.encode();
-
-        final InetSocketAddress hostAddress = new InetSocketAddress(host, port);
 
         long init = System.currentTimeMillis();
 
         SocketChannel client = null;
         try {
-            client = SocketChannel.open(hostAddress);
+            client = getSocketChannel(host, port);
             final ByteBuffer buffer = ByteBuffer.wrap(input);
 
             client.write(messageLength(input.length));
@@ -46,7 +48,7 @@ public class SocketClient {
             } else {
                 data = new byte[0];
             }
-            client.close();
+//            client.close();
             return data;
 
         } catch (IOException e) {
@@ -67,4 +69,20 @@ public class SocketClient {
         return header;
     }
 
+    private static SocketChannel getSocketChannel(final String host, final int port) throws IOException {
+        final String key = host + "_" + port;
+        final SocketChannel channel = cache.get(key);
+
+        if (channel != null && channel.isConnected()) {
+            return channel;
+        }
+        if (channel != null) channel.close();
+
+        final InetSocketAddress hostAddress = new InetSocketAddress(host, port);
+
+        final SocketChannel client = SocketChannel.open(hostAddress);
+        cache.put(key, client);
+
+        return client;
+    }
 }
