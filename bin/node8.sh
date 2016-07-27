@@ -9,7 +9,7 @@ done
 
 CLASSPATH=$CLASSPATH:../target/classes/
 
-java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.ScioDB -p 9091 -s 0.0.0.0:9090
+java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.ScioDB -p 9098 -s 0.0.0.0:9090
 #nohup java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.Kernel node.json > logs/node.log 2>&1 &
 #pid=$!
 #echo $pid >> ../pids/node.pid
