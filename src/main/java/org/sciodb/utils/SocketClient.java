@@ -43,8 +43,12 @@ public class SocketClient {
                 final ByteBuffer response = ByteBuffer.allocate(MAX_ANSWER_BYTES);
 
                 int currentSize = client.read(response);
-                data = ByteUtils.newArray(currentSize);
-                System.arraycopy(response.array(), 0, data, 0, currentSize);
+                if (currentSize > 0) {
+                    data = ByteUtils.newArray(currentSize);
+                    System.arraycopy(response.array(), 0, data, 0, currentSize);
+                } else {
+                    data = new byte[0];
+                }
             } else {
                 data = new byte[0];
             }

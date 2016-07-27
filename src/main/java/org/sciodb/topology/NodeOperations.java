@@ -9,9 +9,8 @@ import org.sciodb.messages.impl.NodeMessage;
 import org.sciodb.messages.impl.NodesMessage;
 import org.sciodb.utils.SocketClient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author jenaiz on 03/10/15.
@@ -30,7 +29,7 @@ public class NodeOperations {
 //        }
 
         for(int i = 0; i < 10; i++) {
-            isAlife(me, seed);
+            isAlife(me, seed, new ConcurrentLinkedQueue<Node>());
         }
 
     }
@@ -52,24 +51,25 @@ public class NodeOperations {
                                                         seed.getPort(),
                                                         container,
                                                         true);
-            if (response.length > 4) {
-                final ContainerMessage parseRsp = new ContainerMessage();
-                parseRsp.decode(response);
-
-                final NodesMessage msg = new NodesMessage();
-                msg.decode(parseRsp.getContent());
-                for (final Node n : msg.getNodes()) {
-                    if (!me.equals(n))
-                    result.add(n);
-                }
-            }
+//            if (response.length > 4) {
+//                final ContainerMessage parseRsp = new ContainerMessage();
+//                parseRsp.decode(response);
+//
+//                final NodesMessage msg = new NodesMessage();
+//                msg.decode(parseRsp.getContent());
+//                for (final Node n : msg.getNodes()) {
+//                    if (!me.equals(n))
+//                    result.add(n);
+//                }
+//            }
+            result.addAll(getNodesFromResponse(me, response));
         } catch (CommunicationException e) {
            logger.error("Add to Root failing because: " + e.getLocalizedMessage());
         }
         return result;
     }
 
-    public static boolean isAlife(final Node me, final Node node) {
+    public static boolean isAlife(final Node me, final Node node, final Queue<Node> nodes) {
         final NodeMessage message = new NodeMessage();
         message.setNode(me);
 
@@ -80,12 +80,33 @@ public class NodeOperations {
         container.setContent(message.encode());
 
         try {
-            SocketClient.sendToSocket(node.getHost(), node.getPort(), container, false);
+            byte[] response = SocketClient.sendToSocket(node.getHost(), node.getPort(), container, true);
+
+            nodesFromResponse(me, response, nodes);
+
             return true;
         } catch (CommunicationException e) {
             return false;
         }
 
+    }
+
+    private static void nodesFromResponse(final Node me, final byte[] response, final Queue<Node> peers) {
+
+        if (response.length > 4) {
+            final ContainerMessage parseRsp = new ContainerMessage();
+            parseRsp.decode(response);
+
+            final NodesMessage msg = new NodesMessage();
+            msg.decode(parseRsp.getContent());
+            msg.getNodes().stream().filter(n -> !me.equals(n) && !peers.contains(n)).forEach(peers::add);
+        }
+    }
+
+    private static Queue<Node> getNodesFromResponse(final Node me, final byte[] response) {
+        final Queue<Node> nodes = new LinkedList<>();
+        nodesFromResponse(me, response, nodes);
+        return nodes;
     }
 
 }

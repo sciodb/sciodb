@@ -8,11 +8,7 @@ import org.sciodb.messages.impl.NodeMessage;
 import org.sciodb.messages.impl.NodesMessage;
 import org.sciodb.server.services.Dispatcher;
 import org.sciodb.topology.TopologyContainer;
-import org.sciodb.utils.SocketClient;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.Queue;
 import java.util.UUID;
@@ -57,20 +53,13 @@ public class SocketsThreadPool {
 
                 TopologyContainer.getInstance().addNode(nodeMessage.getNode());
 
-                final Queue<Node> nodes = TopologyContainer.getInstance().getAvailableNodes();
-                final NodesMessage n = new NodesMessage();
-                for (Node nn : nodes) {
-                    n.getNodes().add(nn);
-                }
-                final ContainerMessage response = new ContainerMessage();
-                response.getHeader().setId(UUID.randomUUID().toString());
-                response.getHeader().setOperationId(Operations.DISCOVERY_PEERS.getValue());
-
-                response.setContent(n.encode());
+                final ContainerMessage response = getContainerMessageForPeers();
 
                 server.send(channel, response.encode());
             } else if (operationId == Operations.STATUS.getValue()) {
-//                nioServer.send(socketChannel, new byte[0]);
+                final ContainerMessage response = getContainerMessageForPeers();
+
+                server.send(channel, response.encode());
             } else if (operationId == Operations.ECHO.getValue()) {
 
                 final byte [] response = dispatcher.getService(request);
@@ -79,6 +68,20 @@ public class SocketsThreadPool {
             }
         }
 
+    }
+
+    private ContainerMessage getContainerMessageForPeers() {
+        final Queue<Node> nodes = TopologyContainer.getInstance().getAvailableNodes();
+        final NodesMessage n = new NodesMessage();
+        for (Node nn : nodes) {
+            n.getNodes().add(nn);
+        }
+        final ContainerMessage response = new ContainerMessage();
+        response.getHeader().setId(UUID.randomUUID().toString());
+        response.getHeader().setOperationId(Operations.DISCOVERY_PEERS.getValue());
+
+        response.setContent(n.encode());
+        return response;
     }
 
 
