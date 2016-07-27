@@ -47,17 +47,13 @@ public class SocketsThreadPool {
             final ContainerMessage request = new ContainerMessage();
             request.decode(input);
             int operationId = request.getHeader().getOperationId();
-            if (operationId == Operations.DISCOVERY_PEERS.getValue()) {
+            if (operationId == Operations.DISCOVERY_PEERS.getValue() || operationId == Operations.STATUS.getValue()) {
                 final NodeMessage nodeMessage = new NodeMessage();
                 nodeMessage.decode(request.getContent());
 
                 TopologyContainer.getInstance().addNode(nodeMessage.getNode());
 
-                final ContainerMessage response = getContainerMessageForPeers();
-
-                server.send(channel, response.encode());
-            } else if (operationId == Operations.STATUS.getValue()) {
-                final ContainerMessage response = getContainerMessageForPeers();
+                final ContainerMessage response = getContainerMessageForPeers(operationId);
 
                 server.send(channel, response.encode());
             } else if (operationId == Operations.ECHO.getValue()) {
@@ -70,7 +66,7 @@ public class SocketsThreadPool {
 
     }
 
-    private ContainerMessage getContainerMessageForPeers() {
+    private ContainerMessage getContainerMessageForPeers(final int id) {
         final Queue<Node> nodes = TopologyContainer.getInstance().getAvailableNodes();
         final NodesMessage n = new NodesMessage();
         for (Node nn : nodes) {
@@ -78,7 +74,7 @@ public class SocketsThreadPool {
         }
         final ContainerMessage response = new ContainerMessage();
         response.getHeader().setId(UUID.randomUUID().toString());
-        response.getHeader().setOperationId(Operations.DISCOVERY_PEERS.getValue());
+        response.getHeader().setOperationId(id);
 
         response.setContent(n.encode());
         return response;

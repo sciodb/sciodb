@@ -51,17 +51,7 @@ public class NodeOperations {
                                                         seed.getPort(),
                                                         container,
                                                         true);
-//            if (response.length > 4) {
-//                final ContainerMessage parseRsp = new ContainerMessage();
-//                parseRsp.decode(response);
-//
-//                final NodesMessage msg = new NodesMessage();
-//                msg.decode(parseRsp.getContent());
-//                for (final Node n : msg.getNodes()) {
-//                    if (!me.equals(n))
-//                    result.add(n);
-//                }
-//            }
+
             result.addAll(getNodesFromResponse(me, response));
         } catch (CommunicationException e) {
            logger.error("Add to Root failing because: " + e.getLocalizedMessage());

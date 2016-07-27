@@ -5,6 +5,7 @@ import org.sciodb.messages.impl.Node;
 import org.sciodb.utils.Configuration;
 import org.sciodb.utils.FileUtils;
 import org.sciodb.utils.ServerException;
+import org.sciodb.utils.ThreadUtils;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -50,10 +51,11 @@ public class TopologyRunnable implements Runnable {
         while (true) {
             container.checkNodes(me);
 
-            if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
-                FileUtils.persistNodes(container, me.getPort());
-                lastUpdate = System.currentTimeMillis();
-            }
+//            if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
+//                FileUtils.persistNodes(container, me.getPort());
+//                lastUpdate = System.currentTimeMillis();
+//            }
+            ThreadUtils.sleep(persistTime);
         }
     }
 

@@ -40,23 +40,42 @@ public class TopologyContainer {
     }
 
     public void addNode(final Node node) {
-        if (!nodes.contains(node)) {
+        if (!availableNodes.contains(node) && !nodes.contains(node)) {
             logger.info("Discovered node - " + node.url());
             nodes.add(node);
         }
     }
 
-    public void addAvailableNode(final Node node) {
+    private void addAvailableNode(final Node node) {
         if (!availableNodes.contains(node)) {
             logger.info("New node available - " + node.url());
             availableNodes.add(node);
         }
     }
 
-    public void checkNodes(final Node me) {
+    void checkNodes(final Node me) {
         final long now = System.currentTimeMillis();
 
-        Iterator<Node> iterator = nodes.iterator();
+        Iterator<Node> iterator = availableNodes.iterator();
+
+        logger.info("before iterator - available nodes - " + availableNodes.size());
+
+        while (iterator.hasNext()) {
+            final Node node = iterator.next();
+            boolean execute = checkNode(me, node, masterCheckingTime, 3);
+            if (!execute) {
+                nodes.add(node);
+                iterator.remove();
+                logger.error(node.url() + " - not available ");
+            } else {
+                logger.info(node.url() + " - available");
+            }
+        }
+        logger.info("after iterator - available nodes - " + availableNodes.size());
+
+        iterator = nodes.iterator();
+
+        logger.info("before iterator - nodes - " + nodes.size());
         while (iterator.hasNext()) {
             final Node node = iterator.next();
             if (node.getLastCheck() == 0) {
@@ -78,19 +97,9 @@ public class TopologyContainer {
             }
 
         }
+        logger.info("after iterator - nodes - " + nodes.size());
 
-        iterator = availableNodes.iterator();
-        while (iterator.hasNext()) {
-            final Node node = iterator.next();
-            boolean execute = checkNode(me, node, masterCheckingTime, 3);
-            if (!execute) {
-                nodes.add(node);
-                iterator.remove();
-                logger.error(node.url() + " - not available ");
-            } else {
-                logger.info(node.url() + " - available");
-            }
-        }
+
         final long finished = System.currentTimeMillis();
         final long timeUsed = finished - now;
         if (timeUsed < waitingTime) {
@@ -109,9 +118,6 @@ public class TopologyContainer {
             ThreadUtils.sleep(waitingTime);
         }
         return execute;
-    }
-    public Queue<Node> getNodes() {
-        return nodes;
     }
 
     public Queue<Node> getAvailableNodes() {

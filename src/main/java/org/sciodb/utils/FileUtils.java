@@ -51,8 +51,7 @@ public class FileUtils {
     }
 
     public static void persistNodes(final TopologyContainer t, final int number) {
-        final List<Node> nodes = new ArrayList<>(t.getNodes());
-        nodes.addAll(t.getAvailableNodes());
+        final List<Node> nodes = new ArrayList<>(t.getAvailableNodes());
 
         try {
             if (nodes.size() > 0) {
