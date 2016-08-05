@@ -58,8 +58,6 @@ public class TopologyContainer {
 
         Iterator<Node> iterator = availableNodes.iterator();
 
-        logger.info("before iterator - available nodes - " + availableNodes.size());
-
         while (iterator.hasNext()) {
             final Node node = iterator.next();
             boolean execute = checkNode(me, node, masterCheckingTime, 3);
@@ -71,11 +69,9 @@ public class TopologyContainer {
                 logger.info(node.url() + " - available");
             }
         }
-        logger.info("after iterator - available nodes - " + availableNodes.size());
 
         iterator = nodes.iterator();
 
-        logger.info("before iterator - nodes - " + nodes.size());
         while (iterator.hasNext()) {
             final Node node = iterator.next();
             if (node.getLastCheck() == 0) {
@@ -97,8 +93,6 @@ public class TopologyContainer {
             }
 
         }
-        logger.info("after iterator - nodes - " + nodes.size());
-
 
         final long finished = System.currentTimeMillis();
         final long timeUsed = finished - now;
