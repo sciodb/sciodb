@@ -10,4 +10,4 @@ done
 CLASSPATH=$CLASSPATH:../target/classes/
 
 java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.shell.ScioSchell "$@"
-#java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.shell.Console "$@"
+#java $JAVA_OPTS_SCIODB -cp $CLASSPATH Console "$@"
