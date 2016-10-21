@@ -1,0 +1,2 @@
+- Investigate topologies
+- P2P topology proto

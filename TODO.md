@@ -1,5 +1,5 @@
-- Connection Manager
-- Request Dispatcher
+[X] - Connection Manager
+[X] - Request Dispatcher
 
 
 - Storage engines:
