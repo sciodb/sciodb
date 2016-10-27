@@ -5,6 +5,7 @@ logs/*
 pids/*
 lib/*
 data/*
+bin/logs/*
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
