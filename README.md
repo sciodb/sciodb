@@ -11,9 +11,9 @@ mvn clean package
 
 it will compile, package and copy all the libraries in the *lib* folder.
 
-How to run the system:
+How to run the system, you should go to the *bin* folder and execute
 ```
-./bin/sciodb.sh
+./sciodb.sh
 ```
 
 For the moment it is only for testing, the system is not functional.
