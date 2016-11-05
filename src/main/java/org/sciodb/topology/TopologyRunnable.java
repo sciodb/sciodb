@@ -95,7 +95,6 @@ public class TopologyRunnable implements Runnable {
         }
     }
 
-
     public static boolean isInteger(final String str) {
         return str != null && str.trim().matches("-?\\d+");  //match a number with optional '-' and decimal.
     }
