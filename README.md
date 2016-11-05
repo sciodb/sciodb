@@ -21,14 +21,17 @@ For the moment it is only for testing, the system is not functional.
 If you want to see multiple nodes working, you can execute:
 
 ```
-./start.sh {PORT} {SEED}
+./startup.sh {PORT} {SEED}
 ```
 
-for example:
+For example:
 ```
-./start.sh 9090 0.0.0.0:9090
+./start.sh 9090
+```
+will start a node without seeds. Or if you want to start nodes with a seed to connect:
+
+```
 ./start.sh 9091 0.0.0.0:9090
-./start.sh 9092 0.0.0.0:9090
 ```
 
 and if you want to stop a node:
