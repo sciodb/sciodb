@@ -13,7 +13,7 @@ done
 CLASSPATH=$CLASSPATH:../target/classes/
 
 #java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.ScioDB "$@" -p $1
-nohup java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.ScioDB -p $1 > logs/node_$1.log 2>&1 &
+nohup java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.ScioDB -p $1 -s $2 > logs/node_$1.log 2>&1 &
 pid=$!
 echo $pid >> pids/node_$1.pid
 

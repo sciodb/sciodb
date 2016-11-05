@@ -56,7 +56,7 @@ public class TopologyContainer {
     void checkNodes(final Node me) {
         final long now = System.currentTimeMillis();
 
-        Iterator<Node> iterator = availableNodes.iterator();
+        final Iterator<Node> iterator = availableNodes.iterator();
 
         while (iterator.hasNext()) {
             final Node node = iterator.next();
@@ -70,10 +70,9 @@ public class TopologyContainer {
             }
         }
 
-        iterator = nodes.iterator();
-
-        while (iterator.hasNext()) {
-            final Node node = iterator.next();
+        final Iterator<Node> iterator2 = nodes.iterator();
+        while (iterator2.hasNext()) {
+            final Node node = iterator2.next();
             if (node.getLastCheck() == 0) {
                 node.setLastCheck(now);
             } else {
@@ -82,18 +81,17 @@ public class TopologyContainer {
                 }
             }
 
-            boolean alife = checkNode(me, node, masterCheckingTime, 3);
+            boolean alive = checkNode(me, node, masterCheckingTime, 3);
 
-            if (alife) {
+            if (alive) {
                 addAvailableNode(node);
-                iterator.remove();
+                iterator2.remove();
                 logger.info(node.url() + " - available");
             } else {
                 logger.error(node.url() + " - not available ");
             }
 
         }
-
         final long finished = System.currentTimeMillis();
         final long timeUsed = finished - now;
         if (timeUsed < waitingTime) {
