@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Create a list of folders for testing (logs, pids, data)
+./create_test_env.sh
+
 export JAVA_OPTS_SCIODB="-Xms128m -Xmx256m -XX:MaxMetaspaceSize=128m"
 
 export CLASSPATH=".";

@@ -21,11 +21,11 @@ The normal way to start Scio DB is using the principal script:
 
 For testing purposive, if you want to start up multiples nodes, you can use the *startup.sh* script. For example:
 ```
-./start.sh 9090
+./startup.sh 9090
 ```
 Or if you want to start a node and connect it with the other:
 ```
-./start.sh 9091 0.0.0.0:9090
+./startup.sh 9091 0.0.0.0:9090
 ```
 The format is:
 ```
