@@ -16,6 +16,7 @@ How to run the system, you should go to the *bin* folder and execute
 ./sciodb.sh
 ```
 
+This should start the sciodb and you will be able to add or remove nodes to the sciodb.
 For the moment it is only for testing, the system is not functional.
 
 If you want to see multiple nodes working, you can execute:
@@ -26,12 +27,12 @@ If you want to see multiple nodes working, you can execute:
 
 For example:
 ```
-./start.sh 9090
+./startup.sh 9090
 ```
 will start a node without seeds. Or if you want to start nodes with a seed to connect:
 
 ```
-./start.sh 9091 0.0.0.0:9090
+./startup.sh 9091 0.0.0.0:9090
 ```
 
 and if you want to stop a node:
