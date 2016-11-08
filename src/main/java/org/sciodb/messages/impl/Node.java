@@ -1,13 +1,20 @@
 package org.sciodb.messages.impl;
 
+import org.apache.log4j.Logger;
 import org.sciodb.messages.Decoder;
 import org.sciodb.messages.Encoder;
 import org.sciodb.messages.Message;
+
+import javax.xml.bind.DatatypeConverter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * @author jesus.navarrete  (22/09/14)
  */
 public class Node implements Message {
+
+    final static private Logger logger = Logger.getLogger(Node.class);
 
     private String host;
     private int port;
@@ -79,6 +86,21 @@ public class Node implements Message {
 
         if (port != node.port) return false;
         return host.equals(node.host);
+
+    }
+
+    public String hash() {
+        try {
+            final MessageDigest md5 = MessageDigest.getInstance("MD5");
+
+            md5.update(url().getBytes());
+            byte[] r = md5.digest();
+            return DatatypeConverter.printBase64Binary(r);
+//            return new BASE64Encoder().encode(r);
+        } catch (final NoSuchAlgorithmException e) {
+            logger.error("MD5 algorithm, not present, impossible to hash node", e);
+        }
+        return url();
 
     }
 

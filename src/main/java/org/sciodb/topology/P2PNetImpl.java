@@ -105,14 +105,6 @@ public class P2PNetImpl implements Net {
     }
 
     public static void main(String[] args) {
-//        int max = 100;
-//        for (int i = 0; i < max; i++) {
-//            System.out.print(i +  "\t");
-//        }
-//        System.out.println();
-//        for (int i = 0; i < max; i++) {
-//            System.out.print(i * i +  "\t");
-//        }
         final P2PNetImpl p2PNet = new P2PNetImpl();
 
         int port = 0;

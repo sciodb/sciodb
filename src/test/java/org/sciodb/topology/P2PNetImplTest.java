@@ -12,6 +12,30 @@ import static org.junit.Assert.*;
  * Created by jenaiz on 06/08/16.
  */
 public class P2PNetImplTest {
+    @Test
+    public void add1() throws Exception {
+
+    }
+
+    @Test
+    public void remove1() throws Exception {
+
+    }
+
+    @Test
+    public void getPosition() throws Exception {
+
+    }
+
+    @Test
+    public void getPeers1() throws Exception {
+
+    }
+
+    @Test
+    public void snapshot1() throws Exception {
+
+    }
 
     private Net p2pNet;
 
