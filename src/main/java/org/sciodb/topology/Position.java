@@ -1,7 +1,7 @@
 package org.sciodb.topology;
 
 /**
- * Created by jenaiz on 06/08/16.
+ * @author Jesús Navarrete (06/08/16)
  */
 public class Position {
 

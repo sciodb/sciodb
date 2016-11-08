@@ -9,7 +9,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Created by jenaiz on 06/08/16.
+ * @author Jesús Navarrete (06/08/16)
  */
 public class P2PNetImplTest {
     @Test

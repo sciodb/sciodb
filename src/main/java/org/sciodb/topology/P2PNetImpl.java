@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by jenaiz on 06/08/16.
+ * @author Jesús Navarrete (06/08/16)
  */
 public class P2PNetImpl implements Net {
 
