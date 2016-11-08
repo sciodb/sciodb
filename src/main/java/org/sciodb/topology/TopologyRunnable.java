@@ -83,16 +83,17 @@ public class TopologyRunnable implements Runnable {
             final String[] parts = seed.split(":");
             if (parts.length == 2 && isInteger(parts[1])) {
                 final Node node = new Node(parts[0], new Integer(parts[1].trim()));
-                final List<Node> nodes = NodeOperations.discoverPeer(me, node);
-                foundNodes.addAll(nodes);
-                foundNodes.add(node);
+                if (!me.url().equals(node.url())) {
+                    final List<Node> nodes = NodeOperations.discoverPeer(me, node);
+                    foundNodes.addAll(nodes);
+                    foundNodes.add(node);
+                }
             }
         }
         for (final Node n : foundNodes) {
             container.addNode(n);
         }
     }
-
 
     public static boolean isInteger(final String str) {
         return str != null && str.trim().matches("-?\\d+");  //match a number with optional '-' and decimal.

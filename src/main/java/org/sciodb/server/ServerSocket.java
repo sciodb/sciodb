@@ -73,12 +73,10 @@ public class ServerSocket implements Runnable {
             try {
                 // Process any pending changes
                 synchronized (this.pendingChanges) {
-                    final Iterator changes = this.pendingChanges.iterator();
-                    while (changes.hasNext()) {
-                        final ChangeRequest change = (ChangeRequest) changes.next();
+                    for (ChangeRequest change : this.pendingChanges) {
                         switch (change.type) {
                             case ChangeRequest.CHANGEOPS:
-                                SelectionKey key = change.socket.keyFor(this.selector);
+                                final SelectionKey key = change.socket.keyFor(this.selector);
                                 key.interestOps(change.ops);
                         }
                     }
@@ -89,9 +87,9 @@ public class ServerSocket implements Runnable {
                 this.selector.select();
 
                 // Iterate over the set of keys for which events are available
-                final Iterator selectedKeys = this.selector.selectedKeys().iterator();
+                final Iterator<SelectionKey> selectedKeys = this.selector.selectedKeys().iterator();
                 while (selectedKeys.hasNext()) {
-                    final SelectionKey key = (SelectionKey) selectedKeys.next();
+                    final SelectionKey key = selectedKeys.next();
                     selectedKeys.remove();
 
                     if (!key.isValid()) {

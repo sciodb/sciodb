@@ -1,6 +1,8 @@
 - Connection Manager
 - Request Dispatcher
 
+- create doc folder and use github for the next tasks
+
 
 - Storage engines:
     * in-memory (for testing)

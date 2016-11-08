@@ -70,9 +70,7 @@ public class NodeOperations {
         container.setContent(message.encode());
 
         try {
-            byte[] response = SocketClient.sendToSocket(node.getHost(), node.getPort(), container, true);
-
-            nodesFromResponse(me, response, nodes);
+            SocketClient.sendToSocket(node.getHost(), node.getPort(), container, false);
 
             return true;
         } catch (CommunicationException e) {
