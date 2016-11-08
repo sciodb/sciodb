@@ -10,7 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * @author jesus.navarrete  (22/09/14)
+ * @author Jesús Navarrete (22/09/14)
  */
 public class Node implements Message {
 

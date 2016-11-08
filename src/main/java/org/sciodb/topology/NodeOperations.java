@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * @author jenaiz on 03/10/15.
+ * @author Jesús Navarrete (03/10/15)
  */
 public class NodeOperations {
 

@@ -5,7 +5,7 @@ import org.sciodb.messages.Encoder;
 import org.sciodb.messages.Message;
 
 /**
- * @author jesus.navarrete  (09/06/16)
+ * @author Jesús Navarrete (09/06/16)
  */
 // TODO extends from node
 public class NodeMessage implements Message {

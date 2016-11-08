@@ -1,7 +1,7 @@
 package org.sciodb.server.services;
 
 /**
- * @author jesus.navarrete  (24/03/16)
+ * @author Jesús Navarrete (24/03/16)
  */
 public class EchoCommand implements Command {
 

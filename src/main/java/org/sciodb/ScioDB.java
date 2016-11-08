@@ -11,7 +11,7 @@ import org.sciodb.utils.Configuration;
 /**
  * Starter of the database based on the parameters of the command line.
  *
- * @author jesus.navarrete  (21/02/16)
+ * @author Jesús Navarrete (21/02/16)
  *
  * Copyright (C) 2016 Jesús Navarrete <jenaiz@alblang.org>
  *

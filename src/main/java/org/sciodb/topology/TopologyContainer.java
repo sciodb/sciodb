@@ -10,7 +10,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * @author jesus.navarrete  (22/09/14)
+ * @author Jesús Navarrete (22/09/14)
  */
 public class TopologyContainer {
 
@@ -29,10 +29,10 @@ public class TopologyContainer {
         nodes = new ConcurrentLinkedQueue<>();
         availableNodes = new ConcurrentLinkedQueue<>();
 
-        waitingTime = Configuration.getInstance().getNodesCheckTimeNessyTopology();
-        persistTime = Configuration.getInstance().getNodesPersistTimeNessyTopology();
+        waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
+        persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
 
-        masterCheckingTime = Configuration.getInstance().getMasterCheckTimeNessyTopology();
+        masterCheckingTime = Configuration.getInstance().getMasterCheckTimeTopology();
     }
 
     public static TopologyContainer getInstance() {

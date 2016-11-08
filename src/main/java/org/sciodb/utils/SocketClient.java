@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.sciodb.utils.ScioDBConstants.MAX_ANSWER_BYTES;
 
 /**
- * @author jesus.navarrete  (08/06/16)
+ * @author Jesús Navarrete (08/06/16)
  */
 public class SocketClient {
 

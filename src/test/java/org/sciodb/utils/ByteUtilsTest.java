@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * @author jesus.navarrete  (08/06/16)
+ * @author Jesús Navarrete (08/06/16)
  */
 public class ByteUtilsTest {
 

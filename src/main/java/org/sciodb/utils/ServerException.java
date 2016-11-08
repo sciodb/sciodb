@@ -1,7 +1,7 @@
 package org.sciodb.utils;
 
 /**
- * @author jesus.navarrete  (02/06/16)
+ * @author Jesús Navarrete (02/06/16)
  */
 public class ServerException extends Exception {
     public ServerException() {

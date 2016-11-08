@@ -2,6 +2,9 @@ package org.sciodb.server;
 
 import java.nio.channels.SocketChannel;
 
+/**
+ * @author Jesús Navarrete (26/07/16)
+ */
 public class ChangeRequest {
 
     public static final int REGISTER = 1;

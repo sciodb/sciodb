@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import static org.junit.Assert.*;
 
 /**
- * @author jenaiz on 24/04/16.
+ * @author Jesús Navarrete (24/04/16)
  */
 public class EncoderTest {
 

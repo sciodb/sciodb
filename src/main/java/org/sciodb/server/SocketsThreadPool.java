@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @author jesus.navarrete  (07/04/16)
+ * @author Jesús Navarrete (07/04/16)
  */
 public class SocketsThreadPool {
 

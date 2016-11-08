@@ -4,7 +4,7 @@ import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
 
 /**
- * @author jesus.navarrete  (29/02/16)
+ * @author Jesús Navarrete (29/02/16)
  */
 public class Dispatcher {
 

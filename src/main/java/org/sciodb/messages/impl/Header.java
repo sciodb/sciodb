@@ -5,7 +5,7 @@ import org.sciodb.messages.Encoder;
 import org.sciodb.messages.Message;
 
 /**
- * @author jenaiz on 23/04/16.
+ * @author Jesús Navarrete (23/04/16)
  */
 public class Header implements Message {
 

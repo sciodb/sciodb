@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author jenaiz on 23/04/16.
+ * @author Jesús Navarrete (23/04/16)
+ *
  */
 public class Encoder {
 

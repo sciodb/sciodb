@@ -17,7 +17,7 @@ import java.util.*;
 import static org.sciodb.utils.ScioDBConstants.HEADER_SIZE;
 
 /**
- * @author jesus.navarrete  (24/02/16)
+ * @author Jesús Navarrete (24/02/16)
  */
 public class ServerSocket implements Runnable {
 

@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 /**
- * @author jesus.navarrete  (10/05/16)
+ * @author Jesús Navarrete (10/05/16)
  */
 public class ServerSocketTest {
 

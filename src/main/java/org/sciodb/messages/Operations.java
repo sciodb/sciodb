@@ -1,7 +1,7 @@
 package org.sciodb.messages;
 
 /**
- * @author jenaiz on 23/04/16.
+ * @author Jesús Navarrete (23/04/16)
  */
 public enum Operations {
     ECHO(1), STATUS(2),

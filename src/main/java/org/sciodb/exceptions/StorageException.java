@@ -1,7 +1,7 @@
 package org.sciodb.exceptions;
 
 /**
- * @author jenaiz on 10/04/16.
+ * @author Jesús Navarrete (10/04/16)
  */
 public class StorageException extends Exception {
 
