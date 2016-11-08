@@ -30,10 +30,10 @@ public class TopologyRunnable implements Runnable {
     public TopologyRunnable(final Node node, final String[] seeds) throws ServerException {
         container = TopologyContainer.getInstance();
 
-        waitingTime = Configuration.getInstance().getNodesCheckTimeNessyTopology();
-        persistTime = Configuration.getInstance().getNodesPersistTimeNessyTopology();
+        waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
+        persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
 
-        masterCheckingTime = Configuration.getInstance().getMasterCheckTimeNessyTopology();
+        masterCheckingTime = Configuration.getInstance().getMasterCheckTimeTopology();
 
         me = node;
         parseSeeds(seeds);
