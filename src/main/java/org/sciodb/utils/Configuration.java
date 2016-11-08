@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * @author jesus.navarrete  (24/02/16)
+ * @author Jesús Navarrete (24/02/16)
  */
 public class Configuration {
 

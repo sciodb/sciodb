@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import static org.sciodb.utils.ScioDBConstants.MAX_SIZE;
 
 /**
- * @author jesus.navarrete  (08/06/16)
+ * @author Jesús Navarrete (08/06/16)
  */
 public class ByteUtils {
 

@@ -8,7 +8,7 @@ import org.sciodb.exceptions.StorageException;
 import java.util.List;
 
 /**
- * @author jesus.navarrete  (24/03/16)
+ * @author Jesús Navarrete (24/03/16)
  */
 public class InMemoryStorage implements StorageEngine {
 

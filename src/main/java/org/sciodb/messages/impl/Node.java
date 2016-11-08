@@ -5,7 +5,7 @@ import org.sciodb.messages.Encoder;
 import org.sciodb.messages.Message;
 
 /**
- * @author jesus.navarrete  (22/09/14)
+ * @author Jesús Navarrete (22/09/14)
  */
 public class Node implements Message {
 

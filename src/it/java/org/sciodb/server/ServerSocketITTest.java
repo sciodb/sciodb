@@ -15,7 +15,7 @@ import java.nio.channels.SocketChannel;
 import java.util.UUID;
 
 /**
- * @author jesus.navarrete  (10/05/16)
+ * @author Jesús Navarrete (10/05/16)
  */
 public class ServerSocketITTest {
 

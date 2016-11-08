@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author jesus.navarrete  (16/02/16)
+ * @author Jesús Navarrete (16/02/16)
  */
 public class ScioDBTest {
 

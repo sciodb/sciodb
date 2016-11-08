@@ -1,7 +1,7 @@
 package org.sciodb.utils;
 
 /**
- * @author jesus.navarrete  (13/07/16)
+ * @author Jesús Navarrete (13/07/16)
  */
 public class ThreadUtils {
 

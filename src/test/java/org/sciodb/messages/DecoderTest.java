@@ -8,7 +8,7 @@ import java.nio.ByteOrder;
 import static org.junit.Assert.assertEquals;
 
 /**
- * @author jesus.navarrete  (30/04/16)
+ * @author Jesús Navarrete (30/04/16)
  */
 public class DecoderTest {
 

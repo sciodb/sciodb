@@ -7,7 +7,7 @@ import org.sciodb.storages.models.DatabaseInfo;
 import java.util.List;
 
 /**
- * @author jenaiz on 03/04/16.
+ * @author Jesús Navarrete (03/04/16)
  */
 public interface StorageEngine {
 

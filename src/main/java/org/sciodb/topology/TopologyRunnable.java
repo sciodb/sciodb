@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author jesus.navarrete  (24/09/14)
+ * @author Jesús Navarrete (24/09/14)
  */
 public class TopologyRunnable implements Runnable {
 

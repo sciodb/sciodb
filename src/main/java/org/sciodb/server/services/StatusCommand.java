@@ -3,7 +3,7 @@ package org.sciodb.server.services;
 import org.apache.log4j.Logger;
 
 /**
- * @author jesus.navarrete  (09/03/16)
+ * @author Jesús Navarrete (09/03/16)
  */
 public class StatusCommand implements Command {
 

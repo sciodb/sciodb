@@ -10,7 +10,7 @@ import java.io.StringWriter;
 import java.util.List;
 
 /**
- * @author jesus.navarrete  (02/10/15)
+ * @author Jesús Navarrete (02/10/15)
  */
 public class NodeMapper {
 

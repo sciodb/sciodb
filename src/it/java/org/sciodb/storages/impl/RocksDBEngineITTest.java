@@ -11,7 +11,7 @@ import java.io.File;
 import static org.junit.Assert.assertTrue;
 
 /**
- * @author jenaiz on 26/05/16.
+ * @author Jesús Navarrete (26/05/16)
  */
 public class RocksDBEngineITTest {
 

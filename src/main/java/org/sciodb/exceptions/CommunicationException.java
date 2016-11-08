@@ -1,7 +1,7 @@
 package org.sciodb.exceptions;
 
 /**
- * @author jesus.navarrete  (08/06/16)
+ * @author Jesús Navarrete (08/06/16)
  */
 public class CommunicationException extends Exception {
 

@@ -1,7 +1,7 @@
 package org.sciodb.server.services;
 
 /**
- * @author jesus.navarrete  (29/02/16)
+ * @author Jesús Navarrete (29/02/16)
  */
 public interface Command {
 

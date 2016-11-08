@@ -8,7 +8,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * @author jesus.navarrete  (11/07/16)
+ * @author Jesús Navarrete (11/07/16)
  */
 public class NodesMessage implements Message {
 

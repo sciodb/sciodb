@@ -5,7 +5,7 @@ import org.sciodb.utils.ByteUtils;
 import java.nio.ByteBuffer;
 
 /**
- * @author jenaiz on 23/04/16.
+ * @author Jesús Navarrete (23/04/16)
  */
 public class Decoder {
 

@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * @author jesus.navarrete  (28/06/16)
+ * @author Jesús Navarrete (28/06/16)
  */
 public class NodeMessageTest {
 

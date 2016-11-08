@@ -1,7 +1,7 @@
 package org.sciodb.utils;
 
 /**
- * Created by jenaiz on 27/07/16.
+ * @author Jesús Navarrete (27/07/16)
  */
 public interface ScioDBConstants {
 
