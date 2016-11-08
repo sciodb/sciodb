@@ -79,8 +79,8 @@ public class TopologyRunnable implements Runnable {
 
     private void parseSeeds(final String[] seeds) {
         final Set<Node> foundNodes = new HashSet<>();
-        for (final String s : seeds) {
-            final String[] parts = s.split(":");
+        for (final String seed : seeds) {
+            final String[] parts = seed.split(":");
             if (parts.length == 2 && isInteger(parts[1])) {
                 final Node node = new Node(parts[0], new Integer(parts[1].trim()));
                 if (!me.url().equals(node.url())) {
