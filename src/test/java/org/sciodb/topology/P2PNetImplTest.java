@@ -98,8 +98,8 @@ public class P2PNetImplTest {
         final List<Node> peers = p2pNet.getPeers(node2);
 
         assertEquals("", 2, peers.size());
-        assertEquals("", node1.getPort(), peers.get(1).getPort());
-        assertEquals("", node3.getPort(), peers.get(0).getPort());
+        assertEquals("", node1.getPort(), peers.get(0).getPort());
+        assertEquals("", node3.getPort(), peers.get(1).getPort());
     }
 
     @Test
