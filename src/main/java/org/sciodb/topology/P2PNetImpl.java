@@ -3,7 +3,6 @@ package org.sciodb.topology;
 import org.sciodb.messages.impl.Node;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -14,11 +13,11 @@ public class P2PNetImpl implements Net {
     private Node[][] matrix;
 
     private int initial = 10;
-    private int maximun;
+    private int maximum;
 
     public P2PNetImpl() {
         matrix = new Node[initial][initial];
-        maximun = (int)Math.pow(initial, initial);
+        maximum = (int)Math.pow(initial, initial);
     }
 
     private void resize() {
@@ -30,13 +29,13 @@ public class P2PNetImpl implements Net {
             }
         }
         matrix = clone;
-        maximun = (int)Math.pow(initial, 2) - maximun;
+        maximum = (int)Math.pow(initial, 2) - maximum;
     }
 
     @Override
     public synchronized void add(final Node node) {
 
-        if (maximun == 0) {
+        if (maximum == 0) {
             resize();
         }
 
@@ -47,7 +46,7 @@ public class P2PNetImpl implements Net {
             for (int j = z; j <= slice - z && !stop; ++j) {
                 if (matrix[j][slice - j] == null) {
                     matrix[j][slice - j] = node;
-                    maximun--;
+                    maximum--;
                     stop = true;
                 }
             }
