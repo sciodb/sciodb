@@ -52,7 +52,6 @@ public class P2PNetImpl implements Net {
             }
         }
         printMatrix(matrix);
-        System.out.println("----");
     }
 
     private void printMatrix(final Node[][] matrix) {
@@ -67,6 +66,7 @@ public class P2PNetImpl implements Net {
             }
             System.out.println(sb.toString());
         }
+        System.out.println("----");
     }
 
     @Override
@@ -128,14 +128,4 @@ public class P2PNetImpl implements Net {
         return nodes;
     }
 
-    public static void main(String[] args) {
-        final P2PNetImpl p2PNet = new P2PNetImpl();
-
-        int port = 0;
-        for (; port < 99; port++) {
-            p2PNet.add(new Node("0.0.0.0", port));
-        }
-
-        p2PNet.printMatrix(p2PNet.matrix);
-    }
 }
