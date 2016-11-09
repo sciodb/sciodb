@@ -9,9 +9,10 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Created by jenaiz on 06/08/16.
+ * @author Jesús Navarrete (06/08/16)
  */
 public class P2PNetImplTest {
+
     @Test
     public void add1() throws Exception {
 
@@ -98,8 +99,8 @@ public class P2PNetImplTest {
         final List<Node> peers = p2pNet.getPeers(node2);
 
         assertEquals("", 2, peers.size());
-        assertEquals("", node1.getPort(), peers.get(1).getPort());
-        assertEquals("", node3.getPort(), peers.get(0).getPort());
+        assertEquals("", node1.getPort(), peers.get(0).getPort());
+        assertEquals("", node3.getPort(), peers.get(1).getPort());
     }
 
     @Test

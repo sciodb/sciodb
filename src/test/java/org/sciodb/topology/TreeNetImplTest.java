@@ -1,6 +1,7 @@
 package org.sciodb.topology;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.sciodb.messages.impl.Node;
 import sun.security.provider.MD5;
@@ -10,7 +11,7 @@ import java.security.MessageDigest;
 import static org.junit.Assert.*;
 
 /**
- * @author jenaiz on 02/10/16.
+ * @author Jesús Navarrete (02/10/16)
  */
 public class TreeNetImplTest {
 
@@ -95,16 +96,19 @@ public class TreeNetImplTest {
 
     }
 
+    @Ignore
     @Test
     public void getPosition() throws Exception {
         fail("Not implemented yet");
     }
 
+    @Ignore
     @Test
     public void getPeers() throws Exception {
         fail("Not implemented yet");
     }
 
+    @Ignore
     @Test
     public void snapshot() throws Exception {
         fail("Not implemented yet");
