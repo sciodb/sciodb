@@ -76,6 +76,22 @@ public class P2PNetImplTest {
     @Test
     public void snapshot() throws Exception {
 
+        final int amount = 4;
+
+        fillNet(amount);
+        final List<Node> nodes = p2pNet.snapshot();
+
+        assertEquals(amount, nodes.size());
+        assertEquals(9000, nodes.get(0).getPort());
+        assertEquals("0.0.0.0", nodes.get(0).getHost());
+    }
+
+    private void fillNet(final int amount) {
+        for (int i = 0; i < amount; i++) {
+            final Node node = new Node("0.0.0.0", 9000 + i);
+            p2pNet.add(node);
+        }
+
     }
 
 }
