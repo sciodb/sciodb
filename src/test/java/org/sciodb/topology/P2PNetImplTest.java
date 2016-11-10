@@ -13,31 +13,6 @@ import static org.junit.Assert.*;
  */
 public class P2PNetImplTest {
 
-    @Test
-    public void add1() throws Exception {
-
-    }
-
-    @Test
-    public void remove1() throws Exception {
-
-    }
-
-    @Test
-    public void getPosition() throws Exception {
-
-    }
-
-    @Test
-    public void getPeers1() throws Exception {
-
-    }
-
-    @Test
-    public void snapshot1() throws Exception {
-
-    }
-
     private Net p2pNet;
 
     @Before
@@ -63,11 +38,6 @@ public class P2PNetImplTest {
         p2pNet.remove(node1);
 
         assertEquals("", 0, p2pNet.snapshot().size());
-
-    }
-
-    @Test
-    public void position() throws Exception {
 
     }
 

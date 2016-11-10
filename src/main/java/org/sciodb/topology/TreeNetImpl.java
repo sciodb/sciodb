@@ -81,11 +81,6 @@ public class TreeNetImpl implements Net {
     }
 
     @Override
-    public Position getPosition(Node node) {
-        throw new RuntimeException("Method not available");
-    }
-
-    @Override
     public List<Node> getPeers(Node node) {
         throw new RuntimeException("Not implemented");
     }

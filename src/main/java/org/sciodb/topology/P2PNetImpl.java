@@ -85,11 +85,6 @@ public class P2PNetImpl implements Net {
     }
 
     @Override
-    public Position getPosition(final Node node) {
-        return null;
-    }
-
-    @Override
     public List<Node> getPeers(final Node node) {
         final List<Node> peers = new ArrayList<>();
 
