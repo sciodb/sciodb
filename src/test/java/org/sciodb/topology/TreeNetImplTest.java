@@ -7,6 +7,7 @@ import org.sciodb.messages.impl.Node;
 import sun.security.provider.MD5;
 
 import java.security.MessageDigest;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -15,7 +16,7 @@ import static org.junit.Assert.*;
  */
 public class TreeNetImplTest {
 
-    Net tree;
+    private Net tree;
 
     @Before
     public void setUp() throws Exception {
@@ -32,7 +33,6 @@ public class TreeNetImplTest {
 
         final Node node2 = new Node("localhost", 9092);
         tree.add(node2);
-
     }
 
     @Test
@@ -68,7 +68,7 @@ public class TreeNetImplTest {
 
     @Test
     public void search() throws Exception {
-        TreeNetImpl tree1 = new TreeNetImpl();
+        final TreeNetImpl tree1 = new TreeNetImpl();
 
         final Node node1 = new Node("localhost", 9090);
         final Node node2 = new Node("192.137.168.1", 9091);
@@ -98,12 +98,6 @@ public class TreeNetImplTest {
 
     @Ignore
     @Test
-    public void getPosition() throws Exception {
-        fail("Not implemented yet");
-    }
-
-    @Ignore
-    @Test
     public void getPeers() throws Exception {
         fail("Not implemented yet");
     }
@@ -111,7 +105,23 @@ public class TreeNetImplTest {
     @Ignore
     @Test
     public void snapshot() throws Exception {
-        fail("Not implemented yet");
+        final TreeNetImpl tree1 = new TreeNetImpl();
+
+        final Node node1 = new Node("localhost", 9090);
+        final Node node2 = new Node("192.137.168.1", 9091);
+        final Node node3 = new Node("0.0.0.0", 9092);
+
+        tree1.add(node1);
+        tree1.add(node2);
+        tree1.add(node3);
+
+        final List<Node> nodes = tree1.snapshot();
+
+        assertNotEquals(null, nodes);
+        assertEquals(3, nodes.size());
+        assertEquals(node1.getHost(), nodes.get(0).getHost());
+        assertEquals(node1.getPort(), nodes.get(0).getPort());
+
     }
 
 }

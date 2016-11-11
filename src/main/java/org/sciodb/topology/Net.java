@@ -12,7 +12,6 @@ public interface Net {
     void add(final Node node);
 
     void remove(final Node node);
-    Position getPosition(final Node node);
 
     List<Node> getPeers(final Node node);
     List<Node> snapshot();
