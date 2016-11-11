@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * BST tree implementation
  *
- * @author jenaiz on 24/09/16.
+ * @author Jesús Navarrete (24/09/16)
  */
 public class TreeNetImpl implements Net {
 
@@ -78,11 +78,6 @@ public class TreeNetImpl implements Net {
         if (root == null) return;
         // find and balance ... maybe
 
-    }
-
-    @Override
-    public Position getPosition(Node node) {
-        throw new RuntimeException("Method not available");
     }
 
     @Override

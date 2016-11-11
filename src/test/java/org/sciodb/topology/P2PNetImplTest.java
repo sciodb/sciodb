@@ -9,33 +9,9 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Created by jenaiz on 06/08/16.
+ * @author Jesús Navarrete (06/08/16)
  */
 public class P2PNetImplTest {
-    @Test
-    public void add1() throws Exception {
-
-    }
-
-    @Test
-    public void remove1() throws Exception {
-
-    }
-
-    @Test
-    public void getPosition() throws Exception {
-
-    }
-
-    @Test
-    public void getPeers1() throws Exception {
-
-    }
-
-    @Test
-    public void snapshot1() throws Exception {
-
-    }
 
     private Net p2pNet;
 
@@ -62,11 +38,6 @@ public class P2PNetImplTest {
         p2pNet.remove(node1);
 
         assertEquals("", 0, p2pNet.snapshot().size());
-
-    }
-
-    @Test
-    public void position() throws Exception {
 
     }
 
@@ -98,12 +69,28 @@ public class P2PNetImplTest {
         final List<Node> peers = p2pNet.getPeers(node2);
 
         assertEquals("", 2, peers.size());
-        assertEquals("", node1.getPort(), peers.get(1).getPort());
-        assertEquals("", node3.getPort(), peers.get(0).getPort());
+        assertEquals("", node1.getPort(), peers.get(0).getPort());
+        assertEquals("", node3.getPort(), peers.get(1).getPort());
     }
 
     @Test
     public void snapshot() throws Exception {
+
+        final int amount = 4;
+
+        fillNet(amount);
+        final List<Node> nodes = p2pNet.snapshot();
+
+        assertEquals(amount, nodes.size());
+        assertEquals(9000, nodes.get(0).getPort());
+        assertEquals("0.0.0.0", nodes.get(0).getHost());
+    }
+
+    private void fillNet(final int amount) {
+        for (int i = 0; i < amount; i++) {
+            final Node node = new Node("0.0.0.0", 9000 + i);
+            p2pNet.add(node);
+        }
 
     }
 
