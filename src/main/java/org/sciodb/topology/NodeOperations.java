@@ -19,21 +19,6 @@ public class NodeOperations {
 
     private final static Logger logger = Logger.getLogger(NodeOperations.class);
 
-    public static void main(String[] args) {
-
-        Node me = new Node("localhost", 9091);
-        Node seed = new Node("localhost", 9090);
-
-//        for(int i = 0; i < 100; i++) {
-//            discoverPeer(me, seed);
-//        }
-
-        for(int i = 0; i < 10; i++) {
-            isAlife(me, seed, new ConcurrentLinkedQueue<Node>());
-        }
-
-    }
-
     public static List<Node> discoverPeer(final Node me, final Node seed) {
         final List<Node> result = new ArrayList<>();
         try {
@@ -59,7 +44,7 @@ public class NodeOperations {
         return result;
     }
 
-    public static boolean isAlife(final Node me, final Node node, final Queue<Node> nodes) {
+    public static boolean isAlive(final Node me, final Node node, final Queue<Node> nodes) {
         final NodeMessage message = new NodeMessage();
         message.setNode(me);
 

@@ -102,7 +102,7 @@ public class TopologyContainer {
     private boolean checkNode(final Node me, final Node node, final int waitingTime, final int retries) {
         boolean execute = false;
         for (int i = 0; i < retries; i++) {
-            if (NodeOperations.isAlife(me, node, nodes)) {
+            if (NodeOperations.isAlive(me, node, nodes)) {
                 execute = true;
                 break;
             }
