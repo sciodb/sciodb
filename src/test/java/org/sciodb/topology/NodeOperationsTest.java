@@ -2,6 +2,7 @@ package org.sciodb.topology;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.sciodb.messages.impl.Node;
 
@@ -26,6 +27,7 @@ public class NodeOperationsTest {
         operations = null;
     }
 
+    @Ignore
     @Test
     public void discoverPeer() throws Exception {
         final Node me = new Node("localhost", 9091);
@@ -37,6 +39,7 @@ public class NodeOperationsTest {
 
     }
 
+    @Ignore
     @Test
     public void isAlive() throws Exception {
         final Node me = new Node("localhost", 9091);
