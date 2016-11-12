@@ -54,7 +54,7 @@ public class SocketsThreadPool {
                 TopologyContainer.getInstance().addNode(nodeMessage.getNode());
 
                 server.send(channel, new byte[0]);
-            } else if (operationId == Operations.DISCOVERY_PEERS.getValue()) {
+            } else if (operationId == Operations.DISCOVER_PEERS.getValue()) {
                 final NodeMessage nodeMessage = new NodeMessage();
                 nodeMessage.decode(request.getContent());
 

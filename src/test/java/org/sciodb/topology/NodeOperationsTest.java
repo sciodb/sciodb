@@ -43,7 +43,7 @@ public class NodeOperationsTest {
         final Node seed = new Node("localhost", 9090);
 
         for(int i = 0; i < 10; i++) {
-            assertTrue(operations.isAlive(me, seed, new ConcurrentLinkedQueue<>()));
+            assertTrue(operations.isAlive(me, seed));
         }
     }
 
