@@ -7,6 +7,7 @@ import org.sciodb.messages.impl.Node;
 import sun.security.provider.MD5;
 
 import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -43,27 +44,33 @@ public class TreeNetImplTest {
         md5.update("localhost:9090".getBytes());
         byte[] r = md5.digest();
 
-        System.out.println(new sun.misc.BASE64Encoder().encode(r));
+        System.out.println(new String(Base64.getEncoder().encode(r)));
         final MessageDigest md5a = MessageDigest.getInstance("MD5");
 
         md5a.update("localhost:9091".getBytes());
         byte[] ra = md5a.digest();
 
-        System.out.println(new sun.misc.BASE64Encoder().encode(ra));
+        System.out.println(new String(Base64.getEncoder().encode(ra)));
         final MessageDigest md5b = MessageDigest.getInstance("MD5");
 
         md5b.update("localhost:9092".getBytes());
         byte[] rb = md5b.digest();
-        System.out.println(new sun.misc.BASE64Encoder().encode(rb));
+        System.out.println(new String(Base64.getEncoder().encode(rb)));
 
-        System.out.println((new sun.misc.BASE64Encoder().encode(r)).compareTo(new sun.misc.BASE64Encoder().encode(ra)));
-        System.out.println((new sun.misc.BASE64Encoder().encode(ra)).compareTo(new sun.misc.BASE64Encoder().encode(r)));
+        int a = (new String(Base64.getEncoder().encode(r))).compareTo(new String(Base64.getEncoder().encode(ra)));
+        int aa = (new String(Base64.getEncoder().encode(ra))).compareTo(new String(Base64.getEncoder().encode(r)));
+        assertTrue(a > 0);
+        assertEquals(a, -aa);
 
-        System.out.println((new sun.misc.BASE64Encoder().encode(r)).compareTo(new sun.misc.BASE64Encoder().encode(rb)));
-        System.out.println((new sun.misc.BASE64Encoder().encode(rb)).compareTo(new sun.misc.BASE64Encoder().encode(r)));
+        int b = (new String(Base64.getEncoder().encode(r))).compareTo(new String(Base64.getEncoder().encode(rb)));
+        int bb = (new String(Base64.getEncoder().encode(rb))).compareTo(new String(Base64.getEncoder().encode(r)));
+        assertTrue(b > 0);
+        assertEquals(b, -bb);
 
-        System.out.println((new sun.misc.BASE64Encoder().encode(ra)).compareTo(new sun.misc.BASE64Encoder().encode(rb)));
-        System.out.println((new sun.misc.BASE64Encoder().encode(rb)).compareTo(new sun.misc.BASE64Encoder().encode(ra)));
+        int c = (new String(Base64.getEncoder().encode(ra))).compareTo(new String(Base64.getEncoder().encode(rb)));
+        int cc = (new String(Base64.getEncoder().encode(rb))).compareTo(new String(Base64.getEncoder().encode(ra)));
+        assertTrue(c > 0);
+        assertEquals(c, -cc);
     }
 
     @Test
