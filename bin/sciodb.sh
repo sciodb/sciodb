@@ -13,7 +13,7 @@ function check_java {
 function check_java_version {
     if [[ "$_java" ]]; then
         version=$("$_java" -version 2>&1 | awk -F '"' '/version/ {print $2}')
-        #echo "Java version $version"
+        echo "Current Java version $version"
         if [[ "$version" < "1.8" ]]; then
             echo "[ERROR] Scio DB requires JDK version 1.8 or later, the current version is $version "
             exit 1
