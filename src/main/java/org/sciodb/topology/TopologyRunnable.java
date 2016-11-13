@@ -52,7 +52,7 @@ public class TopologyRunnable implements Runnable {
             container.checkNodes(me);
 
 //            if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
-//                FileUtils.persistNodes(container, me.getPort());
+//                FileUtils.persistNodes(me.getPort());
 //                lastUpdate = System.currentTimeMillis();
 //            }
             ThreadUtils.sleep(persistTime);
@@ -97,17 +97,6 @@ public class TopologyRunnable implements Runnable {
 
     public static boolean isInteger(final String str) {
         return str != null && str.trim().matches("-?\\d+");  //match a number with optional '-' and decimal.
-    }
-
-    public static void main(String[] args) {
-        System.out.println(isInteger("he12") == false);
-        System.out.println(isInteger("   1") == true);
-        System.out.println(isInteger("12") == true);
-        System.out.println(isInteger("12mmm") == false);
-        System.out.println(isInteger("1.2") == false);
-        System.out.println(isInteger("1 2") == false);
-        System.out.println(isInteger("") == false);
-        System.out.println(isInteger(null) == false);
     }
 
 }
