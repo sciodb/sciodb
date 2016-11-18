@@ -25,36 +25,34 @@ public class TopologyRunnable implements Runnable {
 
     private Node me;
 
-    private TopologyContainer container;
+    private final String[] seeds;
 
-    public TopologyRunnable(final Node node, final String[] seeds) throws ServerException {
-        container = TopologyContainer.getInstance();
-
+    public TopologyRunnable(final Node me, final String[] seeds) throws ServerException {
         waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
         persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
 
         masterCheckingTime = Configuration.getInstance().getMasterCheckTimeTopology();
 
-        me = node;
-        parseSeeds(seeds);
-
+        this.me = me;
+        this.seeds = seeds;
     }
 
     @Override
     public void run() {
 
         logger.info("Starting node [" + me.url() + "]");
+        connectWithSeed(seeds);
 
-        parseHistoricalNodes();
+//        parseHistoricalNodes();
         long lastUpdate = System.currentTimeMillis();
 
         while (true) {
-            container.checkNodes(me);
+            TopologyContainer.getInstance().checkNodes(me);
 
-//            if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
-//                FileUtils.persistNodes(me.getPort());
-//                lastUpdate = System.currentTimeMillis();
-//            }
+            if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
+                FileUtils.persistNodes(me.getPort());
+                lastUpdate = System.currentTimeMillis();
+            }
             ThreadUtils.sleep(persistTime);
         }
     }
@@ -68,7 +66,7 @@ public class TopologyRunnable implements Runnable {
                 final List<Node> previousNodes = NodeMapper.fromString(previousInfo);
 
                 for (final Node node : previousNodes) {
-                    container.addNode(node);
+                    TopologyContainer.getInstance().addNode(node);
                 }
             }
 
@@ -77,21 +75,26 @@ public class TopologyRunnable implements Runnable {
         }
     }
 
-    private void parseSeeds(final String[] seeds) {
+    private void connectWithSeed(final String[] seeds) {
         final Set<Node> foundNodes = new HashSet<>();
         for (final String seed : seeds) {
             final String[] parts = seed.split(":");
             if (parts.length == 2 && isInteger(parts[1])) {
                 final Node node = new Node(parts[0], new Integer(parts[1].trim()));
                 if (!me.url().equals(node.url())) {
-                    final List<Node> nodes = NodeOperations.discoverPeer(me, node);
-                    foundNodes.addAll(nodes);
-                    foundNodes.add(node);
+                    if (NodeOperations.isAlive(me, node)) {
+                        if (NodeOperations.addNode(me, node)) {
+                            final List<Node> peers = NodeOperations.discoverPeer(me, node);
+                            foundNodes.addAll(peers);
+                            break;
+                        }
+                    }
                 }
             }
         }
+        logger.info(foundNodes.size() + " peers nodes found.");
         for (final Node n : foundNodes) {
-            container.addNode(n);
+            TopologyContainer.getInstance().addNode(n);
         }
     }
 

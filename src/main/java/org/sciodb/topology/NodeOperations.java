@@ -38,7 +38,7 @@ public class NodeOperations {
 
             result.addAll(getNodesFromResponse(me, response));
         } catch (CommunicationException e) {
-           logger.error("Add to Root failing because: " + e.getLocalizedMessage());
+           logger.error("Discovering peers failing because: " + e.getLocalizedMessage());
         }
         return result;
     }
@@ -60,7 +60,25 @@ public class NodeOperations {
         } catch (final CommunicationException e) {
             return false;
         }
+    }
 
+    public static boolean addNode(final Node me, final Node node) {
+        final NodeMessage message = new NodeMessage();
+        message.setNode(me);
+
+        final ContainerMessage container = new ContainerMessage();
+        container.getHeader().setOperationId(Operations.ADD_NODE.getValue());
+        container.getHeader().setId(UUID.randomUUID().toString());
+
+        container.setContent(message.encode());
+
+        try {
+            SocketClient.sendToSocket(node.getHost(), node.getPort(), container, false);
+
+            return true;
+        } catch (final CommunicationException e) {
+            return false;
+        }
     }
 
     private static void nodesFromResponse(final Node me, final byte[] response, final Queue<Node> peers) {
