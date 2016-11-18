@@ -27,7 +27,7 @@ public class TopologyContainer {
 
     private Logger logger = Logger.getLogger(TopologyContainer.class);
 
-    private final int MINIMUN_PEERS = 3;
+    private final int MINIMUN_PEERS;
     private Node me;
 
     private TopologyContainer() {
@@ -38,6 +38,7 @@ public class TopologyContainer {
         persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
 
         masterCheckingTime = Configuration.getInstance().getMasterCheckTimeTopology();
+        MINIMUN_PEERS = Configuration.getInstance().getReplicasNumber();
     }
 
     public static TopologyContainer getInstance() {

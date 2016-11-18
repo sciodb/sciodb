@@ -56,14 +56,7 @@ public class Configuration {
         return Integer.valueOf(properties.getProperty("topology.nodes_persist.time"));
     }
 
-    @Deprecated
-    public String getValue(final String property) {
-        return properties.getProperty(property);
+    public int getReplicasNumber() {
+        return Integer.valueOf(properties.getProperty("replication.nodes.number"));
     }
-
-    @Deprecated
-    public int getInt(final String property) {
-        return Integer.valueOf(properties.getProperty(property));
-    }
-
 }
