@@ -1,4 +1,4 @@
-package org.sciodb.topology;
+package org.sciodb.topology.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;

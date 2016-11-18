@@ -1,8 +1,10 @@
-package org.sciodb.topology;
+package org.sciodb.topology.impl;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.sciodb.messages.impl.Node;
+import org.sciodb.topology.Net;
+import org.sciodb.topology.impl.P2PNetImpl;
 
 import java.util.List;
 

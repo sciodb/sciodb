@@ -1,8 +1,10 @@
-package org.sciodb.topology;
+package org.sciodb.topology.impl;
 
 import org.sciodb.messages.impl.Node;
+import org.sciodb.topology.Net;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -12,6 +14,7 @@ public class P2PNetImpl implements Net {
 
     private Node[][] matrix;
 
+    private int counter = 0;
     private int initial = 10;
     private int maximum;
 
@@ -33,11 +36,16 @@ public class P2PNetImpl implements Net {
     }
 
     @Override
+    public boolean contains(Node node) {
+        return false;
+    }
+
+    @Override
     public synchronized void add(final Node node) {
 
-        if (maximum == 0) {
-            resize();
-        }
+        if (node == null) return;
+
+        if (maximum == 0) resize();
 
         boolean stop = false;
 
@@ -47,6 +55,7 @@ public class P2PNetImpl implements Net {
                 if (matrix[j][slice - j] == null) {
                     matrix[j][slice - j] = node;
                     maximum--;
+                    counter++;
                     stop = true;
                 }
             }
@@ -71,6 +80,8 @@ public class P2PNetImpl implements Net {
 
     @Override
     public synchronized void remove(final Node node) {
+        if (node == null) return;
+
         boolean stop = false;
 
         for (int slice = 0; slice < 2 * initial - 1 && !stop; ++slice) {
@@ -78,6 +89,7 @@ public class P2PNetImpl implements Net {
             for (int j = z; j <= slice - z && !stop; ++j) {
                 if (matrix[j][slice - j] != null && matrix[j][slice -j].hash().equals(node.hash())) {
                     matrix[j][slice - j] = null;
+                    counter--;
                     stop = true;
                 }
             }
@@ -123,4 +135,18 @@ public class P2PNetImpl implements Net {
         return nodes;
     }
 
+    @Override
+    public Iterator<Node> iterator() {
+        return null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return (counter == 0);
+    }
+
+    @Override
+    public int size() {
+        return counter;
+    }
 }
