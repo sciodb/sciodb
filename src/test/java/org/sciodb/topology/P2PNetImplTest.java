@@ -25,7 +25,7 @@ public class P2PNetImplTest {
         final Node node1 = new Node("0.0.0.0", 9090);
         p2pNet.add(node1);
 
-        assertEquals("", 1, p2pNet.snapshot().size());
+        assertEquals(1, p2pNet.snapshot().size());
     }
 
     @Test
@@ -33,11 +33,11 @@ public class P2PNetImplTest {
         final Node node1 = new Node("0.0.0.0", 9090);
         p2pNet.add(node1);
 
-        assertEquals("", 1, p2pNet.snapshot().size());
+        assertEquals(1, p2pNet.snapshot().size());
 
         p2pNet.remove(node1);
 
-        assertEquals("", 0, p2pNet.snapshot().size());
+        assertEquals(0, p2pNet.snapshot().size());
 
     }
 
@@ -51,8 +51,8 @@ public class P2PNetImplTest {
 
         final List<Node> peers = p2pNet.getPeers(node1);
 
-        assertEquals("", 1, peers.size());
-        assertEquals("", node2.getPort(), peers.get(0).getPort());
+        assertEquals(1, peers.size());
+        assertEquals(node2.getPort(), peers.get(0).getPort());
     }
 
     @Test
@@ -68,9 +68,9 @@ public class P2PNetImplTest {
 
         final List<Node> peers = p2pNet.getPeers(node2);
 
-        assertEquals("", 2, peers.size());
-        assertEquals("", node1.getPort(), peers.get(0).getPort());
-        assertEquals("", node3.getPort(), peers.get(1).getPort());
+        assertEquals(2, peers.size());
+        assertEquals(node1.getPort(), peers.get(0).getPort());
+        assertEquals(node3.getPort(), peers.get(1).getPort());
     }
 
     @Test
@@ -91,7 +91,6 @@ public class P2PNetImplTest {
             final Node node = new Node("0.0.0.0", 9000 + i);
             p2pNet.add(node);
         }
-
     }
 
 }
