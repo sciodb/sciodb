@@ -59,7 +59,7 @@ public class SocketsThreadPool {
                 final NodeMessage nodeMessage = new NodeMessage();
                 nodeMessage.decode(request.getContent());
 
-                TopologyContainer.getInstance().addNode(nodeMessage.getNode());
+                TopologyContainer.getInstance().addAvailableNode(nodeMessage.getNode());
 
                 server.send(channel, new byte[0]);
 

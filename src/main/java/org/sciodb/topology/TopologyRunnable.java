@@ -66,7 +66,7 @@ public class TopologyRunnable implements Runnable {
                 final List<Node> previousNodes = NodeMapper.fromString(previousInfo);
 
                 for (final Node node : previousNodes) {
-                    TopologyContainer.getInstance().addNode(node);
+                    TopologyContainer.getInstance().addAvailableNode(node);
                 }
             }
 
@@ -94,7 +94,7 @@ public class TopologyRunnable implements Runnable {
         }
         logger.info(foundNodes.size() + " peers nodes found.");
         for (final Node n : foundNodes) {
-            TopologyContainer.getInstance().addNode(n);
+            TopologyContainer.getInstance().addAvailableNode(n);
         }
     }
 

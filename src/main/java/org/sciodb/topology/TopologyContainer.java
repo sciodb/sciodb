@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class TopologyContainer {
 
-    private final Queue<Node> nodes;
     private final Queue<Node> availableNodes;
 
     private static final TopologyContainer instance = new TopologyContainer();
@@ -31,7 +30,6 @@ public class TopologyContainer {
     private Node me;
 
     private TopologyContainer() {
-        nodes = new ConcurrentLinkedQueue<>();
         availableNodes = new ConcurrentLinkedQueue<>();
 
         waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
@@ -45,14 +43,7 @@ public class TopologyContainer {
         return instance;
     }
 
-    public void addNode(final Node node) {
-        if (!availableNodes.contains(node) && !nodes.contains(node)) {
-            logger.info("Discovered node - " + node.url());
-            nodes.add(node);
-        }
-    }
-
-    private void addAvailableNode(final Node node) {
+    public void addAvailableNode(final Node node) {
         if (!availableNodes.contains(node)) {
             logger.info("New node available - " + node.url());
             availableNodes.add(node);
@@ -69,37 +60,15 @@ public class TopologyContainer {
         logger.debug("Nodes availables...");
         while (iterator.hasNext()) {
             final Node node = iterator.next();
-            boolean execute = checkNode(me, node, masterCheckingTime, 3);
-            if (!execute) {
-                nodes.add(node);
-                iterator.remove();
-                logger.error(node.url() + " - not available ");
-            } else {
-                logger.info(node.url() + " - available");
-            }
-        }
-
-        final Iterator<Node> iterator2 = nodes.iterator();
-        logger.debug("Nodes failing...");
-        while (iterator2.hasNext()) {
-            final Node node = iterator2.next();
-            if (node.getLastCheck() == 0) {
-                node.setLastCheck(now);
-            } else {
-                if ((now - node.getLastCheck()) < 5000) {
-                    continue;
-                }
-            }
 
             boolean alive = checkNode(me, node, masterCheckingTime, 3);
 
             if (alive) {
-                addAvailableNode(node);
                 logger.info(node.url() + " - available");
             } else {
+                iterator.remove();
                 logger.error(node.url() + " - not available ");
             }
-            iterator2.remove();
         }
 
         checkPeers();
@@ -128,7 +97,7 @@ public class TopologyContainer {
         if (!availableNodes.isEmpty() && availableNodes.size() <= MINIMUN_PEERS) {
             final List<Node> peers = NodeOperations.discoverPeer(me, availableNodes.element());
             logger.info("More peers discovered: " + peers.size());
-            nodes.addAll(peers);
+            availableNodes.addAll(peers);
         }
     }
 
