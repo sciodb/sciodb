@@ -43,7 +43,7 @@ public class TopologyContainer {
         return instance;
     }
 
-    public void addAvailableNode(final Node node) {
+    public void addNode(final Node node) {
         if (!availableNodes.contains(node)) {
             logger.info("New node available - " + node.url());
             availableNodes.add(node);

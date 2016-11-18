@@ -11,7 +11,6 @@ import org.sciodb.topology.TopologyContainer;
 
 import java.nio.channels.SocketChannel;
 import java.util.List;
-import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -59,7 +58,7 @@ public class SocketsThreadPool {
                 final NodeMessage nodeMessage = new NodeMessage();
                 nodeMessage.decode(request.getContent());
 
-                TopologyContainer.getInstance().addAvailableNode(nodeMessage.getNode());
+                TopologyContainer.getInstance().addNode(nodeMessage.getNode());
 
                 server.send(channel, new byte[0]);
 
