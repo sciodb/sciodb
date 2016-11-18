@@ -47,7 +47,9 @@ public class SocketsThreadPool {
         if (input != null && input.length > 0) {
             final ContainerMessage request = new ContainerMessage();
             request.decode(input);
+
             int operationId = request.getHeader().getOperationId();
+
             if (operationId == Operations.STATUS.getValue()) {
                 final NodeMessage nodeMessage = new NodeMessage();
                 nodeMessage.decode(request.getContent());

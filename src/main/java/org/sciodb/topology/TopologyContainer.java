@@ -12,7 +12,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * @author scJesús Navarrete (22/09/14)
+ * @author Jesús Navarrete (22/09/14)
  */
 public class TopologyContainer {
 
