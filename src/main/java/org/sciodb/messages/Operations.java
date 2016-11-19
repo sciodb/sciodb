@@ -7,10 +7,13 @@ package org.sciodb.messages;
  */
 public enum Operations {
     // Public simple operations
-    ECHO(1), STATUS(2),
+    STATUS(1),
 
     // Internal operations between nodes
-    ADD_NODE(30), DISCOVER_PEERS(31);
+    ADD_NODE(30), DISCOVER_PEERS(31),
+
+    // Database operations
+    DATABASE_STATUS(40), OP_ECHO(41);
 
     private final int value;
 

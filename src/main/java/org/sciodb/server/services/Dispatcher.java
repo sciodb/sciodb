@@ -22,10 +22,10 @@ public class Dispatcher {
 
         final Operations op = Operations.values()[message.getHeader().getOperationId()];
         switch (op) {
-            case ECHO:
+            case OP_ECHO:
                 s = echoCommand;
                 break;
-            case STATUS:
+            case DATABASE_STATUS:
                 s = statusCommand;
                 break;
             default:

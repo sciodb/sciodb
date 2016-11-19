@@ -71,7 +71,7 @@ public class SocketsThreadPool {
                 final ContainerMessage response = getContainerMessageForPeers(operationId, peers);
 
                 server.send(channel, response.encode());
-            } else if (operationId == Operations.ECHO.getValue()) {
+            } else {
 
                 final byte [] response = dispatcher.getService(request);
 
