@@ -2,7 +2,7 @@ package org.sciodb.topology;
 
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.topology.impl.NodeMapper;
+import org.sciodb.utils.NodeMapper;
 import org.sciodb.utils.Configuration;
 import org.sciodb.utils.FileUtils;
 import org.sciodb.utils.ServerException;

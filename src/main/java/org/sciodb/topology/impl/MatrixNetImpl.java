@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Jesús Navarrete (06/08/16)
  */
-public class P2PNetImpl implements Net {
+public class MatrixNetImpl implements Net {
 
     private Node[][] matrix;
 
@@ -18,7 +18,7 @@ public class P2PNetImpl implements Net {
     private int initial = 10;
     private int maximum;
 
-    public P2PNetImpl() {
+    public MatrixNetImpl() {
         matrix = new Node[initial][initial];
         maximum = (int)Math.pow(initial, initial);
     }
