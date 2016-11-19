@@ -5,12 +5,9 @@
     <groupId>org.sciodb</groupId>
     <artifactId>sciodb</artifactId>
 
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <version>0.1-SNAPSHOT</version>
-    <modules>
-        <module>../crazy-ideas</module>
-    </modules>
 
     <properties>
         <project.java.version>1.8</project.java.version>
