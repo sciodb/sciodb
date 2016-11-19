@@ -62,7 +62,7 @@ public class FileUtils {
             }
 
         } catch (IOException e) {
-            logger.error("error saving the application.properties file", e);
+            logger.error("Error persisting the nodes information", e);
         }
     }
 }
