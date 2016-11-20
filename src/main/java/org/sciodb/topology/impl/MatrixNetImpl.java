@@ -41,6 +41,11 @@ public class MatrixNetImpl implements Net {
     }
 
     @Override
+    public Node first() {
+        return matrix[0][0];
+    }
+
+    @Override
     public synchronized void add(final Node node) {
 
         if (node == null) return;
@@ -52,7 +57,9 @@ public class MatrixNetImpl implements Net {
         for (int slice = 0; slice < 2 * initial - 1 && !stop; ++slice) {
             int z = slice < initial ? 0 : slice - initial + 1;
             for (int j = z; j <= slice - z && !stop; ++j) {
-                if (matrix[j][slice - j] == null) {
+                if (matrix[j][slice - j] != null && matrix[j][slice - j].hash().equals(node.hash())) {
+                    stop = true;
+                } else if (matrix[j][slice - j] == null) {
                     matrix[j][slice - j] = node;
                     maximum--;
                     counter++;
@@ -61,6 +68,14 @@ public class MatrixNetImpl implements Net {
             }
         }
         printMatrix(matrix);
+    }
+
+    @Override
+    public void addAll(List<Node> nodes) {
+        for (final Node n: nodes) {
+            add(n);
+        }
+
     }
 
     private void printMatrix(final Node[][] matrix) {
@@ -137,7 +152,7 @@ public class MatrixNetImpl implements Net {
 
     @Override
     public Iterator<Node> iterator() {
-        return null;
+        return snapshot().iterator();
     }
 
     @Override

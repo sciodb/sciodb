@@ -78,7 +78,6 @@ public class SocketsThreadPool {
                 server.send(channel, response);
             }
         }
-
     }
 
     private ContainerMessage getContainerMessageForPeers(final int id, final List<Node> peers) {

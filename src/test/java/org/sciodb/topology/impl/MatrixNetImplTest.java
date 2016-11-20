@@ -40,6 +40,16 @@ public class MatrixNetImplTest {
     }
 
     @Test
+    public void add_sameNodeTwoTimes() throws Exception {
+        fillNet(1);
+        fillNet(1);
+
+        assertEquals(1, matrixNet.snapshot().size());
+        assertEquals(1, matrixNet.size());
+        assertEquals(false, matrixNet.isEmpty());
+    }
+
+    @Test
     public void add_10() throws Exception {
         fillNet(10);
 
@@ -60,6 +70,19 @@ public class MatrixNetImplTest {
         assertEquals(0, matrixNet.snapshot().size());
         assertEquals(0, matrixNet.size());
         assertEquals(true, matrixNet.isEmpty());
+    }
+
+    @Test
+    public void remove_notExistingNode() throws Exception {
+        fillNet(1);
+
+        assertEquals(1, matrixNet.snapshot().size());
+
+        matrixNet.remove(new Node("0.0.0.1", 9091));
+
+        assertEquals(1, matrixNet.snapshot().size());
+        assertEquals(1, matrixNet.size());
+        assertEquals(false, matrixNet.isEmpty());
     }
 
     @Test
@@ -92,7 +115,7 @@ public class MatrixNetImplTest {
     }
 
     @Test
-    public void getPeers_withNodes() throws Exception {
+    public void getPeers_withThreeNodes() throws Exception {
         final Node node1 = new Node("0.0.0.0", 9090);
         matrixNet.add(node1);
 
@@ -102,7 +125,17 @@ public class MatrixNetImplTest {
         final Node node3 = new Node("0.0.0.0", 9092);
         matrixNet.add(node3);
 
-        final List<Node> peers = matrixNet.getPeers(node2);
+        List<Node> peers = matrixNet.getPeers(node1);
+
+        assertEquals(node2.getPort(), peers.get(0).getPort());
+        assertEquals(node2.getHost(), peers.get(0).getHost());
+        assertEquals(node2.hash(), peers.get(0).hash());
+
+        assertEquals(node3.getPort(), peers.get(1).getPort());
+        assertEquals(node3.getHost(), peers.get(1).getHost());
+        assertEquals(node3.hash(), peers.get(1).hash());
+
+        peers = matrixNet.getPeers(node2);
 
         assertEquals(2, peers.size());
 
@@ -113,7 +146,26 @@ public class MatrixNetImplTest {
         assertEquals(node3.getPort(), peers.get(1).getPort());
         assertEquals(node3.getHost(), peers.get(1).getHost());
         assertEquals(node3.hash(), peers.get(1).hash());
+
+        peers = matrixNet.getPeers(node3);
+
+        assertEquals(2, peers.size());
+
+        assertEquals(node1.getPort(), peers.get(0).getPort());
+        assertEquals(node1.getHost(), peers.get(0).getHost());
+        assertEquals(node1.hash(), peers.get(0).hash());
+
+        assertEquals(node2.getPort(), peers.get(1).getPort());
+        assertEquals(node2.getHost(), peers.get(1).getHost());
+        assertEquals(node2.hash(), peers.get(1).hash());
     }
+
+//    @Test
+//    public void getPeers_one() {
+//        fillNet(1);
+//
+//        matrixNet.getPeers(new Node("0.0.0.0", ))
+//    }
 
     @Test
     public void snapshot() throws Exception {

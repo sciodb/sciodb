@@ -45,6 +45,12 @@ public class TreeNetImpl implements Net {
             pointer.data = node;
         }
     }
+
+    @Override
+    public void addAll(List<Node> nodes) {
+        for(final Node n: nodes) add(n);
+    }
+
     // TODO make it private !!!
     public Node search(final Node node) throws Exception {
         if (root == null) {
@@ -85,6 +91,11 @@ public class TreeNetImpl implements Net {
     @Override
     public boolean contains(Node node) {
         return false;
+    }
+
+    @Override
+    public Node first() {
+        return (root == null? null: root.getData());
     }
 
     @Override
