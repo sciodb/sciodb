@@ -1,10 +1,11 @@
-package org.sciodb.topology;
+package org.sciodb.topology.impl;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.sciodb.messages.impl.Node;
-import sun.security.provider.MD5;
+import org.sciodb.topology.Net;
+import org.sciodb.topology.impl.TreeNetImpl;
 
 import java.security.MessageDigest;
 import java.util.Base64;

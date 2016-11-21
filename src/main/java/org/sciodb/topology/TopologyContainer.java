@@ -2,20 +2,20 @@ package org.sciodb.topology;
 
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
+import org.sciodb.topology.impl.MatrixNetImpl;
 import org.sciodb.utils.Configuration;
 import org.sciodb.utils.ThreadUtils;
 
-import java.util.Iterator;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * @author scJesús Navarrete (22/09/14)
+ * @author Jesús Navarrete (22/09/14)
  */
 public class TopologyContainer {
 
-    private final Queue<Node> nodes;
-    private final Queue<Node> availableNodes;
+    private final Net availableNodes;
+    private final Set<Node> peers;
 
     private static final TopologyContainer instance = new TopologyContainer();
 
@@ -25,14 +25,18 @@ public class TopologyContainer {
 
     private Logger logger = Logger.getLogger(TopologyContainer.class);
 
+    private final int MINIMUN_PEERS;
+    private Node me;
+
     private TopologyContainer() {
-        nodes = new ConcurrentLinkedQueue<>();
-        availableNodes = new ConcurrentLinkedQueue<>();
+        availableNodes = new MatrixNetImpl();
+        peers = new HashSet<>();
 
         waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
         persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
 
         masterCheckingTime = Configuration.getInstance().getMasterCheckTimeTopology();
+        MINIMUN_PEERS = Configuration.getInstance().getReplicasNumber();
     }
 
     public static TopologyContainer getInstance() {
@@ -40,13 +44,6 @@ public class TopologyContainer {
     }
 
     public void addNode(final Node node) {
-        if (!availableNodes.contains(node) && !nodes.contains(node)) {
-            logger.info("Discovered node - " + node.url());
-            nodes.add(node);
-        }
-    }
-
-    private void addAvailableNode(final Node node) {
         if (!availableNodes.contains(node)) {
             logger.info("New node available - " + node.url());
             availableNodes.add(node);
@@ -54,44 +51,28 @@ public class TopologyContainer {
     }
 
     void checkNodes(final Node me) {
+        if (me != null && this.me == null) this.me = me;
+
         final long now = System.currentTimeMillis();
 
-        final Iterator<Node> iterator = availableNodes.iterator();
+        final Iterator<Node> iterator = peers.iterator();
 
+        logger.debug("Nodes availables...");
         while (iterator.hasNext()) {
             final Node node = iterator.next();
-            boolean execute = checkNode(me, node, masterCheckingTime, 3);
-            if (!execute) {
-                nodes.add(node);
-                iterator.remove();
-                logger.error(node.url() + " - not available ");
-            } else {
-                logger.info(node.url() + " - available");
-            }
-        }
-
-        final Iterator<Node> iterator2 = nodes.iterator();
-        while (iterator2.hasNext()) {
-            final Node node = iterator2.next();
-            if (node.getLastCheck() == 0) {
-                node.setLastCheck(now);
-            } else {
-                if ((now - node.getLastCheck()) < 5000) {
-                    continue;
-                }
-            }
 
             boolean alive = checkNode(me, node, masterCheckingTime, 3);
 
             if (alive) {
-                addAvailableNode(node);
-                iterator2.remove();
                 logger.info(node.url() + " - available");
             } else {
+                iterator.remove();
                 logger.error(node.url() + " - not available ");
             }
-
         }
+
+        checkPeers();
+
         final long finished = System.currentTimeMillis();
         final long timeUsed = finished - now;
         if (timeUsed < waitingTime) {
@@ -112,8 +93,25 @@ public class TopologyContainer {
         return execute;
     }
 
-    public Queue<Node> getAvailableNodes() {
-        return availableNodes;
+    private void checkPeers() {
+        if (!availableNodes.isEmpty() && availableNodes.size() > peers.size() && peers.size() <= MINIMUN_PEERS) {
+            final List<Node> nodes = NodeOperations.discoverPeer(me, availableNodes.first());
+            logger.info("More peers discovered: " + nodes.size());
+            peers.addAll(nodes);
+        }
+    }
+
+    public List<Node> getAvailableNodes() {
+        return availableNodes.snapshot();
+    }
+
+    public List<Node> getPeers(final Node node) { // Don't delete this *node* it will be used soon!
+        final List<Node> result = new ArrayList<>();
+
+        result.addAll(availableNodes.getPeers(node));
+        if (me != null) result.add(me);
+
+        return result;
     }
     
 }

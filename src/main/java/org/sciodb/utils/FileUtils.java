@@ -2,7 +2,6 @@ package org.sciodb.utils;
 
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.topology.NodeMapper;
 import org.sciodb.topology.TopologyContainer;
 
 import java.io.BufferedWriter;
@@ -63,7 +62,7 @@ public class FileUtils {
             }
 
         } catch (IOException e) {
-            logger.error("error saving the application.properties file", e);
+            logger.error("Error persisting the nodes information", e);
         }
     }
 }

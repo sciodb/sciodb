@@ -1,7 +1,9 @@
-package org.sciodb.topology;
+package org.sciodb.topology.impl;
 
 import org.sciodb.messages.impl.Node;
+import org.sciodb.topology.Net;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -43,6 +45,12 @@ public class TreeNetImpl implements Net {
             pointer.data = node;
         }
     }
+
+    @Override
+    public void addAll(List<Node> nodes) {
+        for(final Node n: nodes) add(n);
+    }
+
     // TODO make it private !!!
     public Node search(final Node node) throws Exception {
         if (root == null) {
@@ -81,12 +89,37 @@ public class TreeNetImpl implements Net {
     }
 
     @Override
+    public boolean contains(Node node) {
+        return false;
+    }
+
+    @Override
+    public Node first() {
+        return (root == null? null: root.getData());
+    }
+
+    @Override
     public List<Node> getPeers(Node node) {
         throw new RuntimeException("Not implemented");
     }
 
     @Override
     public List<Node> snapshot() {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public Iterator<Node> iterator() {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public boolean isEmpty() {
+        throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public int size() {
         throw new RuntimeException("Not implemented");
     }
 

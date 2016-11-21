@@ -112,7 +112,7 @@ public class ServerSocketITTest {
 
         final ContainerMessage container = new ContainerMessage();
         container.getHeader().setId(UUID.randomUUID().toString());
-        container.getHeader().setOperationId(Operations.ECHO.getValue());
+        container.getHeader().setOperationId(Operations.OP_ECHO.getValue());
 
         container.setContent(echo.encode());
 

@@ -10,7 +10,7 @@ import org.sciodb.server.services.Dispatcher;
 import org.sciodb.topology.TopologyContainer;
 
 import java.nio.channels.SocketChannel;
-import java.util.Queue;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -46,39 +46,44 @@ public class SocketsThreadPool {
         if (input != null && input.length > 0) {
             final ContainerMessage request = new ContainerMessage();
             request.decode(input);
+
             int operationId = request.getHeader().getOperationId();
+
             if (operationId == Operations.STATUS.getValue()) {
+                final NodeMessage nodeMessage = new NodeMessage();
+                nodeMessage.decode(request.getContent());
+
+                server.send(channel, new byte[0]);
+            } else if (operationId == Operations.ADD_NODE.getValue()) {
                 final NodeMessage nodeMessage = new NodeMessage();
                 nodeMessage.decode(request.getContent());
 
                 TopologyContainer.getInstance().addNode(nodeMessage.getNode());
 
                 server.send(channel, new byte[0]);
+
             } else if (operationId == Operations.DISCOVER_PEERS.getValue()) {
                 final NodeMessage nodeMessage = new NodeMessage();
                 nodeMessage.decode(request.getContent());
 
-                TopologyContainer.getInstance().addNode(nodeMessage.getNode());
+                final List<Node> peers = TopologyContainer.getInstance().getPeers(nodeMessage.getNode());
 
-                final ContainerMessage response = getContainerMessageForPeers(operationId);
+                final ContainerMessage response = getContainerMessageForPeers(operationId, peers);
 
                 server.send(channel, response.encode());
-            } else if (operationId == Operations.ECHO.getValue()) {
+            } else {
 
                 final byte [] response = dispatcher.getService(request);
 
                 server.send(channel, response);
             }
         }
-
     }
 
-    private ContainerMessage getContainerMessageForPeers(final int id) {
-        final Queue<Node> nodes = TopologyContainer.getInstance().getAvailableNodes();
+    private ContainerMessage getContainerMessageForPeers(final int id, final List<Node> peers) {
         final NodesMessage n = new NodesMessage();
-        for (Node nn : nodes) {
-            n.getNodes().add(nn);
-        }
+        n.getNodes().addAll(peers);
+
         final ContainerMessage response = new ContainerMessage();
         response.getHeader().setId(UUID.randomUUID().toString());
         response.getHeader().setOperationId(id);

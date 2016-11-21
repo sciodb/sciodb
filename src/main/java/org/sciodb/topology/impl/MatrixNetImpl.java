@@ -1,21 +1,24 @@
-package org.sciodb.topology;
+package org.sciodb.topology.impl;
 
 import org.sciodb.messages.impl.Node;
+import org.sciodb.topology.Net;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author Jesús Navarrete (06/08/16)
  */
-public class P2PNetImpl implements Net {
+public class MatrixNetImpl implements Net {
 
     private Node[][] matrix;
 
+    private int counter = 0;
     private int initial = 10;
     private int maximum;
 
-    public P2PNetImpl() {
+    public MatrixNetImpl() {
         matrix = new Node[initial][initial];
         maximum = (int)Math.pow(initial, initial);
     }
@@ -33,25 +36,46 @@ public class P2PNetImpl implements Net {
     }
 
     @Override
+    public boolean contains(Node node) {
+        return false;
+    }
+
+    @Override
+    public Node first() {
+        return matrix[0][0];
+    }
+
+    @Override
     public synchronized void add(final Node node) {
 
-        if (maximum == 0) {
-            resize();
-        }
+        if (node == null) return;
+
+        if (maximum == 0) resize();
 
         boolean stop = false;
 
         for (int slice = 0; slice < 2 * initial - 1 && !stop; ++slice) {
             int z = slice < initial ? 0 : slice - initial + 1;
             for (int j = z; j <= slice - z && !stop; ++j) {
-                if (matrix[j][slice - j] == null) {
+                if (matrix[j][slice - j] != null && matrix[j][slice - j].hash().equals(node.hash())) {
+                    stop = true;
+                } else if (matrix[j][slice - j] == null) {
                     matrix[j][slice - j] = node;
                     maximum--;
+                    counter++;
                     stop = true;
                 }
             }
         }
         printMatrix(matrix);
+    }
+
+    @Override
+    public void addAll(List<Node> nodes) {
+        for (final Node n: nodes) {
+            add(n);
+        }
+
     }
 
     private void printMatrix(final Node[][] matrix) {
@@ -71,6 +95,8 @@ public class P2PNetImpl implements Net {
 
     @Override
     public synchronized void remove(final Node node) {
+        if (node == null) return;
+
         boolean stop = false;
 
         for (int slice = 0; slice < 2 * initial - 1 && !stop; ++slice) {
@@ -78,6 +104,7 @@ public class P2PNetImpl implements Net {
             for (int j = z; j <= slice - z && !stop; ++j) {
                 if (matrix[j][slice - j] != null && matrix[j][slice -j].hash().equals(node.hash())) {
                     matrix[j][slice - j] = null;
+                    counter--;
                     stop = true;
                 }
             }
@@ -123,4 +150,18 @@ public class P2PNetImpl implements Net {
         return nodes;
     }
 
+    @Override
+    public Iterator<Node> iterator() {
+        return snapshot().iterator();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return (counter == 0);
+    }
+
+    @Override
+    public int size() {
+        return counter;
+    }
 }
