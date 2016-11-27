@@ -6,6 +6,9 @@ import org.sciodb.messages.impl.Node;
 import org.sciodb.server.ServerSocket;
 import org.sciodb.topology.TopologyRunnable;
 import org.sciodb.utils.Configuration;
+import org.sciodb.utils.SeedUtils;
+
+import java.util.List;
 
 
 /**
@@ -84,12 +87,7 @@ public class ScioDB {
 
                 final String s = cmd.getOptionValue("s");
 
-                String[] seeds;
-                if (s != null) {
-                    seeds = s.split(",");
-                } else {
-                    seeds = new String[0];
-                }
+                final List<Node> seeds = SeedUtils.fromString(s);
                 starting(node, seeds);
             }
 
@@ -98,7 +96,7 @@ public class ScioDB {
         }
     }
 
-    public void starting(final Node node, final String[] seeds) {
+    public void starting(final Node node, final List<Node> seeds) {
         logger.info(node.getHost() + " - " + node.getPort());
         try {
             new Thread(new ServerSocket(null, node.getPort())).start();
