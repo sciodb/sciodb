@@ -2,11 +2,7 @@ package org.sciodb.topology;
 
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.utils.NodeMapper;
-import org.sciodb.utils.Configuration;
-import org.sciodb.utils.FileUtils;
-import org.sciodb.utils.ServerException;
-import org.sciodb.utils.ThreadUtils;
+import org.sciodb.utils.*;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -20,19 +16,19 @@ public class TopologyRunnable implements Runnable {
 
     private Logger logger = Logger.getLogger(TopologyRunnable.class);
 
-    private static int waitingTime;
+//    private static int waitingTime;
     private static int persistTime;
-    private static int masterCheckingTime;
+//    private static int masterCheckingTime;
 
     private Node me;
 
-    private final String[] seeds;
+    private final List<Node> seeds;
 
-    public TopologyRunnable(final Node me, final String[] seeds) throws ServerException {
-        waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
+    public TopologyRunnable(final Node me, final List<Node> seeds) throws ServerException {
+//        waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
         persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
 
-        masterCheckingTime = Configuration.getInstance().getMasterCheckTimeTopology();
+//        masterCheckingTime = Configuration.getInstance().getMasterCheckTimeTopology();
 
         this.me = me;
         this.seeds = seeds;
@@ -76,31 +72,19 @@ public class TopologyRunnable implements Runnable {
         }
     }
 
-    private void connectWithSeed(final String[] seeds) {
-        final Set<Node> foundNodes = new HashSet<>();
-        for (final String seed : seeds) {
-            final String[] parts = seed.split(":");
-            if (parts.length == 2 && isInteger(parts[1])) {
-                final Node node = new Node(parts[0], new Integer(parts[1].trim()));
-                if (!me.url().equals(node.url())) {
-                    if (NodeOperations.isAlive(me, node)) {
-                        if (NodeOperations.addNode(me, node)) {
-                            final List<Node> peers = NodeOperations.discoverPeer(me, node);
-                            foundNodes.addAll(peers);
-                            break;
-                        }
-                    }
+    private void connectWithSeed(final List<Node> seeds) {
+        for (final Node node : seeds) {
+            if (!me.url().equals(node.url()) && NodeOperations.isAlive(me, node) && NodeOperations.addNode(me, node)) {
+                final List<Node> peers = NodeOperations.discoverPeer(me, node);
+
+                logger.info(peers.size() + " peers nodes found.");
+                for (final Node n : peers) {
+                    TopologyContainer.getInstance().addNode(n);
                 }
+
+                break;
             }
         }
-        logger.info(foundNodes.size() + " peers nodes found.");
-        for (final Node n : foundNodes) {
-            TopologyContainer.getInstance().addNode(n);
-        }
-    }
-
-    public static boolean isInteger(final String str) {
-        return str != null && str.trim().matches("-?\\d+");  //match a number with optional '-' and decimal.
     }
 
 }
