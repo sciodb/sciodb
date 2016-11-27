@@ -62,6 +62,28 @@ public class NodeOperations {
         }
     }
 
+    public static List<Node> getNetworkSnapshot(final Node me, final Node node) {
+        final List<Node> result = new ArrayList<>();
+
+        final NodeMessage message = new NodeMessage();
+        message.setNode(me);
+
+        final ContainerMessage container = new ContainerMessage();
+        container.getHeader().setOperationId(Operations.SHARE_SNAPSHOT.getValue());
+        container.getHeader().setId(UUID.randomUUID().toString());
+
+        container.setContent(message.encode());
+
+        try {
+            byte[] response = SocketClient.sendToSocket(node.getHost(), node.getPort(), container, true);
+
+            result.addAll(getNodesFromResponse(me, response));
+        } catch (final CommunicationException e) {
+            logger.error("Node " + node.url() + " is not alive, because... " + e.getLocalizedMessage());
+        }
+        return result;
+    }
+
     public static boolean addNode(final Node me, final Node node) {
         final NodeMessage message = new NodeMessage();
         message.setNode(me);
@@ -80,6 +102,25 @@ public class NodeOperations {
             return false;
         }
     }
+
+//    public static boolean distributeSnapshot(final List<Node> nodes, final Node root) {
+//        final NodesMessage message = new NodesMessage();
+//        message.getNodes().addAll(nodes);
+//
+//        final ContainerMessage container = new ContainerMessage();
+//        container.getHeader().setOperationId(Operations.SHARE_SNAPSHOT.getValue());
+//        container.getHeader().setId(UUID.randomUUID().toString());
+//
+//        container.setContent(message.encode());
+//
+//        try {
+//            SocketClient.sendToSocket(root.getHost(), root.getPort(), container, false);
+//
+//            return true;
+//        } catch (final CommunicationException e) {
+//            return false;
+//        }
+//    }
 
     private static void nodesFromResponse(final Node me, final byte[] response, final Queue<Node> peers) {
 

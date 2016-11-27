@@ -16,6 +16,7 @@ public class TopologyContainer {
 
     private final Net availableNodes;
     private final Set<Node> peers;
+//    private final Queue<Node> newNodes;
 
     private static final TopologyContainer instance = new TopologyContainer();
 
@@ -31,6 +32,7 @@ public class TopologyContainer {
     private TopologyContainer() {
         availableNodes = new MatrixNetImpl();
         peers = new HashSet<>();
+//        newNodes = new ConcurrentLinkedQueue<>();
 
         waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
         persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
@@ -47,6 +49,7 @@ public class TopologyContainer {
         if (!availableNodes.contains(node)) {
             logger.info("New node available - " + node.url());
             availableNodes.add(node);
+//            newNodes.add(node);
         }
     }
 

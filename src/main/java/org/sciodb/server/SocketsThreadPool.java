@@ -71,6 +71,8 @@ public class SocketsThreadPool {
                 final ContainerMessage response = getContainerMessageForPeers(operationId, peers);
 
                 server.send(channel, response.encode());
+//            } else if (operationId == Operations.SHARE_SNAPSHOT.getValue()) {
+//                 TODO implements the update of the network topology...
             } else {
 
                 final byte [] response = dispatcher.getService(request);
