@@ -34,7 +34,7 @@ public class NodeOperationsTest {
         final Node seed = new Node("localhost", 9090);
 
         for(int i = 0; i < 100; i++) {
-            operations.discoverPeer(me, seed);
+//            operations.discoverPeer(me, seed);
         }
 
     }

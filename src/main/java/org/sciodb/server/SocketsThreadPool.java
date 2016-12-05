@@ -1,5 +1,6 @@
 package org.sciodb.server;
 
+import com.sun.corba.se.spi.orb.Operation;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
@@ -54,15 +55,17 @@ public class SocketsThreadPool {
                 nodeMessage.decode(request.getContent());
 
                 server.send(channel, new byte[0]);
-            } else if (operationId == Operations.ADD_NODE.getValue()) {
+            } else if (operationId == Operations.JOIN_NETWORK.getValue()) {
                 final NodeMessage nodeMessage = new NodeMessage();
                 nodeMessage.decode(request.getContent());
+                nodeMessage.getNode().setGuid(UUID.randomUUID().toString()); // TODO review to be sure that UUID is a good GUID !
 
-                TopologyContainer.getInstance().addNode(nodeMessage.getNode());
+                TopologyContainer.getInstance().join(nodeMessage.getNode());
 
-                server.send(channel, new byte[0]);
+                final ContainerMessage response = getMessageForJoiners(operationId, nodeMessage);
+                server.send(channel, response.encode());
 
-            } else if (operationId == Operations.DISCOVER_PEERS.getValue()) {
+            } else if (operationId == Operations.COPY_ROUTING_TABLE.getValue()) {
                 final NodeMessage nodeMessage = new NodeMessage();
                 nodeMessage.decode(request.getContent());
 
@@ -79,6 +82,8 @@ public class SocketsThreadPool {
 
                 server.send(channel, response);
             }
+
+
         }
     }
 
@@ -86,12 +91,42 @@ public class SocketsThreadPool {
         final NodesMessage n = new NodesMessage();
         n.getNodes().addAll(peers);
 
+        return setupContainerMessageFor(id, n.encode());
+//        final ContainerMessage response = new ContainerMessage();
+//        response.getHeader().setId(UUID.randomUUID().toString());
+//        response.getHeader().setOperationId(id);
+//
+//        response.setContent(n.encode());
+//        return response;
+    }
+
+    private static ContainerMessage getMessageForJoiners(final int id, final NodeMessage peer) {
+        return setupContainerMessageFor(id, peer.encode());
+    }
+
+    private static ContainerMessage setupContainerMessageFor(final int id, final byte[] message) {
         final ContainerMessage response = new ContainerMessage();
         response.getHeader().setId(UUID.randomUUID().toString());
         response.getHeader().setOperationId(id);
 
-        response.setContent(n.encode());
+        response.setContent(message);
+
         return response;
     }
 
+    public static void main(String[] args) {
+        Node node = new Node("0.0.0.0", 9091);
+        node.setGuid("1234567890");
+        NodeMessage message = new NodeMessage();
+        message.setNode(node);
+        ContainerMessage cm = getMessageForJoiners(123, message);
+
+        ContainerMessage cm2 = new ContainerMessage();
+        cm2.decode(cm.encode());
+
+        Node n2 = new Node();
+        n2.decode(cm2.getContent());
+
+        System.out.println(n2.url() + " - " + n2.getGuid());
+    }
 }

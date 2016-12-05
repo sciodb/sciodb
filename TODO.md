@@ -1,9 +1,18 @@
-- Connection Manager
-- Request Dispatcher
+TODO
+====
 
-- create doc folder and use github for the next tasks
+Currently working:
+
+- Implementation of Kademlia algotihm for P2P network topology
+- Request Dispatcher (WAITING)
 
 
+In the Roadmap
+--------------
+
+
+Ideas
+-----
 - Storage engines:
     * in-memory (for testing)
     * wiredtiger?

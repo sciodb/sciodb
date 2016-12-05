@@ -10,7 +10,8 @@ public enum Operations {
     STATUS(1),
 
     // Internal operations between nodes
-    ADD_NODE(30), DISCOVER_PEERS(31), SHARE_SNAPSHOT(32),
+//    ADD_NODE(30), DISCOVER_PEERS(31), SHARE_SNAPSHOT(32),
+    JOIN_NETWORK(30), LEAVE_NETWORK(31), COPY_ROUTING_TABLE(32), FIND_CLOSEST(33),
 
     // Database operations
     DATABASE_STATUS(40), OP_ECHO(41);
