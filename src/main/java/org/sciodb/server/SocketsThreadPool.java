@@ -2,6 +2,7 @@ package org.sciodb.server;
 
 import com.sun.corba.se.spi.orb.Operation;
 import org.apache.log4j.Logger;
+import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.Node;
@@ -48,43 +49,85 @@ public class SocketsThreadPool {
             final ContainerMessage request = new ContainerMessage();
             request.decode(input);
 
-            int operationId = request.getHeader().getOperationId();
+//            int operationId = request.getHeader().getOperationId();
 
-            if (operationId == Operations.STATUS.getValue()) {
-                final NodeMessage nodeMessage = new NodeMessage();
-                nodeMessage.decode(request.getContent());
+//            if (operationId == Operations.STATUS.getValue()) {
+//                final NodeMessage nodeMessage = new NodeMessage();
+//                nodeMessage.decode(request.getContent());
+//
+//                server.send(channel, new byte[0]);
+//            } else if (operationId == Operations.JOIN_NETWORK.getValue()) {
+//                final NodeMessage nodeMessage = new NodeMessage();
+//                nodeMessage.decode(request.getContent());
+//                nodeMessage.getNode().setGuid(UUID.randomUUID().toString()); // TODO review to be sure that UUID is a good GUID !
+//
+//                TopologyContainer.getInstance().join(nodeMessage.getNode());
+//
+//                final ContainerMessage response = getMessageForJoiners(operationId, nodeMessage);
+//                server.send(channel, response.encode());
+//
+//            } else if (operationId == Operations.COPY_ROUTING_TABLE.getValue()) {
+//                final NodeMessage nodeMessage = new NodeMessage();
+//                nodeMessage.decode(request.getContent());
+//
+//                final List<Node> peers = TopologyContainer.getInstance().getPeers(nodeMessage.getNode());
+//
+//                final ContainerMessage response = getContainerMessageForPeers(operationId, peers);
+//
+//                server.send(channel, response.encode());
+////            } else if (operationId == Operations.SHARE_SNAPSHOT.getValue()) {
+////                 TODO implements the update of the network topology...
+//            } else {
+//
+//                final byte [] response = dispatcher.getService(request);
+//
+//                server.send(channel, response);
+//            }
+            final Operations op = Operations.values()[request.getHeader().getOperationId()];
+            final Node source = readRequest(request);
 
-                server.send(channel, new byte[0]);
-            } else if (operationId == Operations.JOIN_NETWORK.getValue()) {
-                final NodeMessage nodeMessage = new NodeMessage();
-                nodeMessage.decode(request.getContent());
-                nodeMessage.getNode().setGuid(UUID.randomUUID().toString()); // TODO review to be sure that UUID is a good GUID !
+            switch (op) {
+                case PING:
+                    // do something ...
+                    server.send(channel, new byte[0]);
+                    break;
+                case STORE:
+//                    final Node source = readRequest(request);
+                    // store <key, value> ...
+                    server.send(channel, new byte[0]);
+                    break;
+                case FIND_NODE:
+                    final List<Node> peers = TopologyContainer.getInstance().getPeers(source);
+                    server.send(channel, getContainerMessageForPeers(op.getValue(), peers).encode());
+                    break;
+                case FIND_VALUE:
+                    try {
+                        final Node node = TopologyContainer.getInstance().check(source);
 
-                TopologyContainer.getInstance().join(nodeMessage.getNode());
+                        final NodeMessage nodeMessage = new NodeMessage();
+                        nodeMessage.setNode(node);
 
-                final ContainerMessage response = getMessageForJoiners(operationId, nodeMessage);
-                server.send(channel, response.encode());
+                        server.send(channel, getMessageForJoiners(op.getValue(), nodeMessage).encode());
+                    } catch (EmptyDataException e) {
+                        final NodeMessage nodeMessage = new NodeMessage();
+                        nodeMessage.setNode(new Node("", 0)); // TODO MOVE TO NOTHING
 
-            } else if (operationId == Operations.COPY_ROUTING_TABLE.getValue()) {
-                final NodeMessage nodeMessage = new NodeMessage();
-                nodeMessage.decode(request.getContent());
+                        server.send(channel, getMessageForJoiners(op.getValue(), nodeMessage).encode());
+                    }
+                    break;
+                default:
+                    final byte [] response = dispatcher.getService(request);
 
-                final List<Node> peers = TopologyContainer.getInstance().getPeers(nodeMessage.getNode());
-
-                final ContainerMessage response = getContainerMessageForPeers(operationId, peers);
-
-                server.send(channel, response.encode());
-//            } else if (operationId == Operations.SHARE_SNAPSHOT.getValue()) {
-//                 TODO implements the update of the network topology...
-            } else {
-
-                final byte [] response = dispatcher.getService(request);
-
-                server.send(channel, response);
+                    server.send(channel, response);
             }
-
-
         }
+    }
+
+    private Node readRequest(final ContainerMessage message) {
+        final NodeMessage nodeMessage = new NodeMessage();
+        nodeMessage.decode(message.getContent());
+
+        return nodeMessage.getNode();
     }
 
     private ContainerMessage getContainerMessageForPeers(final int id, final List<Node> peers) {

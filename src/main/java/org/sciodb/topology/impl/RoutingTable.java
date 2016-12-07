@@ -83,7 +83,7 @@ public class RoutingTable {
         return nodes.size();
     }
 
-    private boolean contains(final Node node) {
+    public boolean contains(final Node node) {
         boolean found = false;
         for (final RoutingNode rn : nodes) {
             if ((rn.getNode().url().equals(node.url())) || (rn.getNode().getGuid().equals(node.getGuid()))) {

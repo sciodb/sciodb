@@ -13,6 +13,9 @@ public enum Operations {
 //    ADD_NODE(30), DISCOVER_PEERS(31), SHARE_SNAPSHOT(32),
     JOIN_NETWORK(30), LEAVE_NETWORK(31), COPY_ROUTING_TABLE(32), FIND_CLOSEST(33),
 
+    // kademlia paper ...
+    PING(40), STORE(41), FIND_NODE(42), FIND_VALUE(43),
+
     // Database operations
     DATABASE_STATUS(40), OP_ECHO(41);
 

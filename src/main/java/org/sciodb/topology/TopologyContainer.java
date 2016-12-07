@@ -2,6 +2,7 @@ package org.sciodb.topology;
 
 import org.apache.log4j.Logger;
 import org.sciodb.exceptions.CommunicationException;
+import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.topology.impl.RoutingTable;
 import org.sciodb.topology.impl.MatrixNetImpl;
@@ -129,5 +130,13 @@ public class TopologyContainer {
 
     public void setMe(final Node me) {
         this.me = me;
+    }
+
+    public Node check(final Node source) throws EmptyDataException {
+        if (table.contains(source)) {
+            return source;
+        } else {
+            throw new EmptyDataException("No node found");
+        }
     }
 }
