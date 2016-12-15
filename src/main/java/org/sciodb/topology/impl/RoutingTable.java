@@ -2,6 +2,7 @@ package org.sciodb.topology.impl;
 
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
+import org.sciodb.topology.models.Triple;
 
 import java.util.*;
 
@@ -11,10 +12,17 @@ import java.util.*;
 public class RoutingTable {
 
     private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RoutingTable.class);
+
+    private int k;
+
+    private Set<Triple<String, String, Node>> buckets;
     private int bits;
     private LinkedList<RoutingNode> nodes;
 
     public RoutingTable(int bits) {
+        k = 20;
+        buckets = new HashSet<>();
+
         this.bits = bits;
         nodes = new LinkedList<>();
     }
@@ -37,6 +45,8 @@ public class RoutingTable {
         boolean result = true;
 
         if (!contains(node)) {
+            logger.info("New node available - " + node.url());
+
             nodes.add(wrapper);
 
             Collections.sort(nodes, new Comparator<RoutingNode>(){

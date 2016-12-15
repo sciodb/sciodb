@@ -8,6 +8,7 @@ import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.messages.impl.NodeMessage;
 import org.sciodb.messages.impl.NodesMessage;
+import org.sciodb.topology.models.Triple;
 import org.sciodb.utils.SocketClient;
 
 import java.util.*;
@@ -19,18 +20,40 @@ public class NodeOperations {
 
     private final static Logger logger = Logger.getLogger(NodeOperations.class);
 
-    public static String joinNetwork(final Node me, final Node seed) {
+    private Node me;
+
+    public NodeOperations(final Node me) {
+        this.me = me;
+    }
+
+    public boolean ping(final Node target) {
+//        The PING
+//        RPC probes a node to see if it is online.
         final NodeMessage message = new NodeMessage();
         message.setNode(me);
 
-        final ContainerMessage container = new ContainerMessage();
-        container.getHeader().setOperationId(Operations.JOIN_NETWORK.getValue());
-        container.getHeader().setId(UUID.randomUUID().toString());
-
-        container.setContent(message.encode());
+        final ContainerMessage container = getMessage(Operations.PING.getValue(), message.encode());
 
         try {
-            byte[] response = SocketClient.sendToSocket(seed.getHost(), seed.getPort(), container, true);
+            SocketClient.sendToSocket(target.getHost(), target.getPort(), container, false);
+
+            return true;
+        } catch (final CommunicationException e) {
+            return false;
+        }
+    }
+
+    public String store(final Node target) {
+//        instructs
+//        a node to store a <key, value> pair for later
+//        retrieval.
+        final NodeMessage message = new NodeMessage();
+        message.setNode(me);
+
+        final ContainerMessage container = getMessage(Operations.STORE.getValue(), message.encode());
+
+        try {
+            byte[] response = SocketClient.sendToSocket(target.getHost(), target.getPort(), container, true);
 
             final ContainerMessage parseRsp = new ContainerMessage();
             parseRsp.decode(response);
@@ -44,6 +67,49 @@ public class NodeOperations {
             return "";
         }
     }
+
+    public static void findValue() {
+//        behaves like FIND NODE—returning
+//        hIP address, UDP port, Node IDi triples—with one
+//        exception. If the RPC recipient has received a STORE
+//        RPC for the key, it just returns the stored value.
+    }
+
+    private ContainerMessage getMessage(final int op, final byte[] encoded) {
+        final ContainerMessage container = new ContainerMessage();
+
+        container.getHeader().setOperationId(op);
+        container.getHeader().setId(UUID.randomUUID().toString());
+        container.setContent(encoded);
+
+        return container;
+    }
+
+//    public static String joinNetwork(final Node me, final Node seed) {
+//        final NodeMessage message = new NodeMessage();
+//        message.setNode(me);
+//
+//        final ContainerMessage container = new ContainerMessage();
+//        container.getHeader().setOperationId(Operations.JOIN_NETWORK.getValue());
+//        container.getHeader().setId(UUID.randomUUID().toString());
+//
+//        container.setContent(message.encode());
+//
+//        try {
+//            byte[] response = SocketClient.sendToSocket(seed.getHost(), seed.getPort(), container, true);
+//
+//            final ContainerMessage parseRsp = new ContainerMessage();
+//            parseRsp.decode(response);
+//
+//            final NodeMessage msg = new NodeMessage();
+//            msg.decode(parseRsp.getContent());
+//
+//            return msg.getNode().getGuid();
+//        } catch (final CommunicationException e) {
+//            logger.error("Node not added to Seed, reason " + e.getLocalizedMessage());
+//            return "";
+//        }
+//    }
 
     public static void leaveNetwork(final Node me, final List<Node> peers) {
         for (final Node p: peers) {
@@ -70,24 +136,28 @@ public class NodeOperations {
         }
     }
 
-    public static List<Node> copyRoutingTable(final Node me, final Node peer) throws CommunicationException {
+    public List<Node> findNode(final Node peer) throws CommunicationException {
+        //        takes a 160-bit ID as an argument.
+//        The recipient of a the RPC returns
+//        <IP address, UDP port, Node ID> triples for the k
+//        nodes it knows about closest to the target ID. These
+//        triples can come from a single k-bucket, or they may
+//        come from multiple k-buckets if the closest k-bucket
+//        is not full. In any case, the RPC recipient must return
+//                k items (unless there are fewer than k nodes in all its
+//                k-buckets combined, in which case it returns every
+//        node it knows about).
         final NodeMessage message = new NodeMessage();
         message.setNode(me);
 
         final ContainerMessage container = new ContainerMessage();
-        container.getHeader().setOperationId(Operations.COPY_ROUTING_TABLE.getValue());
+        container.getHeader().setOperationId(Operations.FIND_NODE.getValue());
         container.getHeader().setId(UUID.randomUUID().toString());
 
         container.setContent(message.encode());
 
         try {
             byte[] response = SocketClient.sendToSocket(peer.getHost(), peer.getPort(), container, true);
-
-//            final ContainerMessage parseRsp = new ContainerMessage();
-//            parseRsp.decode(response);
-//
-//            final NodeMessage msg = new NodeMessage();
-//            msg.decode(parseRsp.getContent());
 
             return nodesFromResponse(me, response);
         } catch (final CommunicationException e) {
@@ -121,103 +191,18 @@ public class NodeOperations {
         }
     }
 
-//    public static List<Node> discoverPeer(final Node me, final Node seed) {
-//        final List<Node> result = new ArrayList<>();
-//        try {
-//            final NodeMessage message = new NodeMessage();
-//            message.setNode(me);
-//
-//            final ContainerMessage container = new ContainerMessage();
-//            container.getHeader().setLength(0);
-//            container.getHeader().setOperationId(Operations.DISCOVER_PEERS.getValue());
-//            container.getHeader().setId(UUID.randomUUID().toString());
-//
-//            container.setContent(message.encode());
-//
-//            byte[] response = SocketClient.sendToSocket(seed.getHost(),
-//                                                        seed.getPort(),
-//                                                        container,
-//                                                        true);
-//
-//            result.addAll(getNodesFromResponse(me, response));
-//        } catch (CommunicationException e) {
-//           logger.error("Discovering peers failing because: " + e.getLocalizedMessage());
-//        }
-//        return result;
-//    }
-
-    public static boolean isAlive(final Node me, final Node node) {
-        final NodeMessage message = new NodeMessage();
-        message.setNode(me);
-
-        final ContainerMessage container = new ContainerMessage();
-        container.getHeader().setOperationId(Operations.STATUS.getValue());
-        container.getHeader().setId(UUID.randomUUID().toString());
-
-        container.setContent(message.encode());
-
-        try {
-            SocketClient.sendToSocket(node.getHost(), node.getPort(), container, false);
-
-            return true;
-        } catch (final CommunicationException e) {
-            return false;
-        }
-    }
-
-//    public static List<Node> getNetworkSnapshot(final Node me, final Node node) {
-//        final List<Node> result = new ArrayList<>();
-//
+//    public static boolean ping(final Node me, final Node node) {
 //        final NodeMessage message = new NodeMessage();
 //        message.setNode(me);
 //
 //        final ContainerMessage container = new ContainerMessage();
-//        container.getHeader().setOperationId(Operations.SHARE_SNAPSHOT.getValue());
-//        container.getHeader().setId(UUID.randomUUID().toString());
-//
-//        container.setContent(message.encode());
-//
-//        try {
-//            byte[] response = SocketClient.sendToSocket(node.getHost(), node.getPort(), container, true);
-//
-//            result.addAll(getNodesFromResponse(me, response));
-//        } catch (final CommunicationException e) {
-//            logger.error("Node " + node.url() + " is not alive, because... " + e.getLocalizedMessage());
-//        }
-//        return result;
-//    }
-
-//    public static boolean join(final Node me, final Node node) {
-//        final NodeMessage message = new NodeMessage();
-//        message.setNode(me);
-//
-//        final ContainerMessage container = new ContainerMessage();
-//        container.getHeader().setOperationId(Operations.ADD_NODE.getValue());
+//        container.getHeader().setOperationId(Operations.STATUS.getValue());
 //        container.getHeader().setId(UUID.randomUUID().toString());
 //
 //        container.setContent(message.encode());
 //
 //        try {
 //            SocketClient.sendToSocket(node.getHost(), node.getPort(), container, false);
-//
-//            return true;
-//        } catch (final CommunicationException e) {
-//            return false;
-//        }
-//    }
-
-//    public static boolean distributeSnapshot(final List<Node> nodes, final Node root) {
-//        final NodesMessage message = new NodesMessage();
-//        message.getNodes().addAll(nodes);
-//
-//        final ContainerMessage container = new ContainerMessage();
-//        container.getHeader().setOperationId(Operations.SHARE_SNAPSHOT.getValue());
-//        container.getHeader().setId(UUID.randomUUID().toString());
-//
-//        container.setContent(message.encode());
-//
-//        try {
-//            SocketClient.sendToSocket(root.getHost(), root.getPort(), container, false);
 //
 //            return true;
 //        } catch (final CommunicationException e) {
@@ -239,11 +224,5 @@ public class NodeOperations {
         }
         return new ArrayList<>();
     }
-
-//    private static List<Node> getNodesFromResponse(final Node me, final byte[] response) {
-//        final List<Node> nodes = new LinkedList<>();
-//        nodesFromResponse(me, response, nodes);
-//        return nodes;
-//    }
 
 }

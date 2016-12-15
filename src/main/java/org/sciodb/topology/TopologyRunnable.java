@@ -58,15 +58,57 @@ public class TopologyRunnable implements Runnable {
 //        }
 
         // join the network
-        if (seeds.size() > 0) {
-            final List<Node> nodes = connectWithSeed(seeds);
-            if (nodes.size() != 0) {
-                // find correct peers
-                createRoutingTable(nodes);
+//        if (seeds.size() > 0) {
+//            final List<Node> nodes = connectWithSeed(seeds);
+//            if (nodes.size() != 0) {
+//                // find correct peers
+//                createRoutingTable(nodes);
+//            }
+//        } else {
+//            me.setGuid(GUID.get());
+//        }
+//        long lastUpdate = System.currentTimeMillis();
+//
+//        while (true) {
+//            container.checkNodes(); //me);
+//
+//            if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
+//                FileUtils.persistNodes(me.getPort());
+//                lastUpdate = System.currentTimeMillis();
+//            }
+//            ThreadUtils.sleep(persistTime);
+//        }
+
+        // kademlia paper...
+
+        // bootstrap
+        final NodeOperations op = new NodeOperations(me);
+        boolean isJoined = false;
+        for (final Node seed: seeds) {
+            final String guid = op.store(seed);
+
+            if (StringUtils.isNotEmpty(guid)) {
+                me.setGuid(guid);
+//                container.join(seed);
+                try {
+                    final List<Node> possiblePeers = op.findNode(seed);
+
+                    for(final Node peer: possiblePeers) {
+                        container.join(peer);
+                    }
+                } catch (final CommunicationException e) {
+                    logger.error("Problems getting nodes from peer" , e);
+                }
+                isJoined = true;
+
+                break;
             }
-        } else {
+        }
+
+        if (!isJoined) {
             me.setGuid(GUID.get());
         }
+
         long lastUpdate = System.currentTimeMillis();
 
         while (true) {
@@ -81,16 +123,16 @@ public class TopologyRunnable implements Runnable {
 
     }
 
-    private void createRoutingTable(final List<Node> nodes) {
-        for (final Node node: nodes) {
-            if (!node.getGuid().equals(me.getGuid())) {
-                final Node closestNode = NodeOperations.findClosest(me, node);
-                if (!closestNode.getGuid().equals(me.getGuid()) && !(closestNode.url().equals(me.url()))) {
-                    container.join(closestNode);
-                }
-            }
-        }
-    }
+//    private void createRoutingTable(final List<Node> nodes) {
+//        for (final Node node: nodes) {
+//            if (!node.getGuid().equals(me.getGuid())) {
+//                final Node closestNode = NodeOperations.findClosest(me, node);
+//                if (!closestNode.getGuid().equals(me.getGuid()) && !(closestNode.url().equals(me.url()))) {
+//                    container.join(closestNode);
+//                }
+//            }
+//        }
+//    }
 
 //    private void parseHistoricalNodes() {
 //        final String fileName = Configuration.getInstance().getTempFolder() + FileUtils.OUTPUT_FILE;
@@ -110,26 +152,26 @@ public class TopologyRunnable implements Runnable {
 //        }
 //    }
 
-    private List<Node> connectWithSeed(final List<Node> seeds) {
-        for (final Node seed : seeds) {
-            if (!me.url().equals(seed.url()) && NodeOperations.isAlive(me, seed)) {
-                final String guid = NodeOperations.joinNetwork(me, seed);
-
-                if (guid != null && !guid.isEmpty()) {
-                    me.setGuid(guid);
-                    container.join(seed);
-                    try {
-                        final List<Node> peers = NodeOperations.copyRoutingTable(me, seed);
-
-//                        peers.add(seed);
-                        logger.info(peers.size() + " peers nodes found.");
-                        return peers;
-                    } catch (CommunicationException ce) { /* continue with the next seed */
-                    }
-                }
-            }
-        }
-        return new ArrayList<>();
-    }
+//    private List<Node> connectWithSeed(final List<Node> seeds) {
+//        for (final Node seed : seeds) {
+//            if (!me.url().equals(seed.url()) && NodeOperations.ping(me, seed)) {
+//                final String guid = NodeOperations.joinNetwork(me, seed);
+//
+//                if (guid != null && !guid.isEmpty()) {
+//                    me.setGuid(guid);
+//                    container.join(seed);
+//                    try {
+//                        final List<Node> peers = NodeOperations.copyRoutingTable(me, seed);
+//
+////                        peers.add(seed);
+//                        logger.info(peers.size() + " peers nodes found.");
+//                        return peers;
+//                    } catch (CommunicationException ce) { /* continue with the next seed */
+//                    }
+//                }
+//            }
+//        }
+//        return new ArrayList<>();
+//    }
 
 }

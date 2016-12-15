@@ -10,6 +10,7 @@ import org.sciodb.messages.impl.NodeMessage;
 import org.sciodb.messages.impl.NodesMessage;
 import org.sciodb.server.services.Dispatcher;
 import org.sciodb.topology.TopologyContainer;
+import org.sciodb.utils.StringUtils;
 
 import java.nio.channels.SocketChannel;
 import java.util.List;
@@ -83,42 +84,52 @@ public class SocketsThreadPool {
 //
 //                server.send(channel, response);
 //            }
-            final Operations op = Operations.values()[request.getHeader().getOperationId()];
+
+            int operationId = request.getHeader().getOperationId();
             final Node source = readRequest(request);
 
-            switch (op) {
-                case PING:
-                    // do something ...
-                    server.send(channel, new byte[0]);
-                    break;
-                case STORE:
+            if (StringUtils.isNotEmpty(source.getGuid())) {
+                TopologyContainer.getInstance().join(source); // always add the node to the k-buckets
+            }
+
+            if (operationId == Operations.PING.getValue()) {
+                // do something ...
+                server.send(channel, new byte[0]);
+            } else if (operationId == Operations.STORE.getValue()) {
 //                    final Node source = readRequest(request);
                     // store <key, value> ...
-                    server.send(channel, new byte[0]);
-                    break;
-                case FIND_NODE:
-                    final List<Node> peers = TopologyContainer.getInstance().getPeers(source);
-                    server.send(channel, getContainerMessageForPeers(op.getValue(), peers).encode());
-                    break;
-                case FIND_VALUE:
-                    try {
-                        final Node node = TopologyContainer.getInstance().check(source);
+                if (StringUtils.isEmpty(source.getGuid())) {
+                    source.setGuid(UUID.randomUUID().toString());
+                }
+                TopologyContainer.getInstance().join(source);
+                final NodeMessage nodeMessage = new NodeMessage();
+                nodeMessage.setNode(source);
 
-                        final NodeMessage nodeMessage = new NodeMessage();
-                        nodeMessage.setNode(node);
+                final ContainerMessage response = getMessageForJoiners(operationId, nodeMessage);
 
-                        server.send(channel, getMessageForJoiners(op.getValue(), nodeMessage).encode());
-                    } catch (EmptyDataException e) {
-                        final NodeMessage nodeMessage = new NodeMessage();
-                        nodeMessage.setNode(new Node("", 0)); // TODO MOVE TO NOTHING
+                server.send(channel, response.encode());
+            } else if (operationId == Operations.FIND_NODE.getValue()) {
+                final List<Node> peers = TopologyContainer.getInstance().getPeers(source);
+                server.send(channel, getContainerMessageForPeers(operationId, peers).encode());
+            } else if (operationId == Operations.FIND_VALUE.getValue()) {
 
-                        server.send(channel, getMessageForJoiners(op.getValue(), nodeMessage).encode());
-                    }
-                    break;
-                default:
-                    final byte [] response = dispatcher.getService(request);
+                try {
+                    final Node node = TopologyContainer.getInstance().check(source);
 
-                    server.send(channel, response);
+                    final NodeMessage nodeMessage = new NodeMessage();
+                    nodeMessage.setNode(node);
+
+                    server.send(channel, getMessageForJoiners(operationId, nodeMessage).encode());
+                } catch (EmptyDataException e) {
+                    final NodeMessage nodeMessage = new NodeMessage();
+                    nodeMessage.setNode(new Node("", 0)); // TODO MOVE TO NOTHING
+
+                    server.send(channel, getMessageForJoiners(operationId, nodeMessage).encode());
+                }
+            } else {
+                final byte[] response = dispatcher.getService(request);
+
+                server.send(channel, response);
             }
         }
     }

@@ -1,13 +1,12 @@
 package org.sciodb.topology;
 
 import org.apache.log4j.Logger;
-import org.sciodb.exceptions.CommunicationException;
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.topology.impl.RoutingTable;
-import org.sciodb.topology.impl.MatrixNetImpl;
 import org.sciodb.utils.Configuration;
 import org.sciodb.utils.GUID;
+import org.sciodb.utils.StringUtils;
 import org.sciodb.utils.ThreadUtils;
 
 import java.util.*;
@@ -18,8 +17,7 @@ import java.util.*;
 public class TopologyContainer {
 
     private final RoutingTable table;
-//    private final Net availableNodes;
-//    private final Set<Node> peers;
+//    private final Set<Node> nodes;
 
     private static final TopologyContainer instance = new TopologyContainer();
 
@@ -33,8 +31,7 @@ public class TopologyContainer {
     private Node me;
 
     private TopologyContainer() {
-//        availableNodes = new MatrixNetImpl();
-//        peers = new HashSet<>();
+//        nodes = new LinkedHashSet<>(20);
         table = new RoutingTable(64); // TODO set to 128 bits
 
         waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
@@ -49,9 +46,17 @@ public class TopologyContainer {
     }
 
     public void join(final Node node) {
-        final long distance = GUID.distance(me.getGuid(), node.getGuid());
-        table.add(node, distance);
+        // TODO least-recently seen node at the head, most-recently seen at the tail
+         if (StringUtils.isNotEmpty(node.getGuid())) {
 
+            final long distance = GUID.distance(me.getGuid(), node.getGuid());
+            table.add(node, distance);
+
+        } else {
+            logger.warn("Node not added - " + node.url());
+            logger.warn("Node not added - " + node.getGuid());
+
+        }
 //        if (!availableNodes.contains(node)) {
 //            logger.info("New node available - " + node.url());
 //            availableNodes.add(node);
@@ -94,8 +99,9 @@ public class TopologyContainer {
 
     private boolean checkNode(final Node me, final Node node, final int waitingTime, final int retries) {
         boolean execute = false;
+        final NodeOperations op = new NodeOperations(me);
         for (int i = 0; i < retries; i++) {
-            if (NodeOperations.isAlive(me, node)) {
+            if (op.ping(node)) {
                 execute = true;
                 break;
             }
@@ -139,4 +145,5 @@ public class TopologyContainer {
             throw new EmptyDataException("No node found");
         }
     }
+
 }
