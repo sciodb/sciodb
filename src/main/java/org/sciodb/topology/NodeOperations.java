@@ -85,57 +85,6 @@ public class NodeOperations {
         return container;
     }
 
-//    public static String joinNetwork(final Node me, final Node seed) {
-//        final NodeMessage message = new NodeMessage();
-//        message.setNode(me);
-//
-//        final ContainerMessage container = new ContainerMessage();
-//        container.getHeader().setOperationId(Operations.JOIN_NETWORK.getValue());
-//        container.getHeader().setId(UUID.randomUUID().toString());
-//
-//        container.setContent(message.encode());
-//
-//        try {
-//            byte[] response = SocketClient.sendToSocket(seed.getHost(), seed.getPort(), container, true);
-//
-//            final ContainerMessage parseRsp = new ContainerMessage();
-//            parseRsp.decode(response);
-//
-//            final NodeMessage msg = new NodeMessage();
-//            msg.decode(parseRsp.getContent());
-//
-//            return msg.getNode().getGuid();
-//        } catch (final CommunicationException e) {
-//            logger.error("Node not added to Seed, reason " + e.getLocalizedMessage());
-//            return "";
-//        }
-//    }
-
-    public static void leaveNetwork(final Node me, final List<Node> peers) {
-        for (final Node p: peers) {
-            leaveNetwork(me, p);
-        }
-    }
-
-    public static boolean leaveNetwork(final Node me, final Node target) {
-        final NodeMessage message = new NodeMessage();
-        message.setNode(me);
-
-        final ContainerMessage container = new ContainerMessage();
-        container.getHeader().setOperationId(Operations.LEAVE_NETWORK.getValue());
-        container.getHeader().setId(UUID.randomUUID().toString());
-
-        container.setContent(message.encode());
-
-        try {
-            SocketClient.sendToSocket(target.getHost(), target.getPort(), container, false);
-
-            return true;
-        } catch (final CommunicationException e) {
-            return false;
-        }
-    }
-
     public List<Node> findNode(final Node peer) throws CommunicationException {
         //        takes a 160-bit ID as an argument.
 //        The recipient of a the RPC returns
@@ -164,51 +113,6 @@ public class NodeOperations {
             throw new CommunicationException("Node not added to Seed, reason " + e.getLocalizedMessage());
         }
     }
-
-    public static Node findClosest(final Node me, final Node peer) {
-        final NodeMessage message = new NodeMessage();
-        message.setNode(me);
-
-        final ContainerMessage container = new ContainerMessage();
-        container.getHeader().setOperationId(Operations.JOIN_NETWORK.getValue());
-        container.getHeader().setId(UUID.randomUUID().toString());
-
-        container.setContent(message.encode());
-
-        try {
-            byte[] response = SocketClient.sendToSocket(peer.getHost(), peer.getPort(), container, true);
-
-            final ContainerMessage parseRsp = new ContainerMessage();
-            parseRsp.decode(response);
-
-            final NodeMessage msg = new NodeMessage();
-            msg.decode(parseRsp.getContent());
-
-            return msg.getNode();
-        } catch (final CommunicationException e) {
-            logger.error("Node not added to Seed, reason " + e.getLocalizedMessage());
-            return null;
-        }
-    }
-
-//    public static boolean ping(final Node me, final Node node) {
-//        final NodeMessage message = new NodeMessage();
-//        message.setNode(me);
-//
-//        final ContainerMessage container = new ContainerMessage();
-//        container.getHeader().setOperationId(Operations.STATUS.getValue());
-//        container.getHeader().setId(UUID.randomUUID().toString());
-//
-//        container.setContent(message.encode());
-//
-//        try {
-//            SocketClient.sendToSocket(node.getHost(), node.getPort(), container, false);
-//
-//            return true;
-//        } catch (final CommunicationException e) {
-//            return false;
-//        }
-//    }
 
     private static List<Node> nodesFromResponse(final Node me, final byte[] response) {
 

@@ -17,7 +17,6 @@ import java.util.*;
 public class TopologyContainer {
 
     private final RoutingTable table;
-//    private final Set<Node> nodes;
 
     private static final TopologyContainer instance = new TopologyContainer();
 
@@ -31,7 +30,6 @@ public class TopologyContainer {
     private Node me;
 
     private TopologyContainer() {
-//        nodes = new LinkedHashSet<>(20);
         table = new RoutingTable(64); // TODO set to 128 bits
 
         waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
@@ -57,17 +55,9 @@ public class TopologyContainer {
             logger.warn("Node not added - " + node.getGuid());
 
         }
-//        if (!availableNodes.contains(node)) {
-//            logger.info("New node available - " + node.url());
-//            availableNodes.add(node);
-//            newNodes.add(node);
-//        }
-        // new stuff
-//        node.setGuid(UUID.randomUUID().toString());
     }
 
-    void checkNodes() { //final Node me) {
-//        if (me != null && this.me == null) this.me = me;
+    void checkNodes() {
 
         final long now = System.currentTimeMillis();
 

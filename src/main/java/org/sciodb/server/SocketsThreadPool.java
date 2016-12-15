@@ -50,41 +50,6 @@ public class SocketsThreadPool {
             final ContainerMessage request = new ContainerMessage();
             request.decode(input);
 
-//            int operationId = request.getHeader().getOperationId();
-
-//            if (operationId == Operations.STATUS.getValue()) {
-//                final NodeMessage nodeMessage = new NodeMessage();
-//                nodeMessage.decode(request.getContent());
-//
-//                server.send(channel, new byte[0]);
-//            } else if (operationId == Operations.JOIN_NETWORK.getValue()) {
-//                final NodeMessage nodeMessage = new NodeMessage();
-//                nodeMessage.decode(request.getContent());
-//                nodeMessage.getNode().setGuid(UUID.randomUUID().toString()); // TODO review to be sure that UUID is a good GUID !
-//
-//                TopologyContainer.getInstance().join(nodeMessage.getNode());
-//
-//                final ContainerMessage response = getMessageForJoiners(operationId, nodeMessage);
-//                server.send(channel, response.encode());
-//
-//            } else if (operationId == Operations.COPY_ROUTING_TABLE.getValue()) {
-//                final NodeMessage nodeMessage = new NodeMessage();
-//                nodeMessage.decode(request.getContent());
-//
-//                final List<Node> peers = TopologyContainer.getInstance().getPeers(nodeMessage.getNode());
-//
-//                final ContainerMessage response = getContainerMessageForPeers(operationId, peers);
-//
-//                server.send(channel, response.encode());
-////            } else if (operationId == Operations.SHARE_SNAPSHOT.getValue()) {
-////                 TODO implements the update of the network topology...
-//            } else {
-//
-//                final byte [] response = dispatcher.getService(request);
-//
-//                server.send(channel, response);
-//            }
-
             int operationId = request.getHeader().getOperationId();
             final Node source = readRequest(request);
 
@@ -93,10 +58,8 @@ public class SocketsThreadPool {
             }
 
             if (operationId == Operations.PING.getValue()) {
-                // do something ...
                 server.send(channel, new byte[0]);
             } else if (operationId == Operations.STORE.getValue()) {
-//                    final Node source = readRequest(request);
                     // store <key, value> ...
                 if (StringUtils.isEmpty(source.getGuid())) {
                     source.setGuid(UUID.randomUUID().toString());
@@ -146,12 +109,6 @@ public class SocketsThreadPool {
         n.getNodes().addAll(peers);
 
         return setupContainerMessageFor(id, n.encode());
-//        final ContainerMessage response = new ContainerMessage();
-//        response.getHeader().setId(UUID.randomUUID().toString());
-//        response.getHeader().setOperationId(id);
-//
-//        response.setContent(n.encode());
-//        return response;
     }
 
     private static ContainerMessage getMessageForJoiners(final int id, final NodeMessage peer) {
