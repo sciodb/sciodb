@@ -8,6 +8,8 @@ import org.sciodb.topology.TopologyRunnable;
 import org.sciodb.utils.Configuration;
 import org.sciodb.utils.SeedUtils;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.List;
 
 
@@ -71,16 +73,11 @@ public class ScioDB {
 //                    node = NodeMapper.toNode(text);
 //                }
                 final Node node = new Node();
-//                try {
-//                    final String ip = cmd.getOptionValue("i");
-//                    if (ip != null) {
-//                        node.setHost(ip);
-//                    } else {
-                        node.setHost("0.0.0.0"); //Inet4Address.getLocalHost().getHostAddress());
-//                    }
-//                } catch (UnknownHostException e) {
-//                    node.setHost(Configuration.getInstance().getHost()); // TODO by default, should we use this IP?
-//                }
+                try {
+                    node.setHost(Inet4Address.getLocalHost().getHostAddress());
+                } catch (final UnknownHostException e) {
+                    node.setHost("0.0.0.0");
+                }
                 node.setPort(port);
 
                 final String s = cmd.getOptionValue("s");
