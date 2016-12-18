@@ -1,13 +1,12 @@
 package org.sciodb.topology;
 
 import org.apache.log4j.Logger;
+import org.sciodb.exceptions.CommunicationException;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.utils.*;
 
-import java.io.IOException;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Jesús Navarrete (24/09/14)
@@ -19,6 +18,7 @@ public class TopologyRunnable implements Runnable {
 //    private static int waitingTime;
     private static int persistTime;
 //    private static int masterCheckingTime;
+    private static TopologyContainer container;
 
     private Node me;
 
@@ -28,23 +28,52 @@ public class TopologyRunnable implements Runnable {
 //        waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
         persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
 
-//        masterCheckingTime = Configuration.getInstance().getMasterCheckTimeTopology();
+//        masterCheckingTime = Configuration.getInstance().getRetryTimeTopology();
 
         this.me = me;
         this.seeds = seeds;
+        container = TopologyContainer.getInstance();
+        if (seeds.size() == 0) me.setGuid(GUID.get());
     }
 
     @Override
     public void run() {
 
-        logger.info("Starting node [" + me.url() + "]");
-        connectWithSeed(seeds);
+        container.setMe(me);
 
-//        parseHistoricalNodes();
+        // kademlia paper...
+
+        // bootstrap
+        final NodeOperations op = new NodeOperations(me);
+        boolean isJoined = false;
+        for (final Node seed: seeds) {
+            final String guid = op.store(seed);
+
+            if (StringUtils.isNotEmpty(guid)) {
+                me.setGuid(guid);
+                try {
+                    final List<Node> possiblePeers = op.findNode(seed);
+
+                    for(final Node peer: possiblePeers) {
+                        container.join(peer);
+                    }
+                } catch (final CommunicationException e) {
+                    logger.error("Problems getting nodes from peer" , e);
+                }
+                isJoined = true;
+
+                break;
+            }
+        }
+
+        if (!isJoined) {
+            me.setGuid(GUID.get());
+        }
+
         long lastUpdate = System.currentTimeMillis();
 
         while (true) {
-            TopologyContainer.getInstance().checkNodes(me);
+            container.checkNodes();
 
             if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
                 FileUtils.persistNodes(me.getPort());
@@ -52,39 +81,25 @@ public class TopologyRunnable implements Runnable {
             }
             ThreadUtils.sleep(persistTime);
         }
+
     }
 
-    private void parseHistoricalNodes() {
-        final String fileName = Configuration.getInstance().getTempFolder() + FileUtils.OUTPUT_FILE;
-
-        try {
-            final String previousInfo = FileUtils.read(fileName, FileUtils.ENCODING);
-            if (previousInfo != null && !"".equals(previousInfo)) {
-                final List<Node> previousNodes = NodeMapper.fromString(previousInfo);
-
-                for (final Node node : previousNodes) {
-                    TopologyContainer.getInstance().addNode(node);
-                }
-            }
-
-        } catch (IOException e) {
-            logger.error("Error reading the file", e);
-        }
-    }
-
-    private void connectWithSeed(final List<Node> seeds) {
-        for (final Node node : seeds) {
-            if (!me.url().equals(node.url()) && NodeOperations.isAlive(me, node) && NodeOperations.addNode(me, node)) {
-                final List<Node> peers = NodeOperations.discoverPeer(me, node);
-
-                logger.info(peers.size() + " peers nodes found.");
-                for (final Node n : peers) {
-                    TopologyContainer.getInstance().addNode(n);
-                }
-
-                break;
-            }
-        }
-    }
+//    private void parseHistoricalNodes() {
+//        final String fileName = Configuration.getInstance().getTempFolder() + FileUtils.OUTPUT_FILE;
+//
+//        try {
+//            final String previousInfo = FileUtils.read(fileName, FileUtils.ENCODING);
+//            if (previousInfo != null && !"".equals(previousInfo)) {
+//                final List<Node> previousNodes = NodeMapper.fromString(previousInfo);
+//
+//                for (final Node node : previousNodes) {
+//                    container.join(node);
+//                }
+//            }
+//
+//        } catch (IOException e) {
+//            logger.error("Error reading the file", e);
+//        }
+//    }
 
 }

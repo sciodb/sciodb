@@ -1,6 +1,8 @@
 package org.sciodb.server;
 
+import com.sun.corba.se.spi.orb.Operation;
 import org.apache.log4j.Logger;
+import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.Node;
@@ -8,6 +10,7 @@ import org.sciodb.messages.impl.NodeMessage;
 import org.sciodb.messages.impl.NodesMessage;
 import org.sciodb.server.services.Dispatcher;
 import org.sciodb.topology.TopologyContainer;
+import org.sciodb.utils.StringUtils;
 
 import java.nio.channels.SocketChannel;
 import java.util.List;
@@ -48,50 +51,93 @@ public class SocketsThreadPool {
             request.decode(input);
 
             int operationId = request.getHeader().getOperationId();
+            final Node source = readRequest(request);
 
-            if (operationId == Operations.STATUS.getValue()) {
-                final NodeMessage nodeMessage = new NodeMessage();
-                nodeMessage.decode(request.getContent());
+            if (StringUtils.isNotEmpty(source.getGuid())) {
+                TopologyContainer.getInstance().join(source); // always add the node to the k-buckets
+            }
 
+            if (operationId == Operations.PING.getValue()) {
                 server.send(channel, new byte[0]);
-            } else if (operationId == Operations.ADD_NODE.getValue()) {
+            } else if (operationId == Operations.STORE.getValue()) {
+                    // store <key, value> ...
+                if (StringUtils.isEmpty(source.getGuid())) {
+                    source.setGuid(UUID.randomUUID().toString());
+                }
+                TopologyContainer.getInstance().join(source);
                 final NodeMessage nodeMessage = new NodeMessage();
-                nodeMessage.decode(request.getContent());
+                nodeMessage.setNode(source);
 
-                TopologyContainer.getInstance().addNode(nodeMessage.getNode());
-
-                server.send(channel, new byte[0]);
-
-            } else if (operationId == Operations.DISCOVER_PEERS.getValue()) {
-                final NodeMessage nodeMessage = new NodeMessage();
-                nodeMessage.decode(request.getContent());
-
-                final List<Node> peers = TopologyContainer.getInstance().getPeers(nodeMessage.getNode());
-
-                final ContainerMessage response = getContainerMessageForPeers(operationId, peers);
+                final ContainerMessage response = getMessageForJoiners(operationId, nodeMessage);
 
                 server.send(channel, response.encode());
-//            } else if (operationId == Operations.SHARE_SNAPSHOT.getValue()) {
-//                 TODO implements the update of the network topology...
-            } else {
+            } else if (operationId == Operations.FIND_NODE.getValue()) {
+                final List<Node> peers = TopologyContainer.getInstance().getPeers(source);
+                server.send(channel, getContainerMessageForPeers(operationId, peers).encode());
+            } else if (operationId == Operations.FIND_VALUE.getValue()) {
 
-                final byte [] response = dispatcher.getService(request);
+                try {
+                    final Node node = TopologyContainer.getInstance().check(source);
+
+                    final NodeMessage nodeMessage = new NodeMessage();
+                    nodeMessage.setNode(node);
+
+                    server.send(channel, getMessageForJoiners(operationId, nodeMessage).encode());
+                } catch (EmptyDataException e) {
+                    final NodeMessage nodeMessage = new NodeMessage();
+                    nodeMessage.setNode(new Node("", 0)); // TODO MOVE TO NOTHING
+
+                    server.send(channel, getMessageForJoiners(operationId, nodeMessage).encode());
+                }
+            } else {
+                final byte[] response = dispatcher.getService(request);
 
                 server.send(channel, response);
             }
         }
     }
 
+    private Node readRequest(final ContainerMessage message) {
+        final NodeMessage nodeMessage = new NodeMessage();
+        nodeMessage.decode(message.getContent());
+
+        return nodeMessage.getNode();
+    }
+
     private ContainerMessage getContainerMessageForPeers(final int id, final List<Node> peers) {
         final NodesMessage n = new NodesMessage();
         n.getNodes().addAll(peers);
 
+        return setupContainerMessageFor(id, n.encode());
+    }
+
+    private static ContainerMessage getMessageForJoiners(final int id, final NodeMessage peer) {
+        return setupContainerMessageFor(id, peer.encode());
+    }
+
+    private static ContainerMessage setupContainerMessageFor(final int id, final byte[] message) {
         final ContainerMessage response = new ContainerMessage();
         response.getHeader().setId(UUID.randomUUID().toString());
         response.getHeader().setOperationId(id);
 
-        response.setContent(n.encode());
+        response.setContent(message);
+
         return response;
     }
 
+    public static void main(String[] args) {
+        Node node = new Node("0.0.0.0", 9091);
+        node.setGuid("1234567890");
+        NodeMessage message = new NodeMessage();
+        message.setNode(node);
+        ContainerMessage cm = getMessageForJoiners(123, message);
+
+        ContainerMessage cm2 = new ContainerMessage();
+        cm2.decode(cm.encode());
+
+        Node n2 = new Node();
+        n2.decode(cm2.getContent());
+
+        System.out.println(n2.url() + " - " + n2.getGuid());
+    }
 }

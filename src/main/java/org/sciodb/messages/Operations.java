@@ -9,8 +9,8 @@ public enum Operations {
     // Public simple operations
     STATUS(1),
 
-    // Internal operations between nodes
-    ADD_NODE(30), DISCOVER_PEERS(31), SHARE_SNAPSHOT(32),
+    // Internal operations between nodes (kademlia)
+    PING(30), STORE(31), FIND_NODE(32), FIND_VALUE(33),
 
     // Database operations
     DATABASE_STATUS(40), OP_ECHO(41);

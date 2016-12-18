@@ -1,80 +1,78 @@
 package org.sciodb.topology;
 
 import org.apache.log4j.Logger;
+import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.topology.impl.MatrixNetImpl;
+import org.sciodb.topology.impl.RoutingTable;
 import org.sciodb.utils.Configuration;
+import org.sciodb.utils.GUID;
+import org.sciodb.utils.StringUtils;
 import org.sciodb.utils.ThreadUtils;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author Jesús Navarrete (22/09/14)
  */
 public class TopologyContainer {
 
-    private final Net availableNodes;
-    private final Set<Node> peers;
-//    private final Queue<Node> newNodes;
+    private final RoutingTable table;
 
     private static final TopologyContainer instance = new TopologyContainer();
 
     private static int waitingTime;
-    private static int persistTime;
-    private static int masterCheckingTime;
+    private static int retryTime;
 
     private Logger logger = Logger.getLogger(TopologyContainer.class);
 
-    private final int MINIMUN_PEERS;
     private Node me;
 
     private TopologyContainer() {
-        availableNodes = new MatrixNetImpl();
-        peers = new HashSet<>();
-//        newNodes = new ConcurrentLinkedQueue<>();
+        table = new RoutingTable(64); // TODO set to 128 bits
 
         waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
-        persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
 
-        masterCheckingTime = Configuration.getInstance().getMasterCheckTimeTopology();
-        MINIMUN_PEERS = Configuration.getInstance().getReplicasNumber();
+        retryTime = Configuration.getInstance().getRetryTimeTopology();
     }
 
     public static TopologyContainer getInstance() {
         return instance;
     }
 
-    public void addNode(final Node node) {
-        if (!availableNodes.contains(node)) {
-            logger.info("New node available - " + node.url());
-            availableNodes.add(node);
-//            newNodes.add(node);
+    public void join(final Node node) {
+        // TODO least-recently seen node at the head, most-recently seen at the tail
+         if (StringUtils.isNotEmpty(node.getGuid())) {
+
+            final long distance = GUID.distance(me.getGuid(), node.getGuid());
+            table.add(node, distance);
+
+        } else {
+            logger.warn("Node not added - " + node.url());
+            logger.warn("Node not added - " + node.getGuid());
+
         }
     }
 
-    void checkNodes(final Node me) {
-        if (me != null && this.me == null) this.me = me;
+    void checkNodes() {
 
         final long now = System.currentTimeMillis();
 
-        final Iterator<Node> iterator = peers.iterator();
+        final Iterator<Node> iterator = table.getNodes().iterator();
 
-        logger.debug("Nodes availables...");
+        logger.debug("Nodes available...");
         while (iterator.hasNext()) {
             final Node node = iterator.next();
 
-            boolean alive = checkNode(me, node, masterCheckingTime, 3);
+            boolean alive = checkNode(me, node, 3);
 
             if (alive) {
                 logger.info(node.url() + " - available");
             } else {
                 iterator.remove();
+                table.leave(node);
                 logger.error(node.url() + " - not available ");
             }
         }
-
-        checkPeers();
 
         final long finished = System.currentTimeMillis();
         final long timeUsed = finished - now;
@@ -83,38 +81,49 @@ public class TopologyContainer {
         }
     }
 
-    private boolean checkNode(final Node me, final Node node, final int waitingTime, final int retries) {
+    private boolean checkNode(final Node me, final Node node, final int retries) {
         boolean execute = false;
+        final NodeOperations op = new NodeOperations(me);
         for (int i = 0; i < retries; i++) {
-            if (NodeOperations.isAlive(me, node)) {
+            if (op.ping(node)) {
                 execute = true;
                 break;
             }
             logger.info(String.format("Retry connecting with node, try %d", i));
-            ThreadUtils.sleep(waitingTime);
+            ThreadUtils.sleep(retryTime);
         }
         return execute;
     }
 
-    private void checkPeers() {
-        if (!availableNodes.isEmpty() && availableNodes.size() > peers.size() && peers.size() <= MINIMUN_PEERS) {
-            final List<Node> nodes = NodeOperations.discoverPeer(me, availableNodes.first());
-            logger.info("More peers discovered: " + nodes.size());
-            peers.addAll(nodes);
+    public List<Node> getAvailableNodes() {
+        return table.getNodes();
+    }
+
+    /**
+     * It takes the GUID as an argument.  And it returns <IP address, UDP port, Node ID> triples for the k nodes it
+     * knows about closest to the target ID. These triples can come from a single k-bucket, or they may come from
+     * multiple k-buckets if the closest k-bucket is not full. In any case, the RPC recipient must return k items
+     * (unless there are fewer than k nodes in all its k-buckets combined, in which case it returns every node it
+     * knows about).
+     * @param node
+     * @return
+     */
+    public List<Node> getPeers(final Node node) { // Don't delete this *node* it will be used soon!
+        final List<Node> peers = table.getNodes();
+        peers.add(me);
+        return peers;
+    }
+
+    public void setMe(final Node me) {
+        this.me = me;
+    }
+
+    public Node check(final Node source) throws EmptyDataException {
+        if (table.contains(source)) {
+            return source;
+        } else {
+            throw new EmptyDataException("No node found");
         }
     }
 
-    public List<Node> getAvailableNodes() {
-        return availableNodes.snapshot();
-    }
-
-    public List<Node> getPeers(final Node node) { // Don't delete this *node* it will be used soon!
-        final List<Node> result = new ArrayList<>();
-
-        result.addAll(availableNodes.getPeers(node));
-        if (me != null) result.add(me);
-
-        return result;
-    }
-    
 }

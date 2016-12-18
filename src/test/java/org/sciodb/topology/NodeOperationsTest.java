@@ -6,8 +6,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.sciodb.messages.impl.Node;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import static org.junit.Assert.*;
 
 /**
@@ -16,10 +14,13 @@ import static org.junit.Assert.*;
 public class NodeOperationsTest {
 
     private NodeOperations operations;
+    private Node node;
 
     @Before
     public void setUp() throws Exception {
-        operations = new NodeOperations();
+        node = new Node("localhost", 9090);
+
+        operations = new NodeOperations(node);
     }
 
     @After
@@ -34,7 +35,7 @@ public class NodeOperationsTest {
         final Node seed = new Node("localhost", 9090);
 
         for(int i = 0; i < 100; i++) {
-            operations.discoverPeer(me, seed);
+//            operations.discoverPeer(me, seed);
         }
 
     }
@@ -42,11 +43,10 @@ public class NodeOperationsTest {
     @Ignore
     @Test
     public void isAlive() throws Exception {
-        final Node me = new Node("localhost", 9091);
-        final Node seed = new Node("localhost", 9090);
+        final Node target = new Node("localhost", 9091);
 
         for(int i = 0; i < 10; i++) {
-            assertTrue(operations.isAlive(me, seed));
+            assertTrue(operations.ping(target));
         }
     }
 

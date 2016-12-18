@@ -9,4 +9,11 @@ public class StringUtils {
         return str != null && str.trim().matches("-?\\d+");  //match a number with optional '-' and decimal.
     }
 
+    public static boolean isEmpty(final String input) {
+        return input == null || "".equals(input);
+    }
+
+    public static boolean isNotEmpty(final String input) {
+        return !isEmpty(input);
+    }
 }

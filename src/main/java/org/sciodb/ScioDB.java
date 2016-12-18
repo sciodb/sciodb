@@ -8,6 +8,8 @@ import org.sciodb.topology.TopologyRunnable;
 import org.sciodb.utils.Configuration;
 import org.sciodb.utils.SeedUtils;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.List;
 
 
@@ -34,8 +36,6 @@ public class ScioDB {
 
         final ScioDB scio = new ScioDB();
         scio.commandLine(args);
-
-        logger.info("Stopped!");
     }
 
     public void commandLine(final String[] args) {
@@ -73,16 +73,11 @@ public class ScioDB {
 //                    node = NodeMapper.toNode(text);
 //                }
                 final Node node = new Node();
-//                try {
-//                    final String ip = cmd.getOptionValue("i");
-//                    if (ip != null) {
-//                        node.setHost(ip);
-//                    } else {
-                        node.setHost("0.0.0.0"); //Inet4Address.getLocalHost().getHostAddress());
-//                    }
-//                } catch (UnknownHostException e) {
-//                    node.setHost(Configuration.getInstance().getHost()); // TODO by default, should we use this IP?
-//                }
+                try {
+                    node.setHost(Inet4Address.getLocalHost().getHostAddress());
+                } catch (final UnknownHostException e) {
+                    node.setHost("0.0.0.0");
+                }
                 node.setPort(port);
 
                 final String s = cmd.getOptionValue("s");
@@ -101,8 +96,19 @@ public class ScioDB {
         try {
             new Thread(new ServerSocket(null, node.getPort())).start();
             new Thread(new TopologyRunnable(node, seeds)).start();
+
+            final Runtime runtime = Runtime.getRuntime();
+            runtime.addShutdownHook(new Thread(new Shutdown()));
+
         } catch (Exception e) {
             logger.error("Impossible to start the database", e);
+        }
+    }
+
+    private class Shutdown implements Runnable {
+        @Override
+        public void run() {
+            logger.info("Stopped!");
         }
     }
 }
