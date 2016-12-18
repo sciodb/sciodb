@@ -19,10 +19,12 @@ public class Node implements Message {
     private String host;
     private int port;
     private int status;
+    private String guid;
 
     private long lastCheck;
 
     public Node() {
+        guid = "";
     }
 
     public Node(final String host, final int port) {
@@ -65,6 +67,7 @@ public class Node implements Message {
         encoder.in(host);
         encoder.in(port);
         encoder.in(status);
+        encoder.in(guid);
 
         return encoder.container();
     }
@@ -75,6 +78,7 @@ public class Node implements Message {
         this.host = decoder.getString();
         this.port = decoder.getInt();
         this.status = decoder.getInt();
+        this.guid = decoder.getString();
     }
 
     @Override
@@ -125,6 +129,14 @@ public class Node implements Message {
 
     public void setLastCheck(long lastCheck) {
         this.lastCheck = lastCheck;
+    }
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 }
 
