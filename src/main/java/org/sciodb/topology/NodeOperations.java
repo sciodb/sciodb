@@ -26,9 +26,10 @@ public class NodeOperations {
         this.me = me;
     }
 
+    /**
+     * The ping operation probes if a node is online, no response is required.
+     */
     public boolean ping(final Node target) {
-//        The PING
-//        RPC probes a node to see if it is online.
         final NodeMessage message = new NodeMessage();
         message.setNode(me);
 
@@ -43,10 +44,13 @@ public class NodeOperations {
         }
     }
 
+    /**
+     * The store operation send a <key, value> pair for later retrieval.
+     *
+     * @param target
+     * @return
+     */
     public String store(final Node target) {
-//        instructs
-//        a node to store a <key, value> pair for later
-//        retrieval.
         final NodeMessage message = new NodeMessage();
         message.setNode(me);
 
@@ -68,11 +72,11 @@ public class NodeOperations {
         }
     }
 
-    public static void findValue() {
 //        behaves like FIND NODE—returning
-//        hIP address, UDP port, Node IDi triples—with one
+//        <IP address, UDP port, Node ID> triples—with one
 //        exception. If the RPC recipient has received a STORE
 //        RPC for the key, it just returns the stored value.
+    public static void findValue() {
     }
 
     private ContainerMessage getMessage(final int op, final byte[] encoded) {
@@ -85,17 +89,19 @@ public class NodeOperations {
         return container;
     }
 
-    public List<Node> findNode(final Node peer) throws CommunicationException {
-        //        takes a 160-bit ID as an argument.
-//        The recipient of a the RPC returns
-//        <IP address, UDP port, Node ID> triples for the k
-//        nodes it knows about closest to the target ID. These
-//        triples can come from a single k-bucket, or they may
-//        come from multiple k-buckets if the closest k-bucket
-//        is not full. In any case, the RPC recipient must return
-//                k items (unless there are fewer than k nodes in all its
-//                k-buckets combined, in which case it returns every
-//        node it knows about).
+    /**
+     * The find-node operation send the GUID of the node and retrieves:
+     * - in case the node was not executing store operation before: it retrieves a list of
+     *   <IP address, UDP port, Node ID> triples for the k nodes closest to the target ID.
+     *
+     *   TODO investigate return a list of triples and not a list of nodes.
+     *
+     * @param target
+     * @return a list of k closest nodes.
+     * @throws CommunicationException
+     */
+    public List<Node> findNode(final Node target) throws CommunicationException {
+
         final NodeMessage message = new NodeMessage();
         message.setNode(me);
 
@@ -106,15 +112,15 @@ public class NodeOperations {
         container.setContent(message.encode());
 
         try {
-            byte[] response = SocketClient.sendToSocket(peer.getHost(), peer.getPort(), container, true);
+            byte[] response = SocketClient.sendToSocket(target.getHost(), target.getPort(), container, true);
 
-            return nodesFromResponse(me, response);
+            return nodesFromResponse(response);
         } catch (final CommunicationException e) {
             throw new CommunicationException("Node not added to Seed, reason " + e.getLocalizedMessage());
         }
     }
 
-    private static List<Node> nodesFromResponse(final Node me, final byte[] response) {
+    private List<Node> nodesFromResponse(final byte[] response) {
 
         if (response.length > 4) {
             final ContainerMessage parseRsp = new ContainerMessage();
