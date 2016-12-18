@@ -28,7 +28,7 @@ public class TopologyRunnable implements Runnable {
 //        waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
         persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
 
-//        masterCheckingTime = Configuration.getInstance().getMasterCheckTimeTopology();
+//        masterCheckingTime = Configuration.getInstance().getRetryTimeTopology();
 
         this.me = me;
         this.seeds = seeds;

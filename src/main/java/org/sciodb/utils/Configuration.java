@@ -44,8 +44,8 @@ public class Configuration {
         return properties.getProperty("temp.folder");
     }
 
-    public int getMasterCheckTimeTopology() {
-        return Integer.valueOf(properties.getProperty("topology.master_check.time"));
+    public int getRetryTimeTopology() {
+        return Integer.valueOf(properties.getProperty("topology.retry.time"));
     }
 
     public int getNodesCheckTimeTopology() {
@@ -56,7 +56,4 @@ public class Configuration {
         return Integer.valueOf(properties.getProperty("topology.nodes_persist.time"));
     }
 
-    public int getReplicasNumber() {
-        return Integer.valueOf(properties.getProperty("replication.nodes.number"));
-    }
 }

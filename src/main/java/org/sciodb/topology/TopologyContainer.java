@@ -21,22 +21,18 @@ public class TopologyContainer {
     private static final TopologyContainer instance = new TopologyContainer();
 
     private static int waitingTime;
-    private static int persistTime;
-    private static int masterCheckingTime;
+    private static int retryTime;
 
     private Logger logger = Logger.getLogger(TopologyContainer.class);
 
-//    private final int MINIMUN_PEERS;
     private Node me;
 
     private TopologyContainer() {
         table = new RoutingTable(64); // TODO set to 128 bits
 
         waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
-        persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
 
-        masterCheckingTime = Configuration.getInstance().getMasterCheckTimeTopology();
-//        MINIMUN_PEERS = Configuration.getInstance().getReplicasNumber();
+        retryTime = Configuration.getInstance().getRetryTimeTopology();
     }
 
     public static TopologyContainer getInstance() {
@@ -63,11 +59,11 @@ public class TopologyContainer {
 
         final Iterator<Node> iterator = table.getNodes().iterator();
 
-        logger.debug("Nodes availables...");
+        logger.debug("Nodes available...");
         while (iterator.hasNext()) {
             final Node node = iterator.next();
 
-            boolean alive = checkNode(me, node, masterCheckingTime, 3);
+            boolean alive = checkNode(me, node, 3);
 
             if (alive) {
                 logger.info(node.url() + " - available");
@@ -78,8 +74,6 @@ public class TopologyContainer {
             }
         }
 
-        checkPeers();
-
         final long finished = System.currentTimeMillis();
         final long timeUsed = finished - now;
         if (timeUsed < waitingTime) {
@@ -87,7 +81,7 @@ public class TopologyContainer {
         }
     }
 
-    private boolean checkNode(final Node me, final Node node, final int waitingTime, final int retries) {
+    private boolean checkNode(final Node me, final Node node, final int retries) {
         boolean execute = false;
         final NodeOperations op = new NodeOperations(me);
         for (int i = 0; i < retries; i++) {
@@ -96,28 +90,24 @@ public class TopologyContainer {
                 break;
             }
             logger.info(String.format("Retry connecting with node, try %d", i));
-            ThreadUtils.sleep(waitingTime);
+            ThreadUtils.sleep(retryTime);
         }
         return execute;
-    }
-
-    private void checkPeers() {
-//        if (!availableNodes.isEmpty() && availableNodes.size() > peers.size() && peers.size() <= MINIMUN_PEERS) {
-//            final List<Node> nodes;
-//            try {
-//                nodes = NodeOperations.copyRoutingTable(me, availableNodes.first());
-//                logger.info("More peers discovered: " + nodes.size());
-//                peers.addAll(nodes);
-//            } catch (CommunicationException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     public List<Node> getAvailableNodes() {
         return table.getNodes();
     }
 
+    /**
+     * It takes the GUID as an argument.  And it returns <IP address, UDP port, Node ID> triples for the k nodes it
+     * knows about closest to the target ID. These triples can come from a single k-bucket, or they may come from
+     * multiple k-buckets if the closest k-bucket is not full. In any case, the RPC recipient must return k items
+     * (unless there are fewer than k nodes in all its k-buckets combined, in which case it returns every node it
+     * knows about).
+     * @param node
+     * @return
+     */
     public List<Node> getPeers(final Node node) { // Don't delete this *node* it will be used soon!
         final List<Node> peers = table.getNodes();
         peers.add(me);
