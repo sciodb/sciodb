@@ -8,14 +8,9 @@ import org.sciodb.utils.GUID;
 import static org.junit.Assert.*;
 
 /**
- * Created by jesusnavarrete on 02/12/2016.
+ * @author Jesús Navarrete on 02/12/2016.
  */
 public class RoutingTableTest {
-
-    @Test
-    public void getBits() throws Exception {
-
-    }
 
     @Test
     public void distance() throws Exception {
