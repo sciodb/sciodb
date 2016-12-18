@@ -27,10 +27,6 @@ public class RoutingTable {
         nodes = new LinkedList<>();
     }
 
-    public int getBits() {
-        return bits;
-    }
-
     public List<Node> getNodes() {
         List<Node> result = new ArrayList<>();
 
