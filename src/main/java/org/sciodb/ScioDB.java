@@ -44,8 +44,7 @@ public class ScioDB {
         options.addOption("h", "help", false, "help, show this message");
         options.addOption("v", "version", false, "current version of the software");
         options.addOption("p", "port", true, "port for the database");
-        options.addOption("s", "seeds", true, "seeds nodes to connect"); // idea from cassandra !!
-        options.addOption("c", "conf", true, "configuration by file");
+        options.addOption("s", "seeds", true, "seeds nodes to connect");
 
         try {
             final CommandLineParser parser = new DefaultParser();
@@ -61,17 +60,6 @@ public class ScioDB {
                 final String p = cmd.getOptionValue("p");
                 port = p != null? Integer.valueOf(p) : Configuration.getInstance().getPort();
 
-                // TODO temporal reading for testing: decide where, when and how to do it !
-                final String confFile = cmd.getOptionValue("c");
-
-//                if (confFile != null && !"".equals(confFile)) {
-//
-//                    final InputStream stream = ScioDB.class.getClassLoader().getResourceAsStream(confFile);
-//
-//                    final Scanner s = new Scanner(stream).useDelimiter("\\A");
-//                    final String text = s.hasNext() ? s.next() : "";
-//                    node = NodeMapper.toNode(text);
-//                }
                 final Node node = new Node();
                 try {
                     node.setHost(Inet4Address.getLocalHost().getHostAddress());
@@ -111,4 +99,5 @@ public class ScioDB {
             logger.info("Stopped!");
         }
     }
+
 }
