@@ -11,7 +11,7 @@ public class StatusCommand implements Command {
 
     @Override
     public byte[] operation(byte[] command) {
-        logger.debug("Status Sevice - executed ! ");
+        logger.debug("Status Service - executed ! ");
 
         return "status operation executed!".getBytes();
     }
