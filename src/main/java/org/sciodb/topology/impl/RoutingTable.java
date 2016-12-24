@@ -91,7 +91,7 @@ public class RoutingTable {
 
     public boolean contains(final Node node) {
         boolean found = false;
-        for (final RoutingNode rn : nodes) {
+        for (final RoutingNode rn : nodes) { // TODO FIX: ConcurrentModificationException
             if ((rn.getNode().url().equals(node.url())) || (rn.getNode().getGuid().equals(node.getGuid()))) {
                 found = true;
                 break;
