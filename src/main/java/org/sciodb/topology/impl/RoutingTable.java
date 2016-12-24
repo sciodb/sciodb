@@ -13,16 +13,10 @@ public class RoutingTable {
 
     private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RoutingTable.class);
 
-    private int k;
-
-    private Set<Triple<String, String, Node>> buckets;
     private int bits;
     private LinkedList<RoutingNode> nodes;
 
     public RoutingTable(int bits) {
-        k = 20;
-        buckets = new HashSet<>();
-
         this.bits = bits;
         nodes = new LinkedList<>();
     }

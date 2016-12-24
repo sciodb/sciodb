@@ -2,16 +2,17 @@ package org.sciodb.topology;
 
 import org.apache.log4j.Logger;
 import org.sciodb.exceptions.CommunicationException;
-import org.sciodb.exceptions.SeedException;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.messages.impl.NodeMessage;
 import org.sciodb.messages.impl.NodesMessage;
-import org.sciodb.topology.models.Triple;
 import org.sciodb.utils.SocketClient;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 
 /**
  * @author Jesús Navarrete (03/10/15)
