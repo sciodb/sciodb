@@ -1,6 +1,5 @@
 package org.sciodb.server;
 
-import com.sun.corba.se.spi.orb.Operation;
 import org.apache.log4j.Logger;
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.Operations;
@@ -23,8 +22,6 @@ import java.util.concurrent.Executors;
  */
 public class SocketsThreadPool {
 
-    final static private Logger logger = Logger.getLogger(SocketsThreadPool.class);
-
     private ExecutorService service;
     private Dispatcher dispatcher;
     private static SocketsThreadPool instance;
@@ -34,7 +31,7 @@ public class SocketsThreadPool {
         this.dispatcher = new Dispatcher();
     }
 
-    public static SocketsThreadPool getInstance() {
+    static SocketsThreadPool getInstance() {
         if (instance == null) {
             instance = new SocketsThreadPool();
         }

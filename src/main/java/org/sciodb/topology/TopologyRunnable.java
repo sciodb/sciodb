@@ -2,10 +2,10 @@ package org.sciodb.topology;
 
 import org.apache.log4j.Logger;
 import org.sciodb.exceptions.CommunicationException;
+import org.sciodb.exceptions.ServerException;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.utils.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
