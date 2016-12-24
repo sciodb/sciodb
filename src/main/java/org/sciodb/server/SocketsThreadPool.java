@@ -125,19 +125,4 @@ public class SocketsThreadPool {
         return response;
     }
 
-    public static void main(String[] args) {
-        Node node = new Node("0.0.0.0", 9091);
-        node.setGuid("1234567890");
-        NodeMessage message = new NodeMessage();
-        message.setNode(node);
-        ContainerMessage cm = getMessageForJoiners(123, message);
-
-        ContainerMessage cm2 = new ContainerMessage();
-        cm2.decode(cm.encode());
-
-        Node n2 = new Node();
-        n2.decode(cm2.getContent());
-
-        System.out.println(n2.url() + " - " + n2.getGuid());
-    }
 }
