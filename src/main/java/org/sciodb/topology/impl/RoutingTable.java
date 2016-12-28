@@ -2,7 +2,6 @@ package org.sciodb.topology.impl;
 
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.topology.models.Triple;
 
 import java.util.*;
 
