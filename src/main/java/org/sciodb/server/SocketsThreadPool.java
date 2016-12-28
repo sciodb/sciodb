@@ -1,7 +1,5 @@
 package org.sciodb.server;
 
-import com.sun.corba.se.spi.orb.Operation;
-import org.apache.log4j.Logger;
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
@@ -23,8 +21,6 @@ import java.util.concurrent.Executors;
  */
 public class SocketsThreadPool {
 
-    final static private Logger logger = Logger.getLogger(SocketsThreadPool.class);
-
     private ExecutorService service;
     private Dispatcher dispatcher;
     private static SocketsThreadPool instance;
@@ -34,7 +30,7 @@ public class SocketsThreadPool {
         this.dispatcher = new Dispatcher();
     }
 
-    public static SocketsThreadPool getInstance() {
+    static SocketsThreadPool getInstance() {
         if (instance == null) {
             instance = new SocketsThreadPool();
         }
@@ -125,19 +121,4 @@ public class SocketsThreadPool {
         return response;
     }
 
-    public static void main(String[] args) {
-        Node node = new Node("0.0.0.0", 9091);
-        node.setGuid("1234567890");
-        NodeMessage message = new NodeMessage();
-        message.setNode(node);
-        ContainerMessage cm = getMessageForJoiners(123, message);
-
-        ContainerMessage cm2 = new ContainerMessage();
-        cm2.decode(cm.encode());
-
-        Node n2 = new Node();
-        n2.decode(cm2.getContent());
-
-        System.out.println(n2.url() + " - " + n2.getGuid());
-    }
 }

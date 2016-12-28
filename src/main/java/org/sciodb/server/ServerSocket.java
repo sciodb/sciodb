@@ -152,7 +152,6 @@ public class ServerSocket implements Runnable {
         final ByteBuffer buffer = ByteBuffer.allocate(msgSize);
 
         int total = 0;
-//        boolean empty = false;
         if (msgSize > 0) {
             while (total < msgSize) {
 
@@ -164,7 +163,6 @@ public class ServerSocket implements Runnable {
                         channel.close();
                         key.cancel();
                     }
-//                    empty = true;
                     break;
                 }
 
@@ -175,9 +173,6 @@ public class ServerSocket implements Runnable {
                 buffer.put(data);
 
             }
-//            if (!empty) {
-//                logger.debug("total : " + total + " - msgSize : " + msgSize);
-//            }
         }
         if (total == msgSize) {
             return buffer.array();

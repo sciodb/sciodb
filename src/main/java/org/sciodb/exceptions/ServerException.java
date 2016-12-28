@@ -1,4 +1,4 @@
-package org.sciodb.utils;
+package org.sciodb.exceptions;
 
 /**
  * @author Jesús Navarrete (02/06/16)

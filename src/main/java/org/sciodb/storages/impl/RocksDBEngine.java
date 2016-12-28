@@ -6,7 +6,6 @@ import org.sciodb.storages.StorageEngine;
 import org.sciodb.exceptions.StorageException;
 import org.sciodb.storages.models.CollectionInfo;
 import org.sciodb.storages.models.DatabaseInfo;
-import org.sciodb.exceptions.StorageException;
 
 import java.io.File;
 import java.util.ArrayList;

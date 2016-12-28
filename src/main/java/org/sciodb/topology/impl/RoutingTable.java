@@ -7,22 +7,16 @@ import org.sciodb.topology.models.Triple;
 import java.util.*;
 
 /**
- * @author jenaiz on 27/11/2016.
+ * @author Jesús Navarrete (27/11/2016)
  */
 public class RoutingTable {
 
     private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RoutingTable.class);
 
-    private int k;
-
-    private Set<Triple<String, String, Node>> buckets;
     private int bits;
     private LinkedList<RoutingNode> nodes;
 
     public RoutingTable(int bits) {
-        k = 20;
-        buckets = new HashSet<>();
-
         this.bits = bits;
         nodes = new LinkedList<>();
     }
@@ -91,7 +85,7 @@ public class RoutingTable {
 
     public boolean contains(final Node node) {
         boolean found = false;
-        for (final RoutingNode rn : nodes) {
+        for (final RoutingNode rn : nodes) { // TODO FIX: ConcurrentModificationException
             if ((rn.getNode().url().equals(node.url())) || (rn.getNode().getGuid().equals(node.getGuid()))) {
                 found = true;
                 break;

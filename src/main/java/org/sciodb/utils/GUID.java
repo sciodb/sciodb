@@ -3,7 +3,7 @@ package org.sciodb.utils;
 import java.util.UUID;
 
 /**
- * Created by jesusnavarrete on 28/11/2016.
+ * @author Jesús Navarrete (28/11/2016)
  */
 public class GUID {
 

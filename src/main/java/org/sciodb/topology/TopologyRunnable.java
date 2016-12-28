@@ -2,10 +2,10 @@ package org.sciodb.topology;
 
 import org.apache.log4j.Logger;
 import org.sciodb.exceptions.CommunicationException;
+import org.sciodb.exceptions.ServerException;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.utils.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,9 +15,7 @@ public class TopologyRunnable implements Runnable {
 
     private Logger logger = Logger.getLogger(TopologyRunnable.class);
 
-//    private static int waitingTime;
     private static int persistTime;
-//    private static int masterCheckingTime;
     private static TopologyContainer container;
 
     private Node me;
@@ -25,10 +23,7 @@ public class TopologyRunnable implements Runnable {
     private final List<Node> seeds;
 
     public TopologyRunnable(final Node me, final List<Node> seeds) throws ServerException {
-//        waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
         persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
-
-//        masterCheckingTime = Configuration.getInstance().getRetryTimeTopology();
 
         this.me = me;
         this.seeds = seeds;
@@ -40,8 +35,6 @@ public class TopologyRunnable implements Runnable {
     public void run() {
 
         container.setMe(me);
-
-        // kademlia paper...
 
         // bootstrap
         final NodeOperations op = new NodeOperations(me);

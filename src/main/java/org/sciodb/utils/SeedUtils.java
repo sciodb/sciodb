@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jesusnavarrete on 20/11/2016.
+ * @author Jesús Navarrete (20/11/2016)
  */
 public class SeedUtils {
 
