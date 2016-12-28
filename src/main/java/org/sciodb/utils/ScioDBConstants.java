@@ -5,7 +5,7 @@ package org.sciodb.utils;
  */
 public interface ScioDBConstants {
 
-    int MAX_ANSWER_BYTES = 4096;
+    int MAX_ANSWER_BYTES = 9216;
 
     int MAX_SIZE = 16777216;
 
