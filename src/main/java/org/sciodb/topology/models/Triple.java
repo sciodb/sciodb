@@ -1,7 +1,7 @@
 package org.sciodb.topology.models;
 
 /**
- * @author jenaiz on 07/12/2016.
+ * @author Jesús Navarrete (07/12/2016)
  */
 public class Triple<T1, T2, T3> {
 

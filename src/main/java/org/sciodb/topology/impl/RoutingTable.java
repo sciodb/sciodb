@@ -7,7 +7,7 @@ import org.sciodb.topology.models.Triple;
 import java.util.*;
 
 /**
- * @author jenaiz on 27/11/2016.
+ * @author Jesús Navarrete (27/11/2016)
  */
 public class RoutingTable {
 

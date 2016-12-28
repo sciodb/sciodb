@@ -28,8 +28,6 @@ public class ScioDB {
 
     private final static Logger logger = Logger.getLogger(ScioDB.class);
 
-    private int port;
-
     public static void main(String[] args) {
 
         logger.info("Starting ScioDB...");
@@ -38,7 +36,7 @@ public class ScioDB {
         scio.commandLine(args);
     }
 
-    public void commandLine(final String[] args) {
+    private void commandLine(final String[] args) {
         final Options options = new Options();
 
         options.addOption("h", "help", false, "help, show this message");
@@ -58,7 +56,7 @@ public class ScioDB {
                 logger.info("v. 0.1");
             } else {
                 final String p = cmd.getOptionValue("p");
-                port = p != null? Integer.valueOf(p) : Configuration.getInstance().getPort();
+                int port = p != null ? Integer.valueOf(p) : Configuration.getInstance().getPort();
 
                 final Node node = new Node();
                 try {

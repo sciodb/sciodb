@@ -1,7 +1,7 @@
 package org.sciodb.exceptions;
 
 /**
- * Created by jesusnavarrete on 02/12/2016.
+ * @author Jesús Navarrete (02/12/2016)
  */
 public class EmptyDataException extends Exception {
 

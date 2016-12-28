@@ -3,7 +3,7 @@ package org.sciodb.topology.impl;
 import org.sciodb.messages.impl.Node;
 
 /**
- * Created by jesusnavarrete on 02/12/2016.
+ * @author Jesús Navarrete (02/12/2016)
  */
 public class RoutingNode {
 

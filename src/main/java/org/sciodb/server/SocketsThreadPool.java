@@ -1,6 +1,5 @@
 package org.sciodb.server;
 
-import org.apache.log4j.Logger;
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
