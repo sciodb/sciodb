@@ -26,6 +26,7 @@ public class TopologyContainer {
     private Logger logger = Logger.getLogger(TopologyContainer.class);
 
     private Node me;
+    private boolean networkUpdated;
 
     private TopologyContainer() {
         table = new RoutingTable(64); // TODO set to 128 bits
@@ -33,6 +34,7 @@ public class TopologyContainer {
         waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
 
         retryTime = Configuration.getInstance().getRetryTimeTopology();
+        networkUpdated = true;
     }
 
     public static TopologyContainer getInstance() {
@@ -41,14 +43,19 @@ public class TopologyContainer {
 
     public void join(final Node node) {
         // TODO least-recently seen node at the head, most-recently seen at the tail
-         if (StringUtils.isNotEmpty(node.getGuid())) {
-
-            final long distance = GUID.distance(me.getGuid(), node.getGuid());
-            table.add(node, distance);
-
+        if (table.contains(node)) {
+            final Node origin = table.find(node);
+            origin.setLastCheck(System.currentTimeMillis());
         } else {
-            logger.warn("Node not added - " + node.url());
-            logger.warn("Node not added - " + node.getGuid());
+            if (StringUtils.isNotEmpty(node.getGuid())) {
+
+                final long distance = GUID.distance(me.getGuid(), node.getGuid());
+                table.add(node, distance);
+                networkUpdated = false;
+
+            } else {
+                logger.warn("Node not added (empty guid)- " + node.url());
+            }
 
         }
     }
@@ -126,4 +133,11 @@ public class TopologyContainer {
         }
     }
 
+    public boolean isNetworkUpdated() {
+        return networkUpdated;
+    }
+
+    public void setNetworkUpdated(boolean networkUpdated) {
+        this.networkUpdated = networkUpdated;
+    }
 }

@@ -4,11 +4,17 @@ TODO
 Currently working:
 
 - Implementation of Kademlia algotihm for P2P network topology
+    * Adapt check nodes time to fit the kademlia protocol 
+    * Improve data structure Routing Table, replace LinkedList
+    * check the protocol methods of kademlia and the implementation
 - Request Dispatcher (WAITING)
 
 
 In the Roadmap
 --------------
+- Ping operation executed in all the nodes
+- Semi-Ping operation, execute it only in k-nodes
+- ... Decision about the objective of the project...
 
 
 Ideas

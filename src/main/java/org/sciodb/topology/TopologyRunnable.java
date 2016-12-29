@@ -65,13 +65,15 @@ public class TopologyRunnable implements Runnable {
         long lastUpdate = System.currentTimeMillis();
 
         while (true) {
+            if (!container.isNetworkUpdated()) { container.setNetworkUpdated(true); }
+
             container.checkNodes();
 
             if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
                 FileUtils.persistNodes(me.getPort());
                 lastUpdate = System.currentTimeMillis();
             }
-            ThreadUtils.sleep(persistTime);
+            ThreadUtils.sleepMaximun(persistTime, container);
         }
 
     }

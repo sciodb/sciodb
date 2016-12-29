@@ -21,7 +21,7 @@ public class RoutingTable {
     }
 
     public List<Node> getNodes() {
-        List<Node> result = new ArrayList<>();
+        final List<Node> result = new ArrayList<>();
 
         for (RoutingNode r: nodes) { // TODO use lambdas !!
             result.add(r.getNode());
@@ -94,4 +94,13 @@ public class RoutingTable {
         return found;
     }
 
+    public Node find(final Node node) {
+        for (final RoutingNode rn : nodes) {
+            if ((rn.getNode().url().equals(node.url())) || (rn.getNode().getGuid().equals(node.getGuid()))) {
+                return rn.getNode();
+            }
+        }
+
+        throw new NoSuchElementException("Element not found");
+    }
 }
