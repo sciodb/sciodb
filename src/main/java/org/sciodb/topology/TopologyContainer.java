@@ -9,7 +9,8 @@ import org.sciodb.utils.GUID;
 import org.sciodb.utils.StringUtils;
 import org.sciodb.utils.ThreadUtils;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Jesús Navarrete (22/09/14)

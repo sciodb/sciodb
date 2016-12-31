@@ -3,7 +3,11 @@ package org.sciodb.topology;
 import org.apache.log4j.Logger;
 import org.sciodb.exceptions.CommunicationException;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.utils.*;
+import org.sciodb.utils.Configuration;
+import org.sciodb.utils.FileUtils;
+import org.sciodb.utils.GUID;
+import org.sciodb.utils.StringUtils;
+import org.sciodb.utils.ThreadUtils;
 
 import java.util.List;
 

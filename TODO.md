@@ -42,7 +42,7 @@ Ideas
 - background jobs (expensive jobs):
     * not realtime calculations
     * map reduce jobs or similar technology
-    * posibility to use mapreduce
+    * possibility to use mapreduce
     * machine learning libraries
     * solr queries ...
 
