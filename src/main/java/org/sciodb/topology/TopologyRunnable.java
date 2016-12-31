@@ -73,7 +73,7 @@ public class TopologyRunnable implements Runnable {
                 FileUtils.persistNodes(me.getPort());
                 lastUpdate = System.currentTimeMillis();
             }
-            ThreadUtils.sleepMaximun(persistTime, container);
+            ThreadUtils.sleepMaximum(persistTime, container);
         }
 
     }

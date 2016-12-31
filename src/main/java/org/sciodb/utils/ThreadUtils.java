@@ -15,7 +15,7 @@ public class ThreadUtils {
         }
     }
 
-    public static void sleepMaximun(final int time, final TopologyContainer container) {
+    public static void sleepMaximum(final int time, final TopologyContainer container) {
         int interval = 100;
 
         int counter = 0;
@@ -27,6 +27,6 @@ public class ThreadUtils {
     }
 
     public static void main(String[] args) {
-        sleepMaximun(2000, TopologyContainer.getInstance());
+        sleepMaximum(2000, TopologyContainer.getInstance());
     }
 }

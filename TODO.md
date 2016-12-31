@@ -4,7 +4,7 @@ TODO
 Currently working:
 
 - Implementation of Kademlia algotihm for P2P network topology
-    * Adapt check nodes time to fit the kademlia protocol 
+    * Adapt check nodes time to fit the kademlia protocol
     * Improve data structure Routing Table, replace LinkedList
     * check the protocol methods of kademlia and the implementation
 - Request Dispatcher (WAITING)
