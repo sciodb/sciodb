@@ -15,13 +15,7 @@ import java.util.List;
 public class NodeMapper {
 
     public static String toString(final List<Node> nodes) throws IOException {
-        final ObjectMapper mapper = new ObjectMapper();
-        final StringWriter sw = new StringWriter();
-        final PrintWriter p = new PrintWriter(sw);
-
-        mapper.writeValue(p, nodes);
-
-        return sw.toString();
+        return fromObject(nodes);
     }
 
     public static List<Node> fromString(final String input) throws IOException {
@@ -32,13 +26,7 @@ public class NodeMapper {
 
 
     public static String toJson(final Node node) throws IOException {
-        final ObjectMapper mapper = new ObjectMapper();
-        final StringWriter sw = new StringWriter();
-        final PrintWriter p = new PrintWriter(sw);
-
-        mapper.writeValue(p, node);
-
-        return sw.toString();
+        return fromObject(node);
     }
 
     public static Node toNode(final String json) throws IOException {
@@ -46,4 +34,13 @@ public class NodeMapper {
         return  mapper.readValue(json, Node.class);
     }
 
+    private static String fromObject(final Object obj) throws IOException {
+        final ObjectMapper mapper = new ObjectMapper();
+        final StringWriter sw = new StringWriter();
+        final PrintWriter p = new PrintWriter(sw);
+
+        mapper.writeValue(p, obj);
+
+        return sw.toString();
+    }
 }
