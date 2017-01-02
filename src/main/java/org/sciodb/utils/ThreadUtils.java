@@ -23,7 +23,6 @@ public class ThreadUtils {
             ThreadUtils.sleep(interval);
             counter += interval;
         }
-        System.out.println("---- " + container.isNetworkUpdated());
     }
 
     public static void main(String[] args) {
