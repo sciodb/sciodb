@@ -15,10 +15,4 @@ public class GUID {
         return UUID.fromString(source).getLeastSignificantBits() ^ UUID.fromString(target).getLeastSignificantBits();
     }
 
-    public static void main(String[] args) {
-        System.out.println(distance(GUID.get(), GUID.get()));
-        System.out.println(distance(GUID.get(), GUID.get()));
-        System.out.println(distance(GUID.get(), GUID.get()));
-        System.out.println(distance(GUID.get(), GUID.get()));
-    }
 }
