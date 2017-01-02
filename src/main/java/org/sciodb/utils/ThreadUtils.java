@@ -25,7 +25,4 @@ public class ThreadUtils {
         }
     }
 
-    public static void main(String[] args) {
-        sleepMaximum(2000, TopologyContainer.getInstance());
-    }
 }
