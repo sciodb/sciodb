@@ -121,6 +121,24 @@ public class NodeOperations {
         }
     }
 
+    /**
+     * The ping operation probes if a node is online, no response is required.
+     */
+    public boolean leave(final Node peer) {
+        final NodeMessage message = new NodeMessage();
+        message.setNode(me);
+
+        final ContainerMessage container = getMessage(Operations.LEAVE.getValue(), message.encode());
+
+        try {
+            SocketClient.sendToSocket(peer.getHost(), peer.getPort(), container, false);
+
+            return true;
+        } catch (final CommunicationException e) {
+            return false;
+        }
+    }
+
     private List<Node> nodesFromResponse(final byte[] response) {
 
         if (response.length > 4) {

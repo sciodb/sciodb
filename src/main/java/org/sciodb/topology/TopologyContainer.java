@@ -77,7 +77,7 @@ public class TopologyContainer {
                 logger.info(node.url() + " - available");
             } else {
                 iterator.remove();
-                table.leave(node);
+                table.remove(node);
                 logger.error(node.url() + " - not available ");
             }
         }
@@ -140,5 +140,24 @@ public class TopologyContainer {
 
     public void setNetworkUpdated(boolean networkUpdated) {
         this.networkUpdated = networkUpdated;
+    }
+
+    public void leaveNetwork() {
+        final NodeOperations op = new NodeOperations(me);
+        try {
+            op.leave(table.closest());
+        } catch (final EmptyDataException e) {
+            logger.error("Problems leaving the network", e);
+        }
+    }
+
+    public boolean leave(final Node node) {
+        if (table.contains(node)) {
+            logger.info(node.url() + " leaving the network.");
+            table.remove(node);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

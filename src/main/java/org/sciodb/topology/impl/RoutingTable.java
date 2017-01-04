@@ -66,7 +66,7 @@ public class RoutingTable {
         return result;
     }
 
-    public void leave(final Node node) {
+    public void remove(final Node node) {
         for (RoutingNode rn : nodes) {
             if (rn.getNode().getGuid().equals(node.getGuid())) {
                 nodes.remove(rn);
