@@ -1,5 +1,7 @@
 package org.sciodb.utils;
 
+import org.sciodb.topology.TopologyContainer;
+
 /**
  * @author Jesús Navarrete (13/07/16)
  */
@@ -12,4 +14,15 @@ public class ThreadUtils {
             /*not important*/
         }
     }
+
+    public static void sleepMaximum(final int time, final TopologyContainer container) {
+        int interval = 100;
+
+        int counter = 0;
+        while (counter <= time && container.isNetworkUpdated()) {
+            ThreadUtils.sleep(interval);
+            counter += interval;
+        }
+    }
+
 }

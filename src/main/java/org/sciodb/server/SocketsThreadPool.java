@@ -55,6 +55,8 @@ public class SocketsThreadPool {
 
             if (operationId == Operations.PING.getValue()) {
                 server.send(channel, new byte[0]);
+            } else if(operationId == Operations.LEAVE.getValue()) {
+                TopologyContainer.getInstance().leave(source);
             } else if (operationId == Operations.STORE.getValue()) {
                     // store <key, value> ...
                 if (StringUtils.isEmpty(source.getGuid())) {

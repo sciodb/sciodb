@@ -5,10 +5,6 @@ package org.sciodb.exceptions;
  */
 public class CommunicationException extends Exception {
 
-    public CommunicationException() {
-        super();
-    }
-
     public CommunicationException(String message) {
         super(message);
     }
@@ -17,11 +13,4 @@ public class CommunicationException extends Exception {
         super(message, cause);
     }
 
-    public CommunicationException(Throwable cause) {
-        super(cause);
-    }
-
-    protected CommunicationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

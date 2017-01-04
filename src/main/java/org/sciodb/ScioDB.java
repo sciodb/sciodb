@@ -1,9 +1,16 @@
 package org.sciodb;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.server.ServerSocket;
+import org.sciodb.topology.NodeOperations;
+import org.sciodb.topology.TopologyContainer;
 import org.sciodb.topology.TopologyRunnable;
 import org.sciodb.utils.Configuration;
 import org.sciodb.utils.SeedUtils;
@@ -94,6 +101,7 @@ public class ScioDB {
     private class Shutdown implements Runnable {
         @Override
         public void run() {
+            TopologyContainer.getInstance().leaveNetwork();
             logger.info("Stopped!");
         }
     }

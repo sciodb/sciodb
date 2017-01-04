@@ -2,9 +2,13 @@ package org.sciodb.topology.impl;
 
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.topology.models.Triple;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @author Jesús Navarrete (27/11/2016)
@@ -22,7 +26,7 @@ public class RoutingTable {
     }
 
     public List<Node> getNodes() {
-        List<Node> result = new ArrayList<>();
+        final List<Node> result = new ArrayList<>();
 
         for (RoutingNode r: nodes) { // TODO use lambdas !!
             result.add(r.getNode());
@@ -62,7 +66,7 @@ public class RoutingTable {
         return result;
     }
 
-    public void leave(final Node node) {
+    public void remove(final Node node) {
         for (RoutingNode rn : nodes) {
             if (rn.getNode().getGuid().equals(node.getGuid())) {
                 nodes.remove(rn);
@@ -95,4 +99,13 @@ public class RoutingTable {
         return found;
     }
 
+    public Node find(final Node node) {
+        for (final RoutingNode rn : nodes) {
+            if ((rn.getNode().url().equals(node.url())) || (rn.getNode().getGuid().equals(node.getGuid()))) {
+                return rn.getNode();
+            }
+        }
+
+        throw new NoSuchElementException("Element not found");
+    }
 }

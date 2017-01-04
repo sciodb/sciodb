@@ -2,9 +2,12 @@ package org.sciodb.topology;
 
 import org.apache.log4j.Logger;
 import org.sciodb.exceptions.CommunicationException;
-import org.sciodb.exceptions.ServerException;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.utils.*;
+import org.sciodb.utils.Configuration;
+import org.sciodb.utils.FileUtils;
+import org.sciodb.utils.GUID;
+import org.sciodb.utils.StringUtils;
+import org.sciodb.utils.ThreadUtils;
 
 import java.util.List;
 
@@ -22,7 +25,7 @@ public class TopologyRunnable implements Runnable {
 
     private final List<Node> seeds;
 
-    public TopologyRunnable(final Node me, final List<Node> seeds) throws ServerException {
+    public TopologyRunnable(final Node me, final List<Node> seeds) {
         persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
 
         this.me = me;
@@ -66,13 +69,15 @@ public class TopologyRunnable implements Runnable {
         long lastUpdate = System.currentTimeMillis();
 
         while (true) {
+            if (!container.isNetworkUpdated()) { container.setNetworkUpdated(true); }
+
             container.checkNodes();
 
             if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
                 FileUtils.persistNodes(me.getPort());
                 lastUpdate = System.currentTimeMillis();
             }
-            ThreadUtils.sleep(persistTime);
+            ThreadUtils.sleepMaximum(persistTime, container);
         }
 
     }

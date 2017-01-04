@@ -10,7 +10,7 @@ public enum Operations {
     STATUS(1),
 
     // Internal operations between nodes (kademlia)
-    PING(30), STORE(31), FIND_NODE(32), FIND_VALUE(33),
+    PING(30), STORE(31), FIND_NODE(32), FIND_VALUE(33), LEAVE(34),
 
     // Database operations
     DATABASE_STATUS(40), OP_ECHO(41);

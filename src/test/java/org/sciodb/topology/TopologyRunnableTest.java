@@ -2,6 +2,7 @@ package org.sciodb.topology;
 
 import org.junit.Test;
 import org.sciodb.messages.impl.Node;
+import org.sciodb.utils.ThreadUtils;
 
 import static org.junit.Assert.*;
 

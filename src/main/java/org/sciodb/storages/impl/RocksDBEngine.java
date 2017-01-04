@@ -1,7 +1,13 @@
 package org.sciodb.storages.impl;
 
 import org.apache.log4j.Logger;
-import org.rocksdb.*;
+import org.rocksdb.ColumnFamilyDescriptor;
+import org.rocksdb.ColumnFamilyHandle;
+import org.rocksdb.ColumnFamilyOptions;
+import org.rocksdb.DBOptions;
+import org.rocksdb.Options;
+import org.rocksdb.RocksDB;
+import org.rocksdb.RocksDBException;
 import org.sciodb.storages.StorageEngine;
 import org.sciodb.exceptions.StorageException;
 import org.sciodb.storages.models.CollectionInfo;
