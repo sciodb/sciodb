@@ -41,7 +41,7 @@ public class RocksDBEngine implements StorageEngine {
         // loads the RocksDB C++ library
         RocksDB.loadLibrary();
         options = new Options()
-                .setCreateIfMissing(true);
+                        .setCreateIfMissing(true);
     }
 
     @Override
@@ -55,8 +55,7 @@ public class RocksDBEngine implements StorageEngine {
             if (newDB) {
                 f.mkdirs();
                 logger.info("Created database folder : " + dataPath);
-                descriptors.add(new ColumnFamilyDescriptor(
-                        RocksDB.DEFAULT_COLUMN_FAMILY, new ColumnFamilyOptions()));
+                descriptors.add(new ColumnFamilyDescriptor(RocksDB.DEFAULT_COLUMN_FAMILY, new ColumnFamilyOptions()));
 
             } else {
                 final List<byte[]> columns = RocksDB.listColumnFamilies(options, dataPath);
