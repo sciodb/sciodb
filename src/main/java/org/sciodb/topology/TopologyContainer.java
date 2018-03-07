@@ -30,7 +30,7 @@ public class TopologyContainer {
     private boolean networkUpdated;
 
     private TopologyContainer() {
-        table = new RoutingTable(64); // TODO set to 128 bits
+        table = new RoutingTable(128);
 
         waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
 
