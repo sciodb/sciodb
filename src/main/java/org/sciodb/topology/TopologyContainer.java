@@ -21,7 +21,6 @@ public class TopologyContainer {
 
     private static final TopologyContainer instance = new TopologyContainer();
 
-    private static int waitingTime;
     private static int retryTime;
 
     private Logger logger = Logger.getLogger(TopologyContainer.class);
@@ -31,8 +30,6 @@ public class TopologyContainer {
 
     private TopologyContainer() {
         table = new RoutingTable(128);
-
-        waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
 
         retryTime = Configuration.getInstance().getRetryTimeTopology();
         networkUpdated = true;
@@ -63,8 +60,6 @@ public class TopologyContainer {
 
     void checkNodes() {
 
-        final long now = System.currentTimeMillis();
-
         final Iterator<Node> iterator = table.getNodes().iterator();
 
         logger.debug("Nodes available...");
@@ -82,11 +77,7 @@ public class TopologyContainer {
             }
         }
 
-        final long finished = System.currentTimeMillis();
-        final long timeUsed = finished - now;
-        if (timeUsed < waitingTime) {
-            ThreadUtils.sleep((int)(waitingTime - timeUsed));
-        }
+
     }
 
     private boolean checkNode(final Node me, final Node node, final int retries) {

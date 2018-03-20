@@ -15,14 +15,4 @@ public class ThreadUtils {
         }
     }
 
-    public static void sleepMaximum(final int time, final TopologyContainer container) {
-        int interval = 100;
-
-        int counter = 0;
-        while (counter <= time && container.isNetworkUpdated()) {
-            ThreadUtils.sleep(interval);
-            counter += interval;
-        }
-    }
-
 }
