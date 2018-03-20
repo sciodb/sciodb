@@ -47,17 +47,16 @@ public class SocketsThreadPool {
 
             int operationId = request.getHeader().getOperationId();
 
-            final Node source = readRequest(request);
-            if (StringUtils.isNotEmpty(source.getGuid())) {
-                TopologyContainer.getInstance().join(source); // always add the node to the k-buckets
-            }
-
             if (operationId == Operations.PING.getValue()) {
                 server.send(channel, new byte[0]);
             } else if(operationId == Operations.LEAVE.getValue()) {
+                final Node source = readNodeFromRequest(request);
+
                 TopologyContainer.getInstance().leave(source);
             } else if (operationId == Operations.STORE.getValue()) {
-                    // store <key, value> ...
+                // store <key, value> ...
+                final Node source = readNodeFromRequest(request);
+
                 if (StringUtils.isEmpty(source.getGuid())) {
                     source.setGuid(UUID.randomUUID().toString());
                 }
@@ -67,9 +66,12 @@ public class SocketsThreadPool {
 
                 server.send(channel, response.encode());
             } else if (operationId == Operations.FIND_NODE.getValue()) {
+                final Node source = readNodeFromRequest(request);
+
                 final List<Node> peers = TopologyContainer.getInstance().getPeers(source);
                 server.send(channel, getContainerMessageForPeers(operationId, peers).encode());
             } else if (operationId == Operations.FIND_VALUE.getValue()) {
+                final Node source = readNodeFromRequest(request);
 
                 try {
                     final Node node = TopologyContainer.getInstance().check(source);
@@ -87,11 +89,14 @@ public class SocketsThreadPool {
         }
     }
 
-    private Node readRequest(final ContainerMessage message) {
-        final Node nodeMessage = new Node();
-        nodeMessage.decode(message.getContent());
+    private Node readNodeFromRequest(final ContainerMessage message) {
+        final Node source = new Node();
+        source.decode(message.getContent());
 
-        return nodeMessage;
+        if (StringUtils.isNotEmpty(source.getGuid())) {
+            TopologyContainer.getInstance().join(source); // always add the node to the k-buckets
+        }
+        return source;
     }
 
     private ContainerMessage getContainerMessageForPeers(final int id, final List<Node> peers) {
