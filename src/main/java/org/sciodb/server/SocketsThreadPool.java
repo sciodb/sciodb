@@ -4,7 +4,6 @@ import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.messages.impl.NodeMessage;
 import org.sciodb.messages.impl.NodesMessage;
 import org.sciodb.server.services.Dispatcher;
 import org.sciodb.topology.TopologyContainer;
@@ -47,8 +46,8 @@ public class SocketsThreadPool {
             request.decode(input);
 
             int operationId = request.getHeader().getOperationId();
-            final Node source = readRequest(request);
 
+            final Node source = readRequest(request);
             if (StringUtils.isNotEmpty(source.getGuid())) {
                 TopologyContainer.getInstance().join(source); // always add the node to the k-buckets
             }
@@ -63,10 +62,8 @@ public class SocketsThreadPool {
                     source.setGuid(UUID.randomUUID().toString());
                 }
                 TopologyContainer.getInstance().join(source);
-                final NodeMessage nodeMessage = new NodeMessage();
-                nodeMessage.setNode(source);
 
-                final ContainerMessage response = getMessageForJoiners(operationId, nodeMessage);
+                final ContainerMessage response = getMessageForJoiners(operationId, source);
 
                 server.send(channel, response.encode());
             } else if (operationId == Operations.FIND_NODE.getValue()) {
@@ -77,15 +74,10 @@ public class SocketsThreadPool {
                 try {
                     final Node node = TopologyContainer.getInstance().check(source);
 
-                    final NodeMessage nodeMessage = new NodeMessage();
-                    nodeMessage.setNode(node);
-
-                    server.send(channel, getMessageForJoiners(operationId, nodeMessage).encode());
+                    server.send(channel, getMessageForJoiners(operationId, node).encode());
                 } catch (EmptyDataException e) {
-                    final NodeMessage nodeMessage = new NodeMessage();
-                    nodeMessage.setNode(new Node("", 0)); // TODO MOVE TO NOTHING
 
-                    server.send(channel, getMessageForJoiners(operationId, nodeMessage).encode());
+                    server.send(channel, getMessageForJoiners(operationId, new Node("", 0)).encode()); // TODO MOVE new Node... TO NOTHING
                 }
             } else {
                 final byte[] response = dispatcher.getService(request);
@@ -96,10 +88,10 @@ public class SocketsThreadPool {
     }
 
     private Node readRequest(final ContainerMessage message) {
-        final NodeMessage nodeMessage = new NodeMessage();
+        final Node nodeMessage = new Node();
         nodeMessage.decode(message.getContent());
 
-        return nodeMessage.getNode();
+        return nodeMessage;
     }
 
     private ContainerMessage getContainerMessageForPeers(final int id, final List<Node> peers) {
@@ -109,7 +101,7 @@ public class SocketsThreadPool {
         return setupContainerMessageFor(id, n.encode());
     }
 
-    private static ContainerMessage getMessageForJoiners(final int id, final NodeMessage peer) {
+    private static ContainerMessage getMessageForJoiners(final int id, final Node peer) {
         return setupContainerMessageFor(id, peer.encode());
     }
 
