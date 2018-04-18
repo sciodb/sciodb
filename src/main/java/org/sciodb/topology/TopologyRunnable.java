@@ -19,6 +19,8 @@ public class TopologyRunnable implements Runnable {
     private Logger logger = Logger.getLogger(TopologyRunnable.class);
 
     private static int persistTime;
+    private static int waitingTime;
+
     private static TopologyContainer container;
 
     private Node me;
@@ -27,6 +29,7 @@ public class TopologyRunnable implements Runnable {
 
     public TopologyRunnable(final Node me, final List<Node> seeds) {
         persistTime = Configuration.getInstance().getNodesPersistTimeTopology();
+        waitingTime = Configuration.getInstance().getNodesCheckTimeTopology();
 
         this.me = me;
         this.seeds = seeds;
@@ -71,13 +74,20 @@ public class TopologyRunnable implements Runnable {
         while (true) {
             if (!container.isNetworkUpdated()) { container.setNetworkUpdated(true); }
 
+            final long now = System.currentTimeMillis();
+
             container.checkNodes();
+
+            final long finished = System.currentTimeMillis();
+            final long timeUsed = finished - now;
+            if (timeUsed < waitingTime) {
+                ThreadUtils.sleep((int)(waitingTime - timeUsed));
+            }
 
             if ((System.currentTimeMillis() - lastUpdate) > persistTime) {
                 FileUtils.persistNodes(me.getPort());
                 lastUpdate = System.currentTimeMillis();
             }
-            ThreadUtils.sleepMaximum(persistTime, container);
         }
 
     }

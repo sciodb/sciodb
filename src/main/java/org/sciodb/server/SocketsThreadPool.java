@@ -4,7 +4,6 @@ import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.messages.impl.NodeMessage;
 import org.sciodb.messages.impl.NodesMessage;
 import org.sciodb.server.services.Dispatcher;
 import org.sciodb.topology.TopologyContainer;
@@ -47,45 +46,40 @@ public class SocketsThreadPool {
             request.decode(input);
 
             int operationId = request.getHeader().getOperationId();
-            final Node source = readRequest(request);
-
-            if (StringUtils.isNotEmpty(source.getGuid())) {
-                TopologyContainer.getInstance().join(source); // always add the node to the k-buckets
-            }
 
             if (operationId == Operations.PING.getValue()) {
                 server.send(channel, new byte[0]);
             } else if(operationId == Operations.LEAVE.getValue()) {
+                final Node source = readNodeFromRequest(request);
+
                 TopologyContainer.getInstance().leave(source);
             } else if (operationId == Operations.STORE.getValue()) {
-                    // store <key, value> ...
+                // store <key, value> ...
+                final Node source = readNodeFromRequest(request);
+
                 if (StringUtils.isEmpty(source.getGuid())) {
                     source.setGuid(UUID.randomUUID().toString());
                 }
                 TopologyContainer.getInstance().join(source);
-                final NodeMessage nodeMessage = new NodeMessage();
-                nodeMessage.setNode(source);
 
-                final ContainerMessage response = getMessageForJoiners(operationId, nodeMessage);
+                final ContainerMessage response = getMessageForJoiners(operationId, source);
 
                 server.send(channel, response.encode());
             } else if (operationId == Operations.FIND_NODE.getValue()) {
+                final Node source = readNodeFromRequest(request);
+
                 final List<Node> peers = TopologyContainer.getInstance().getPeers(source);
                 server.send(channel, getContainerMessageForPeers(operationId, peers).encode());
             } else if (operationId == Operations.FIND_VALUE.getValue()) {
+                final Node source = readNodeFromRequest(request);
 
                 try {
                     final Node node = TopologyContainer.getInstance().check(source);
 
-                    final NodeMessage nodeMessage = new NodeMessage();
-                    nodeMessage.setNode(node);
-
-                    server.send(channel, getMessageForJoiners(operationId, nodeMessage).encode());
+                    server.send(channel, getMessageForJoiners(operationId, node).encode());
                 } catch (EmptyDataException e) {
-                    final NodeMessage nodeMessage = new NodeMessage();
-                    nodeMessage.setNode(new Node("", 0)); // TODO MOVE TO NOTHING
 
-                    server.send(channel, getMessageForJoiners(operationId, nodeMessage).encode());
+                    server.send(channel, getMessageForJoiners(operationId, new Node("", 0)).encode()); // TODO MOVE new Node... TO NOTHING
                 }
             } else {
                 final byte[] response = dispatcher.getService(request);
@@ -95,11 +89,14 @@ public class SocketsThreadPool {
         }
     }
 
-    private Node readRequest(final ContainerMessage message) {
-        final NodeMessage nodeMessage = new NodeMessage();
-        nodeMessage.decode(message.getContent());
+    private Node readNodeFromRequest(final ContainerMessage message) {
+        final Node source = new Node();
+        source.decode(message.getContent());
 
-        return nodeMessage.getNode();
+        if (StringUtils.isNotEmpty(source.getGuid())) {
+            TopologyContainer.getInstance().join(source); // always add the node to the k-buckets
+        }
+        return source;
     }
 
     private ContainerMessage getContainerMessageForPeers(final int id, final List<Node> peers) {
@@ -109,7 +106,7 @@ public class SocketsThreadPool {
         return setupContainerMessageFor(id, n.encode());
     }
 
-    private static ContainerMessage getMessageForJoiners(final int id, final NodeMessage peer) {
+    private static ContainerMessage getMessageForJoiners(final int id, final Node peer) {
         return setupContainerMessageFor(id, peer.encode());
     }
 

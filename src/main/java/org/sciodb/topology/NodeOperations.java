@@ -5,7 +5,6 @@ import org.sciodb.exceptions.CommunicationException;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.Node;
-import org.sciodb.messages.impl.NodeMessage;
 import org.sciodb.messages.impl.NodesMessage;
 import org.sciodb.utils.SocketClient;
 
@@ -31,10 +30,7 @@ public class NodeOperations {
      * The ping operation probes if a node is online, no response is required.
      */
     public boolean ping(final Node target) {
-        final NodeMessage message = new NodeMessage();
-        message.setNode(me);
-
-        final ContainerMessage container = getMessage(Operations.PING.getValue(), message.encode());
+        final ContainerMessage container = getMessage(Operations.PING.getValue(), me.encode());
 
         try {
             SocketClient.sendToSocket(target.getHost(), target.getPort(), container, false);
@@ -52,10 +48,8 @@ public class NodeOperations {
      * @return
      */
     public String store(final Node target) {
-        final NodeMessage message = new NodeMessage();
-        message.setNode(me);
 
-        final ContainerMessage container = getMessage(Operations.STORE.getValue(), message.encode());
+        final ContainerMessage container = getMessage(Operations.STORE.getValue(), me.encode());
 
         try {
             byte[] response = SocketClient.sendToSocket(target.getHost(), target.getPort(), container, true);
@@ -63,10 +57,10 @@ public class NodeOperations {
             final ContainerMessage parseRsp = new ContainerMessage();
             parseRsp.decode(response);
 
-            final NodeMessage msg = new NodeMessage();
+            final Node msg = new Node();
             msg.decode(parseRsp.getContent());
 
-            return msg.getNode().getGuid();
+            return msg.getGuid();
         } catch (final CommunicationException e) {
             logger.error("Node not added to Seed, reason " + e.getLocalizedMessage());
             return "";
@@ -103,14 +97,11 @@ public class NodeOperations {
      */
     public List<Node> findNode(final Node target) throws CommunicationException {
 
-        final NodeMessage message = new NodeMessage();
-        message.setNode(me);
-
         final ContainerMessage container = new ContainerMessage();
         container.getHeader().setOperationId(Operations.FIND_NODE.getValue());
         container.getHeader().setId(UUID.randomUUID().toString());
 
-        container.setContent(message.encode());
+        container.setContent(me.encode());
 
         try {
             byte[] response = SocketClient.sendToSocket(target.getHost(), target.getPort(), container, true);
@@ -125,10 +116,7 @@ public class NodeOperations {
      * The ping operation probes if a node is online, no response is required.
      */
     public boolean leave(final Node peer) {
-        final NodeMessage message = new NodeMessage();
-        message.setNode(me);
-
-        final ContainerMessage container = getMessage(Operations.LEAVE.getValue(), message.encode());
+        final ContainerMessage container = getMessage(Operations.LEAVE.getValue(), me.encode());
 
         try {
             SocketClient.sendToSocket(peer.getHost(), peer.getPort(), container, false);
