@@ -48,4 +48,4 @@ COPYING
 
 See the file COPYING.
 
-Copyright (c) 2016 Jesús Navarrete <jesus.navarrete@gmail.org>, released under the GPLv2 license
+Copyright (c) 2016-2018 Jesús Navarrete <jesus.navarrete@gmail.org>, released under the GPLv2 license
