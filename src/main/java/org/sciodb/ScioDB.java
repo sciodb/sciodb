@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author Jesús Navarrete (21/02/16)
  *
- * Copyright (C) 2016 Jesús Navarrete <jenaiz@alblang.org>
+ * Copyright (C) 2016 Jesús Navarrete <jesus.navarrete@gmail.com>
  *
  * This source code is licensed under the GNU General Public License,
  * Version 2.  See the file COPYING for more details.
