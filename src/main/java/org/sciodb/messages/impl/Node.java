@@ -93,21 +93,6 @@ public class Node implements Message {
 
     }
 
-    public String hash() {
-        try {
-            final MessageDigest md5 = MessageDigest.getInstance("MD5");
-
-            md5.update(url().getBytes());
-            byte[] r = md5.digest();
-            return DatatypeConverter.printBase64Binary(r);
-//            return new BASE64Encoder().encode(r);
-        } catch (final NoSuchAlgorithmException e) {
-            logger.error("MD5 algorithm, not present, impossible to hash node", e);
-        }
-        return url();
-
-    }
-
     @Override
     public int hashCode() {
         int result = host.hashCode();
