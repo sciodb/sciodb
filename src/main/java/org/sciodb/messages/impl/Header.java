@@ -38,6 +38,7 @@ public class Header implements Message {
     @Override
     public void decode(byte[] input) {
         final Decoder decoder = new Decoder(input);
+
         // Order it's really important
         this.id = decoder.getString();
         this.length = decoder.getInt();
