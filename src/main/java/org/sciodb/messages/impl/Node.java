@@ -5,16 +5,10 @@ import org.sciodb.messages.Decoder;
 import org.sciodb.messages.Encoder;
 import org.sciodb.messages.Message;
 
-import javax.xml.bind.DatatypeConverter;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 /**
  * @author Jesús Navarrete (22/09/14)
  */
 public class Node implements Message {
-
-    final static private Logger logger = Logger.getLogger(Node.class);
 
     private String host;
     private int port;
