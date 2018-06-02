@@ -1,5 +1,6 @@
 package org.sciodb.topology.impl;
 
+import org.apache.log4j.Logger;
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
 
@@ -15,7 +16,7 @@ import java.util.NoSuchElementException;
  */
 public class RoutingTable {
 
-    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RoutingTable.class);
+    private Logger logger = Logger.getLogger(RoutingTable.class);
 
     private int bits;
     private LinkedList<RoutingNode> nodes;
@@ -31,6 +32,7 @@ public class RoutingTable {
         for (RoutingNode r: nodes) { // TODO use lambdas !!
             result.add(r.getNode());
         }
+
         return result;
     }
 

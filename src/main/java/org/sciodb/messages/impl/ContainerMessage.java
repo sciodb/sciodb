@@ -21,10 +21,6 @@ public class ContainerMessage implements Message {
         return header;
     }
 
-    public void setHeader(Header header) {
-        this.header = header;
-    }
-
     public byte[] getContent() {
         return content;
     }

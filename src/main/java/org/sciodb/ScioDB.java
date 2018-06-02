@@ -9,7 +9,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.server.ServerSocket;
-import org.sciodb.topology.NodeOperations;
 import org.sciodb.topology.TopologyContainer;
 import org.sciodb.topology.TopologyRunnable;
 import org.sciodb.utils.Configuration;
@@ -19,16 +18,15 @@ import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.util.List;
 
-
 /**
  * Starter of the database based on the parameters of the command line.
  *
  * @author Jesús Navarrete (21/02/16)
  *
- * Copyright (C) 2016 Jesús Navarrete <jesus.navarrete@gmail.com>
+ * Copyright (C) 2016-2018 Jesús Navarrete <jesus.navarrete@gmail.com>
  *
  * This source code is licensed under the GNU General Public License,
- * Version 2.  See the file COPYING for more details.
+ * Version 3.  See the file LICENSE for more details.
  *
  */
 public class ScioDB {
@@ -84,7 +82,7 @@ public class ScioDB {
         }
     }
 
-    public void starting(final Node node, final List<Node> seeds) {
+    private void starting(final Node node, final List<Node> seeds) {
         logger.info(node.getHost() + " - " + node.getPort());
         try {
             new Thread(new ServerSocket(null, node.getPort())).start();

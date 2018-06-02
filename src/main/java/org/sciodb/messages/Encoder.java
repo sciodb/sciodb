@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class Encoder {
 
-    public final static int INT_BYTES = 4;
-    public final static int LONG_BYTES = 8;
+    final static int INT_BYTES = 4;
+    final static int LONG_BYTES = 8;
 
     private List<ByteBuffer> container;
 
