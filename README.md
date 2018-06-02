@@ -43,9 +43,9 @@ If you want to learn more about how to start the system, take a looke to the [do
 
 Enjoy it!
 
-COPYING
+LICENSE
 -------
 
-See the file COPYING.
+See the file LICENSE.
 
-Copyright (c) 2016 Jesús Navarrete <jesus.navarrete@gmail.org>, released under the GPLv2 license
+Copyright (c) 2016-18 Jesús Navarrete <jesus.navarrete@gmail.org>, released under the GPLv2 license

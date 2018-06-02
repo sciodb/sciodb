@@ -26,7 +26,7 @@ import java.util.List;
  * Copyright (C) 2016-2018 Jesús Navarrete <jesus.navarrete@gmail.com>
  *
  * This source code is licensed under the GNU General Public License,
- * Version 2.  See the file COPYING for more details.
+ * Version 3.  See the file LICENSE for more details.
  *
  */
 public class ScioDB {
