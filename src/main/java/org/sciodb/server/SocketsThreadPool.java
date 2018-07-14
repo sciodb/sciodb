@@ -1,5 +1,6 @@
 package org.sciodb.server;
 
+import org.apache.log4j.Logger;
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
@@ -19,6 +20,8 @@ import java.util.concurrent.Executors;
  * @author Jesús Navarrete (07/04/16)
  */
 public class SocketsThreadPool {
+
+    private final static Logger logger = Logger.getLogger(SocketsThreadPool.class);
 
     private ExecutorService service;
     private Dispatcher dispatcher;
@@ -49,6 +52,8 @@ public class SocketsThreadPool {
 
             if (operationId == Operations.PING.getValue()) {
                 server.send(channel, new byte[0]);
+                final Node source = readNodeFromRequest(request);
+                logger.info("PING operation executed from - " + source.url());
             } else if(operationId == Operations.LEAVE.getValue()) {
                 final Node source = readNodeFromRequest(request);
 

@@ -55,6 +55,7 @@ public class TopologyRunnable implements Runnable {
 
                     for(final Node peer: possiblePeers) {
                         container.join(peer);
+                        logger.warn("Peer joined - " + peer.url());
                     }
                 } catch (final CommunicationException e) {
                     logger.error("Problems getting nodes from peer" , e);
