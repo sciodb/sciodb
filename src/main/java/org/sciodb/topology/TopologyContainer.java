@@ -142,13 +142,10 @@ public class TopologyContainer {
         }
     }
 
-    public boolean leave(final Node node) {
+    public void leave(final Node node) {
         if (table.contains(node)) {
             logger.info(node.url() + " leaving the network.");
             table.remove(node);
-            return true;
-        } else {
-            return false;
         }
     }
 }
