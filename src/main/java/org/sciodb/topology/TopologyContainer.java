@@ -138,7 +138,7 @@ public class TopologyContainer {
         try {
             op.leave(table.closest());
         } catch (final EmptyDataException e) {
-            logger.error("Problems leaving the network", e);
+            logger.warn("No close member found it, when leaving the network.");
         }
     }
 
