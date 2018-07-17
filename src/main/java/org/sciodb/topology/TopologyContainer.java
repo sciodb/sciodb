@@ -21,6 +21,8 @@ public class TopologyContainer {
 
     private static final TopologyContainer instance = new TopologyContainer();
 
+    private static final int MAX_RETRIES = 3;
+
     private static int retryTime;
 
     private Logger logger = Logger.getLogger(TopologyContainer.class);
@@ -66,7 +68,7 @@ public class TopologyContainer {
         while (iterator.hasNext()) {
             final Node node = iterator.next();
 
-            boolean alive = checkNode(me, node, 3);
+            boolean alive = checkNode(me, node);
 
             if (alive) {
                 logger.info(node.url() + " - available");
@@ -80,10 +82,10 @@ public class TopologyContainer {
 
     }
 
-    private boolean checkNode(final Node me, final Node node, final int retries) {
+    private boolean checkNode(final Node me, final Node node) {
         boolean execute = false;
         final NodeOperations op = new NodeOperations(me);
-        for (int i = 0; i < retries; i++) {
+        for (int i = 0; i < MAX_RETRIES; i++) {
             if (op.ping(node)) {
                 execute = true;
                 break;
