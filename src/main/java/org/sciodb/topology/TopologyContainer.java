@@ -61,7 +61,6 @@ public class TopologyContainer {
     }
 
     void checkNodes() {
-
         final Iterator<Node> iterator = table.getNodes().iterator();
 
         logger.debug("Nodes available...");
@@ -78,8 +77,6 @@ public class TopologyContainer {
                 logger.error(node.url() + " - not available ");
             }
         }
-
-
     }
 
     private boolean checkNode(final Node me, final Node node) {
