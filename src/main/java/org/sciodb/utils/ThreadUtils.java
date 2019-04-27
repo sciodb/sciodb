@@ -1,7 +1,5 @@
 package org.sciodb.utils;
 
-import org.sciodb.topology.TopologyContainer;
-
 /**
  * @author Jesús Navarrete (13/07/16)
  */

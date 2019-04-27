@@ -18,7 +18,7 @@ public class SeedUtils {
             for (final String seed : seedsStr) {
                 final String[] parts = seed.split(":");
                 if (parts.length == 2 && StringUtils.isInteger(parts[1]) && !parts[0].trim().equals("")) {
-                    seeds.add(new Node(parts[0], new Integer(parts[1].trim())));
+                    seeds.add(new Node(parts[0], Integer.valueOf(parts[1].trim())));
                 }
             }
         }
