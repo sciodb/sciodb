@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -21,7 +20,7 @@ public class GUIDTest {
         for (int i = 0; i < max; i++) {
             final String guid = GUID.get();
 
-            assertTrue(!cache.contains(guid));
+            assertFalse(cache.contains(guid));
 
             cache.add(guid);
         }

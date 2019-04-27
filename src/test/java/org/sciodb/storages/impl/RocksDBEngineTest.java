@@ -1,11 +1,10 @@
 package org.sciodb.storages.impl;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -50,8 +49,8 @@ public class RocksDBEngineTest {
         byte[] v1 = storage.find(key1.getBytes());
         byte[] v2 = storage.find(key2.getBytes());
 
-        assertTrue(Arrays.equals(v1, value1.getBytes()));
-        assertTrue(Arrays.equals(v2, value2.getBytes()));
+        assertArrayEquals(v1, value1.getBytes());
+        assertArrayEquals(v2, value2.getBytes());
 
     }
 
