@@ -68,9 +68,8 @@ public class SocketClient {
 
     public static ByteBuffer messageLength(final int length) {
         final String headerSize = String.format("%04d", length);
-        final ByteBuffer header = ByteBuffer.wrap(headerSize.getBytes());
 
-        return header;
+        return ByteBuffer.wrap(headerSize.getBytes());
     }
 
     private static SocketChannel getSocketChannel(final String host, final int port) throws IOException {
