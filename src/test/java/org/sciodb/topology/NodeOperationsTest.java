@@ -14,23 +14,22 @@ import static org.junit.Assert.*;
 public class NodeOperationsTest {
 
     private NodeOperations operations;
-    private Node node;
 
     @Before
-    public void setUp() throws Exception {
-        node = new Node("localhost", 9090);
+    public void setUp() {
+        final Node node = new Node("localhost", 9090);
 
         operations = new NodeOperations(node);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         operations = null;
     }
 
     @Ignore
     @Test
-    public void discoverPeer() throws Exception {
+    public void discoverPeer() {
         final Node me = new Node("localhost", 9091);
         final Node seed = new Node("localhost", 9090);
 
@@ -42,7 +41,7 @@ public class NodeOperationsTest {
 
     @Ignore
     @Test
-    public void isAlive() throws Exception {
+    public void isAlive() {
         final Node target = new Node("localhost", 9091);
 
         for(int i = 0; i < 10; i++) {

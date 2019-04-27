@@ -27,13 +27,11 @@ public class RocksDBEngine implements StorageEngine {
     private static final Logger logger = Logger.getLogger(RocksDBEngine.class);
 
     private Options options;
-    private DBOptions dbOptions;
 
     private static String dataPath;
 
     private RocksDB db;
     private List<ColumnFamilyHandle> collections;
-    private List<ColumnFamilyDescriptor> descriptors;
 
     public RocksDBEngine(final String dataFolder) {
         dataPath = dataFolder;
@@ -48,7 +46,7 @@ public class RocksDBEngine implements StorageEngine {
     public void init() throws StorageException {
         try {
             collections = new ArrayList<>();
-            descriptors = new ArrayList<>();
+            final List<ColumnFamilyDescriptor> descriptors = new ArrayList<>();
 
             final File f = new File(dataPath);
             boolean newDB = !f.exists();
@@ -68,8 +66,7 @@ public class RocksDBEngine implements StorageEngine {
 
             }
 
-            dbOptions = new DBOptions()
-                            .setCreateIfMissing(true);
+            final DBOptions dbOptions = new DBOptions().setCreateIfMissing(true);
 
             db = RocksDB.open(dbOptions, dataPath, descriptors, collections);
 

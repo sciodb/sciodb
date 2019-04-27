@@ -31,8 +31,6 @@ public class ServerSocket implements Runnable {
     private InetAddress hostAddress;
     private int port;
 
-    private ServerSocketChannel serverChannel;
-
     // The selector we'll be monitoring
     private Selector selector;
 
@@ -215,7 +213,7 @@ public class ServerSocket implements Runnable {
     private Selector initSelector() throws IOException {
         final Selector socketSelector = SelectorProvider.provider().openSelector();
 
-        this.serverChannel = ServerSocketChannel.open();
+        final ServerSocketChannel serverChannel = ServerSocketChannel.open();
         serverChannel.configureBlocking(false);
 
         final InetSocketAddress isa = new InetSocketAddress(this.hostAddress, this.port);
