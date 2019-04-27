@@ -28,8 +28,8 @@ public class ServerSocket implements Runnable {
 
     final static private Logger logger = Logger.getLogger(ServerSocket.class);
 
-    private InetAddress hostAddress;
-    private int port;
+    private final InetAddress hostAddress;
+    private final int port;
 
     // The selector we'll be monitoring
     private Selector selector;

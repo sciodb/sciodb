@@ -23,8 +23,8 @@ public class SocketsThreadPool {
 
     private final static Logger logger = Logger.getLogger(SocketsThreadPool.class);
 
-    private ExecutorService service;
-    private Dispatcher dispatcher;
+    private final ExecutorService service;
+    private final Dispatcher dispatcher;
     private static SocketsThreadPool instance;
 
     private SocketsThreadPool() {

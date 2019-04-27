@@ -26,7 +26,7 @@ public class RocksDBEngine implements StorageEngine {
 
     private static final Logger logger = Logger.getLogger(RocksDBEngine.class);
 
-    private Options options;
+    private final Options options;
 
     private static String dataPath;
 

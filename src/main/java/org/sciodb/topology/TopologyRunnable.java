@@ -16,14 +16,14 @@ import java.util.List;
  */
 public class TopologyRunnable implements Runnable {
 
-    private Logger logger = Logger.getLogger(TopologyRunnable.class);
+    private final Logger logger = Logger.getLogger(TopologyRunnable.class);
 
     private static int persistTime;
     private static int waitingTime;
 
     private static TopologyContainer container;
 
-    private Node me;
+    private final Node me;
 
     private final List<Node> seeds;
 

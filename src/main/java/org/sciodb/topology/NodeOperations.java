@@ -19,7 +19,7 @@ public class NodeOperations {
 
     private final static Logger logger = Logger.getLogger(NodeOperations.class);
 
-    private Node me;
+    private final Node me;
 
     public NodeOperations(final Node me) {
         this.me = me;

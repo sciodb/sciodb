@@ -25,7 +25,7 @@ public class TopologyContainer {
 
     private static int retryTime;
 
-    private Logger logger = Logger.getLogger(TopologyContainer.class);
+    private final Logger logger = Logger.getLogger(TopologyContainer.class);
 
     private Node me;
     private boolean networkUpdated;

@@ -21,7 +21,7 @@ import java.util.Scanner;
  */
 public class FileUtils {
 
-    private static Logger logger = Logger.getLogger(FileUtils.class);
+    private static final Logger logger = Logger.getLogger(FileUtils.class);
 
     public static final String OUTPUT_FILE = "sciodb-nodes.json";
     public static final Charset ENCODING = StandardCharsets.UTF_8;
