@@ -42,7 +42,7 @@ public class RoutingTable {
 
             nodes.add(wrapper);
 
-            Collections.sort(nodes, (o1, o2) -> {
+            nodes.sort((o1, o2) -> {
                 if (o1.getDistance() < o2.getDistance()) {
                     return -1;
                 }
