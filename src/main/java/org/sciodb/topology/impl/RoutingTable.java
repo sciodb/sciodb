@@ -42,17 +42,14 @@ public class RoutingTable {
 
             nodes.add(wrapper);
 
-            Collections.sort(nodes, new Comparator<>() {
-                @Override
-                public int compare(RoutingNode o1, RoutingNode o2) {
-                    if (o1.getDistance() < o2.getDistance()) {
-                        return -1;
-                    }
-                    if (o1.getDistance() > o2.getDistance()) {
-                        return 1;
-                    }
-                    return 0;
+            Collections.sort(nodes, (o1, o2) -> {
+                if (o1.getDistance() < o2.getDistance()) {
+                    return -1;
                 }
+                if (o1.getDistance() > o2.getDistance()) {
+                    return 1;
+                }
+                return 0;
             });
             if (nodes.size() > bits) {
                 final RoutingNode n = nodes.removeLast();
