@@ -42,13 +42,13 @@ public class RoutingTable {
 
             nodes.add(wrapper);
 
-            Collections.sort(nodes, new Comparator<RoutingNode>(){
+            Collections.sort(nodes, new Comparator<>() {
                 @Override
-                public int compare(RoutingNode o1, RoutingNode o2){
-                    if(o1.getDistance() < o2.getDistance()){
+                public int compare(RoutingNode o1, RoutingNode o2) {
+                    if (o1.getDistance() < o2.getDistance()) {
                         return -1;
                     }
-                    if(o1.getDistance() > o2.getDistance()){
+                    if (o1.getDistance() > o2.getDistance()) {
                         return 1;
                     }
                     return 0;
