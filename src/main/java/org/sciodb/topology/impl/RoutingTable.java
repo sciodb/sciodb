@@ -4,9 +4,6 @@ import org.apache.log4j.Logger;
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
