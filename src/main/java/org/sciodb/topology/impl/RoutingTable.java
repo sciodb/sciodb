@@ -4,22 +4,20 @@ import org.apache.log4j.Logger;
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 /**
  * @author Jesús Navarrete (27/11/2016)
  */
 public class RoutingTable {
 
-    private Logger logger = Logger.getLogger(RoutingTable.class);
+    private final Logger logger = Logger.getLogger(RoutingTable.class);
 
-    private int bits;
-    private LinkedList<RoutingNode> nodes;
+    private final int bits;
+    private final LinkedList<RoutingNode> nodes;
 
     public RoutingTable(int bits) {
         this.bits = bits;
@@ -27,13 +25,9 @@ public class RoutingTable {
     }
 
     public List<Node> getNodes() {
-        final List<Node> result = new ArrayList<>();
-
-        for (RoutingNode r: nodes) { // TODO use lambdas !!
-            result.add(r.getNode());
-        }
-
-        return result;
+        return nodes.stream()
+                .map(RoutingNode::getNode)
+                .collect(Collectors.toList());
     }
 
     public boolean add(final Node node, final long distance) {
@@ -45,17 +39,14 @@ public class RoutingTable {
 
             nodes.add(wrapper);
 
-            Collections.sort(nodes, new Comparator<RoutingNode>(){
-                @Override
-                public int compare(RoutingNode o1, RoutingNode o2){
-                    if(o1.getDistance() < o2.getDistance()){
-                        return -1;
-                    }
-                    if(o1.getDistance() > o2.getDistance()){
-                        return 1;
-                    }
-                    return 0;
+            nodes.sort((o1, o2) -> {
+                if (o1.getDistance() < o2.getDistance()) {
+                    return -1;
                 }
+                if (o1.getDistance() > o2.getDistance()) {
+                    return 1;
+                }
+                return 0;
             });
             if (nodes.size() > bits) {
                 final RoutingNode n = nodes.removeLast();

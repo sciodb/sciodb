@@ -9,7 +9,7 @@ import org.sciodb.messages.Message;
  */
 public class ContainerMessage implements Message {
 
-    private Header header;
+    private final Header header;
 
     private byte[] content;
 

@@ -36,7 +36,7 @@ public class RoutingTableTest {
 
         table.add(target, distance);
 
-        assertTrue(table.size() == 1);
+        assertEquals(1, table.size());
 
     }
 
@@ -51,7 +51,7 @@ public class RoutingTableTest {
 
         addNodes(table, 10, source);
 
-        assertTrue(table.size() == amount);
+        assertEquals(table.size(), amount);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class RoutingTableTest {
 
         addNodes(table, 10, source);
 
-        assertTrue(table.size() == amount);
+        assertEquals(table.size(), amount);
     }
 
     @Test
@@ -82,8 +82,8 @@ public class RoutingTableTest {
 
         table.add(target, distance);
 
-        assertTrue(table.size() == amount);
-        assertTrue(table.closest().url().equals(target.url()));
+        assertEquals(table.size(), amount);
+        assertEquals(table.closest().url(), target.url());
     }
 
     @Test(expected = EmptyDataException.class)
@@ -94,7 +94,7 @@ public class RoutingTableTest {
         int amount = 1;
         final RoutingTable table = new RoutingTable(amount);
 
-        assertTrue(table.size() == 0);
+        assertEquals(0, table.size());
         table.closest();
     }
 

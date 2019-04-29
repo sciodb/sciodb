@@ -16,7 +16,7 @@ public class Encoder {
     final static int INT_BYTES = 4;
     final static int LONG_BYTES = 8;
 
-    private List<ByteBuffer> container;
+    private final List<ByteBuffer> container;
 
     public Encoder() {
         this.container = new ArrayList<>();
@@ -61,11 +61,10 @@ public class Encoder {
     public byte[] container() {
         try {
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            if (container != null) {
-                for (ByteBuffer bb : container) {
-                    outputStream.write(bb.array());
-                }
+            for (ByteBuffer bb : container) {
+                outputStream.write(bb.array());
             }
+
             return outputStream.toByteArray();
         } catch (IOException e) {
             return new byte[0];

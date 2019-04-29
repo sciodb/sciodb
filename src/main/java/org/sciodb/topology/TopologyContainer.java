@@ -21,9 +21,11 @@ public class TopologyContainer {
 
     private static final TopologyContainer instance = new TopologyContainer();
 
+    private static final int MAX_RETRIES = 3;
+
     private static int retryTime;
 
-    private Logger logger = Logger.getLogger(TopologyContainer.class);
+    private final Logger logger = Logger.getLogger(TopologyContainer.class);
 
     private Node me;
     private boolean networkUpdated;
@@ -59,14 +61,13 @@ public class TopologyContainer {
     }
 
     void checkNodes() {
-
         final Iterator<Node> iterator = table.getNodes().iterator();
 
         logger.debug("Nodes available...");
         while (iterator.hasNext()) {
             final Node node = iterator.next();
 
-            boolean alive = checkNode(me, node, 3);
+            boolean alive = checkNode(me, node);
 
             if (alive) {
                 logger.info(node.url() + " - available");
@@ -76,14 +77,12 @@ public class TopologyContainer {
                 logger.error(node.url() + " - not available ");
             }
         }
-
-
     }
 
-    private boolean checkNode(final Node me, final Node node, final int retries) {
+    private boolean checkNode(final Node me, final Node node) {
         boolean execute = false;
         final NodeOperations op = new NodeOperations(me);
-        for (int i = 0; i < retries; i++) {
+        for (int i = 0; i < MAX_RETRIES; i++) {
             if (op.ping(node)) {
                 execute = true;
                 break;
@@ -138,17 +137,14 @@ public class TopologyContainer {
         try {
             op.leave(table.closest());
         } catch (final EmptyDataException e) {
-            logger.error("Problems leaving the network", e);
+            logger.warn("No close member found it, when leaving the network.");
         }
     }
 
-    public boolean leave(final Node node) {
+    public void leave(final Node node) {
         if (table.contains(node)) {
             logger.info(node.url() + " leaving the network.");
             table.remove(node);
-            return true;
-        } else {
-            return false;
         }
     }
 }

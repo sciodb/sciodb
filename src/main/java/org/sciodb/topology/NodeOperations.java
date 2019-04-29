@@ -19,7 +19,7 @@ public class NodeOperations {
 
     private final static Logger logger = Logger.getLogger(NodeOperations.class);
 
-    private Node me;
+    private final Node me;
 
     public NodeOperations(final Node me) {
         this.me = me;
@@ -128,17 +128,21 @@ public class NodeOperations {
 
     private List<Node> nodesFromResponse(final byte[] response) {
 
+        final List<Node> nodes = new ArrayList<>();
+
         if (response.length > 4) {
             final ContainerMessage parseRsp = new ContainerMessage();
             parseRsp.decode(response);
 
             final NodesMessage msg = new NodesMessage();
             msg.decode(parseRsp.getContent());
-            final List<Node> nodes = new ArrayList<>();
-            msg.getNodes().stream().filter(n -> !me.equals(n) && !nodes.contains(n)).forEach(nodes::add);
-            return nodes;
+            msg.getNodes()
+                    .stream()
+                    .filter(n -> !me.equals(n) && !nodes.contains(n))
+                    .forEach(nodes::add);
         }
-        return new ArrayList<>();
+
+        return nodes;
     }
 
 }

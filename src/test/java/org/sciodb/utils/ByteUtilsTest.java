@@ -4,8 +4,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Jesús Navarrete (08/06/16)
@@ -17,6 +16,6 @@ public class ByteUtilsTest {
         byte[] i = new byte[]{100, 101, 102};
 
         assertEquals(2, ByteUtils.split(i, 1, 2).length);
-        assertTrue(Arrays.equals(new byte[]{101, 102}, ByteUtils.split(i, 1, 2)));
+        assertArrayEquals(new byte[]{101, 102}, ByteUtils.split(i, 1, 2));
     }
 }

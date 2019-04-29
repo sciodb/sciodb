@@ -28,10 +28,8 @@ public class ServerSocket implements Runnable {
 
     final static private Logger logger = Logger.getLogger(ServerSocket.class);
 
-    private InetAddress hostAddress;
-    private int port;
-
-    private ServerSocketChannel serverChannel;
+    private final InetAddress hostAddress;
+    private final int port;
 
     // The selector we'll be monitoring
     private Selector selector;
@@ -190,7 +188,7 @@ public class ServerSocket implements Runnable {
         final SocketChannel socketChannel = (SocketChannel) key.channel();
 
         synchronized (this.pendingData) {
-            final List queue = (List) this.pendingData.get(socketChannel);
+            final List queue = this.pendingData.get(socketChannel);
 
             // Write until there's not more data ...
             while (!queue.isEmpty()) {
@@ -215,7 +213,7 @@ public class ServerSocket implements Runnable {
     private Selector initSelector() throws IOException {
         final Selector socketSelector = SelectorProvider.provider().openSelector();
 
-        this.serverChannel = ServerSocketChannel.open();
+        final ServerSocketChannel serverChannel = ServerSocketChannel.open();
         serverChannel.configureBlocking(false);
 
         final InetSocketAddress isa = new InetSocketAddress(this.hostAddress, this.port);

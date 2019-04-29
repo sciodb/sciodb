@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
  */
 public class Decoder {
 
-    private ByteBuffer container;
+    private final ByteBuffer container;
     private int position;
 
     public Decoder(final byte[] input) {

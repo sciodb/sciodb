@@ -27,7 +27,7 @@ public class IpDiscover {
                     } else if (address.isSiteLocalAddress()) {
                         System.out.print(" - site local ");
                     }
-                    System.out.println("");
+                    System.out.println();
 
                 }
 

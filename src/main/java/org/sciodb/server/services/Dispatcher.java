@@ -8,9 +8,9 @@ import org.sciodb.messages.impl.ContainerMessage;
  */
 public class Dispatcher {
 
-    private StatusCommand statusCommand;
+    private final StatusCommand statusCommand;
 
-    private EchoCommand echoCommand;
+    private final EchoCommand echoCommand;
 
     public Dispatcher() {
         this.echoCommand = new EchoCommand();

@@ -46,4 +46,12 @@ public class DecoderTest {
     @Test
     public void outByte() {}
 
+    @Test
+    public void getInt() {
+        int l = 12345;
+        final ByteBuffer bb = ByteBuffer.allocate(8).putInt(l);
+
+        final Decoder d = new Decoder(bb.array());
+        assertEquals(l, d.getInt());
+    }
 }

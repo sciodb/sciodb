@@ -1,6 +1,5 @@
 package org.sciodb.messages.impl;
 
-import org.apache.log4j.Logger;
 import org.sciodb.messages.Decoder;
 import org.sciodb.messages.Encoder;
 import org.sciodb.messages.Message;
