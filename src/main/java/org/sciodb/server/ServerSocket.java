@@ -129,7 +129,7 @@ public class ServerSocket implements Runnable {
             final byte[] size = read(key, HEADER_SIZE, false);
             int msgSize;
 
-            if (size != null && size.length == HEADER_SIZE) {
+            if (size.length == HEADER_SIZE) {
                 final String msg = new String(size);
                 msgSize = Integer.valueOf(msg);
 
