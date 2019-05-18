@@ -2,10 +2,7 @@ package org.sciodb.storages.impl;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Jesús Navarrete (03/04/16)

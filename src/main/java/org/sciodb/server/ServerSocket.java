@@ -77,10 +77,9 @@ public class ServerSocket implements Runnable {
                 // Process any pending changes
                 synchronized (this.pendingChanges) {
                     for (ChangeRequest change : this.pendingChanges) {
-                        switch (change.type) {
-                            case ChangeRequest.CHANGEOPS:
-                                final SelectionKey key = change.socket.keyFor(this.selector);
-                                key.interestOps(change.ops);
+                        if (change.type == ChangeRequest.CHANGEOPS) {
+                            final SelectionKey key = change.socket.keyFor(this.selector);
+                            key.interestOps(change.ops);
                         }
                     }
                     this.pendingChanges.clear();
@@ -124,12 +123,12 @@ public class ServerSocket implements Runnable {
     }
 
 
-    private void read(final SelectionKey key) throws IOException {
+    private void read(final SelectionKey key) {
         try {
             final byte[] size = read(key, HEADER_SIZE, false);
             int msgSize;
 
-            if (size != null && size.length == HEADER_SIZE) {
+            if (size.length == HEADER_SIZE) {
                 final String msg = new String(size);
                 msgSize = Integer.valueOf(msg);
 
