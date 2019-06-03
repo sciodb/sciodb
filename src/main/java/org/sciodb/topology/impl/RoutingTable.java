@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -39,15 +40,7 @@ public class RoutingTable {
 
             nodes.add(wrapper);
 
-            nodes.sort((o1, o2) -> {
-                if (o1.getDistance() < o2.getDistance()) {
-                    return -1;
-                }
-                if (o1.getDistance() > o2.getDistance()) {
-                    return 1;
-                }
-                return 0;
-            });
+            nodes.sort(Comparator.comparingLong(RoutingNode::getDistance));
             if (nodes.size() > bits) {
                 final RoutingNode n = nodes.removeLast();
                 logger.info("Deleting the last element " + n.getNode().url());

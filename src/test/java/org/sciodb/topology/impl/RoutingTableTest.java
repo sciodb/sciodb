@@ -5,7 +5,7 @@ import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.utils.GUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Jesús Navarrete on 02/12/2016.
