@@ -3,7 +3,7 @@ package org.sciodb.messages.impl;
 import org.junit.Test;
 import org.sciodb.utils.GUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author jenaiz on 03/06/2017.
