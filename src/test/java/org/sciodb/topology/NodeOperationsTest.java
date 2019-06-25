@@ -6,7 +6,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.sciodb.messages.impl.Node;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author jenaiz on 12/11/2016.

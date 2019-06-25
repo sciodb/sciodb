@@ -1,7 +1,9 @@
 package org.sciodb.utils;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by jesusnavarrete on 20/11/2016.

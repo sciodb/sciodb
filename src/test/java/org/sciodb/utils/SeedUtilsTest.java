@@ -5,7 +5,7 @@ import org.sciodb.messages.impl.Node;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by jesusnavarrete on 20/11/2016.
