@@ -130,7 +130,7 @@ public class ServerSocket implements Runnable {
 
             if (size.length == HEADER_SIZE) {
                 final String msg = new String(size);
-                msgSize = Integer.valueOf(msg);
+                msgSize = Integer.parseInt(msg);
 
                 if (msgSize == 0) {
                     key.cancel();

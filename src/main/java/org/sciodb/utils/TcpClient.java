@@ -14,15 +14,18 @@ import java.util.Map;
 import static org.sciodb.utils.ScioDBConstants.MAX_ANSWER_BYTES;
 
 /**
+ * Client implementation for all the connections between nodes. We internally use sockets for the communication.
+ *
  * @author Jesús Navarrete (08/06/16)
  */
-public class SocketClient {
+public class TcpClient {
 
-    final static private Logger logger = Logger.getLogger(SocketClient.class);
+    final static private Logger logger = Logger.getLogger(TcpClient.class);
 
-    final static Map<String, SocketChannel> cache = new HashMap<>();
+    final static private Map<String, SocketChannel> cache = new HashMap<>();
 
-    public static byte[] sendToSocket(final String host, final int port, final Message message, final boolean responseRequired) throws CommunicationException {
+    public static byte[] sendToSocket(final String host, final int port, final Message message,
+                                      final boolean responseRequired) throws CommunicationException {
 
         final byte[] input = message.encode();
 
@@ -52,11 +55,10 @@ public class SocketClient {
             } else {
                 data = new byte[0];
             }
-//            client.close();
             return data;
 
         } catch (IOException e) {
-            try { if (client != null) client.close(); } catch (IOException e1) {}
+            try { if (client != null) client.close(); } catch (IOException ignored) {}
 
             throw new CommunicationException("Error connecting with node " + host + ":" + port, e);
         } finally {
@@ -66,7 +68,7 @@ public class SocketClient {
         }
     }
 
-    public static ByteBuffer messageLength(final int length) {
+    private static ByteBuffer messageLength(final int length) {
         final String headerSize = String.format("%04d", length);
 
         return ByteBuffer.wrap(headerSize.getBytes());

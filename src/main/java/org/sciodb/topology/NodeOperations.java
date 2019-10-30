@@ -6,7 +6,7 @@ import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.messages.impl.NodesMessage;
-import org.sciodb.utils.SocketClient;
+import org.sciodb.utils.TcpClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class NodeOperations {
         final ContainerMessage container = getMessage(Operations.PING.getValue(), me.encode());
 
         try {
-            SocketClient.sendToSocket(target.getHost(), target.getPort(), container, false);
+            TcpClient.sendToSocket(target.getHost(), target.getPort(), container, false);
 
             return true;
         } catch (final CommunicationException e) {
@@ -51,7 +51,7 @@ public class NodeOperations {
         final ContainerMessage container = getMessage(Operations.STORE.getValue(), me.encode());
 
         try {
-            byte[] response = SocketClient.sendToSocket(target.getHost(), target.getPort(), container, true);
+            byte[] response = TcpClient.sendToSocket(target.getHost(), target.getPort(), container, true);
 
             final ContainerMessage parseRsp = new ContainerMessage();
             parseRsp.decode(response);
@@ -103,7 +103,7 @@ public class NodeOperations {
         container.setContent(me.encode());
 
         try {
-            byte[] response = SocketClient.sendToSocket(target.getHost(), target.getPort(), container, true);
+            byte[] response = TcpClient.sendToSocket(target.getHost(), target.getPort(), container, true);
 
             return nodesFromResponse(response);
         } catch (final CommunicationException e) {
@@ -118,7 +118,7 @@ public class NodeOperations {
         final ContainerMessage container = getMessage(Operations.LEAVE.getValue(), me.encode());
 
         try {
-            SocketClient.sendToSocket(peer.getHost(), peer.getPort(), container, false);
+            TcpClient.sendToSocket(peer.getHost(), peer.getPort(), container, false);
 
             return true;
         } catch (final CommunicationException e) {
