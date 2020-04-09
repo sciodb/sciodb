@@ -12,6 +12,7 @@ public class RoutingNode {
 
     public RoutingNode(final Node node, final long distance) {
         this.node = node;
+        this.distance = distance;
     }
 
     public Node getNode() {

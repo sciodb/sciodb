@@ -37,7 +37,7 @@ public class Configuration {
     }
 
     public int getPort() {
-        return Integer.valueOf(properties.getProperty("database.port"));
+        return Integer.parseInt(properties.getProperty("database.port"));
     }
 
     public String getTempFolder() {
@@ -45,15 +45,15 @@ public class Configuration {
     }
 
     public int getRetryTimeTopology() {
-        return Integer.valueOf(properties.getProperty("topology.retry.time"));
+        return Integer.parseInt(properties.getProperty("topology.retry.time"));
     }
 
     public int getNodesCheckTimeTopology() {
-        return Integer.valueOf(properties.getProperty("topology.nodes_check.time"));
+        return Integer.parseInt(properties.getProperty("topology.nodes_check.time"));
     }
 
     public int getNodesPersistTimeTopology() {
-        return Integer.valueOf(properties.getProperty("topology.nodes_persist.time"));
+        return Integer.parseInt(properties.getProperty("topology.nodes_persist.time"));
     }
 
 }

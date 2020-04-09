@@ -11,17 +11,12 @@ import java.io.IOException;
 public class ServerSocketTest {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         try {
             new Thread(new ServerSocket(null, 9090)).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-    }
-
-    @Test
-    public void run() throws Exception {
 
     }
 

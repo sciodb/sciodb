@@ -13,18 +13,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class HeaderTest {
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
-    public void encode() throws Exception {
+    public void encode() {
         final String id = "123";
         final int length = 100;
         final int operationId = 2;
@@ -50,7 +40,7 @@ public class HeaderTest {
     }
 
     @Test
-    public void decode() throws Exception {
+    public void decode() {
         byte[] headerBytes = {0, 0, 0, 3, 49, 50, 51, 0, 0, 0, 100, 0, 0, 0, 2};
 
         final Header h2 = new Header();

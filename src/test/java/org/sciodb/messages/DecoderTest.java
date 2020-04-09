@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class DecoderTest {
 
     @Test
-    public void outInt() throws Exception {
+    public void outInt() {
         int i = 12345;
         final ByteBuffer bb = ByteBuffer.allocate(4).putInt(i);
 
@@ -22,7 +22,7 @@ public class DecoderTest {
     }
 
     @Test
-    public void outLong() throws Exception {
+    public void outLong() {
         long l = 12345L;
         final ByteBuffer bb = ByteBuffer.allocate(8).putLong(l);
 
@@ -31,7 +31,7 @@ public class DecoderTest {
     }
 
     @Test
-    public void outString() throws Exception {
+    public void outString() {
         final String str = "helloworld";
         int size = 4 + str.length();
         final ByteBuffer bb = ByteBuffer.allocate(size)
@@ -42,9 +42,6 @@ public class DecoderTest {
         final Decoder d = new Decoder(bb.array());
         assertEquals(str, d.getString());
     }
-
-    @Test
-    public void outByte() {}
 
     @Test
     public void getInt() {

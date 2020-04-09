@@ -11,18 +11,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class EchoMessageTest {
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
-    public void encode() throws Exception {
+    public void encode() {
         final EchoMessage echo = new EchoMessage();
 
         echo.setMsg("Hello world!");
@@ -33,11 +23,6 @@ public class EchoMessageTest {
         result.decode(encode);
 
         assertEquals(echo.getMsg(), result.getMsg());
-    }
-
-    @Test
-    public void decode() throws Exception {
-
     }
 
 }

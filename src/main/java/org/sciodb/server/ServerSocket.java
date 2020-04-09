@@ -53,15 +53,12 @@ public class ServerSocket implements Runnable {
     public void send(final SocketChannel socket, final byte[] data) {
         synchronized (this.pendingChanges) {
             // Indicate we want the interest ops set changed
-            this.pendingChanges.add(new ChangeRequest(socket, ChangeRequest.CHANGEOPS, SelectionKey.OP_WRITE));
+            this.pendingChanges.add(new ChangeRequest(socket, ChangeRequest.CHANGE_OPS, SelectionKey.OP_WRITE));
 
             // And queue the data we want written
             synchronized (this.pendingData) {
-                List<ByteBuffer> queue = this.pendingData.get(socket);
-                if (queue == null) {
-                    queue = new ArrayList<>();
-                    this.pendingData.put(socket, queue);
-                }
+                final List<ByteBuffer> queue = this.pendingData.computeIfAbsent(socket, k -> new ArrayList<>());
+
                 queue.add(ByteBuffer.wrap(data));
             }
         }
@@ -77,7 +74,7 @@ public class ServerSocket implements Runnable {
                 // Process any pending changes
                 synchronized (this.pendingChanges) {
                     for (ChangeRequest change : this.pendingChanges) {
-                        if (change.type == ChangeRequest.CHANGEOPS) {
+                        if (change.type == ChangeRequest.CHANGE_OPS) {
                             final SelectionKey key = change.socket.keyFor(this.selector);
                             key.interestOps(change.ops);
                         }
@@ -130,7 +127,7 @@ public class ServerSocket implements Runnable {
 
             if (size.length == HEADER_SIZE) {
                 final String msg = new String(size);
-                msgSize = Integer.valueOf(msg);
+                msgSize = Integer.parseInt(msg);
 
                 if (msgSize == 0) {
                     key.cancel();
@@ -148,7 +145,7 @@ public class ServerSocket implements Runnable {
 
     }
 
-    private byte[] read(final SelectionKey key, final int msgSize, final boolean cancelation) throws IOException {
+    private byte[] read(final SelectionKey key, final int msgSize, final boolean cancellation) throws IOException {
         final SocketChannel channel = (SocketChannel) key.channel();
 
         final ByteBuffer buffer = ByteBuffer.allocate(msgSize);
@@ -161,7 +158,7 @@ public class ServerSocket implements Runnable {
                 int currentSize = channel.read(messageBuffer);
 
                 if (currentSize == -1) {
-                    if (cancelation) {
+                    if (cancellation) {
                         channel.close();
                         key.cancel();
                     }

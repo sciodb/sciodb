@@ -8,7 +8,7 @@ import java.nio.channels.SocketChannel;
 public class ChangeRequest {
 
     public static final int REGISTER = 1;
-    public static final int CHANGEOPS = 2;
+    public static final int CHANGE_OPS = 2;
 
     public final SocketChannel socket;
     public final int type;

@@ -13,17 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class RoutingTableTest {
 
     @Test
-    public void distance() throws Exception {
-
-    }
-
-    @Test
-    public void getNodes() throws Exception {
-
-    }
-
-    @Test
-    public void add() throws Exception {
+    public void add() {
         final Node source = new Node("0.0.0.0", 9090);
         source.setGuid(GUID.get());
 
@@ -37,14 +27,12 @@ public class RoutingTableTest {
         table.add(target, distance);
 
         assertEquals(1, table.size());
-
     }
 
     @Test
-    public void add_tenNodes() throws Exception {
+    public void add_tenNodes() {
         final Node source = new Node("0.0.0.0", 9090);
         source.setGuid(GUID.get());
-
 
         int amount = 10;
         final RoutingTable table = new RoutingTable(amount);
@@ -55,7 +43,7 @@ public class RoutingTableTest {
     }
 
     @Test
-    public void add_moreThanExpected() throws Exception {
+    public void add_moreThanExpected() {
         final Node source = new Node("0.0.0.0", 9090);
         source.setGuid(GUID.get());
 
