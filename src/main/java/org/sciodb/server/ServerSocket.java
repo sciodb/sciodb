@@ -53,7 +53,7 @@ public class ServerSocket implements Runnable {
     public void send(final SocketChannel socket, final byte[] data) {
         synchronized (this.pendingChanges) {
             // Indicate we want the interest ops set changed
-            this.pendingChanges.add(new ChangeRequest(socket, ChangeRequest.CHANGEOPS, SelectionKey.OP_WRITE));
+            this.pendingChanges.add(new ChangeRequest(socket, ChangeRequest.CHANGE_OPS, SelectionKey.OP_WRITE));
 
             // And queue the data we want written
             synchronized (this.pendingData) {
@@ -74,7 +74,7 @@ public class ServerSocket implements Runnable {
                 // Process any pending changes
                 synchronized (this.pendingChanges) {
                     for (ChangeRequest change : this.pendingChanges) {
-                        if (change.type == ChangeRequest.CHANGEOPS) {
+                        if (change.type == ChangeRequest.CHANGE_OPS) {
                             final SelectionKey key = change.socket.keyFor(this.selector);
                             key.interestOps(change.ops);
                         }
