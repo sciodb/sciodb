@@ -28,9 +28,7 @@ public class SocketClient {
 
         long init = System.currentTimeMillis();
 
-        SocketChannel client = null;
-        try {
-            client = getSocketChannel(host, port);
+        try (SocketChannel client = getSocketChannel(host, port)) {
             final ByteBuffer buffer = ByteBuffer.wrap(input);
 
             client.write(messageLength(input.length));
@@ -52,12 +50,9 @@ public class SocketClient {
             } else {
                 data = new byte[0];
             }
-//            client.close();
             return data;
 
         } catch (IOException e) {
-            try { if (client != null) client.close(); } catch (IOException e1) {}
-
             throw new CommunicationException("Error connecting with node " + host + ":" + port, e);
         } finally {
             long end = System.currentTimeMillis() - init;
