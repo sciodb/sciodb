@@ -57,11 +57,8 @@ public class ServerSocket implements Runnable {
 
             // And queue the data we want written
             synchronized (this.pendingData) {
-                List<ByteBuffer> queue = this.pendingData.get(socket);
-                if (queue == null) {
-                    queue = new ArrayList<>();
-                    this.pendingData.put(socket, queue);
-                }
+                final List<ByteBuffer> queue = this.pendingData.computeIfAbsent(socket, k -> new ArrayList<>());
+
                 queue.add(ByteBuffer.wrap(data));
             }
         }
@@ -148,7 +145,7 @@ public class ServerSocket implements Runnable {
 
     }
 
-    private byte[] read(final SelectionKey key, final int msgSize, final boolean cancelation) throws IOException {
+    private byte[] read(final SelectionKey key, final int msgSize, final boolean cancellation) throws IOException {
         final SocketChannel channel = (SocketChannel) key.channel();
 
         final ByteBuffer buffer = ByteBuffer.allocate(msgSize);
@@ -161,7 +158,7 @@ public class ServerSocket implements Runnable {
                 int currentSize = channel.read(messageBuffer);
 
                 if (currentSize == -1) {
-                    if (cancelation) {
+                    if (cancellation) {
                         channel.close();
                         key.cancel();
                     }
