@@ -8,12 +8,12 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by jesusnavarrete on 20/11/2016.
+ * @author Jesús Navarrete (20/11/2016)
  */
 public class SeedUtilsTest {
 
     @Test
-    public void fromString() throws Exception {
+    public void fromString() {
         final String host = "0.0.0.0";
         final int port = 9090;
         final List<Node> seeds = SeedUtils.fromString(host + ":" + port);
@@ -24,7 +24,7 @@ public class SeedUtilsTest {
     }
 
     @Test
-    public void fromString_withoutPort() throws Exception {
+    public void fromString_withoutPort() {
         final String host = "0.0.0.0";
         final List<Node> seeds = SeedUtils.fromString(host);
 
@@ -32,7 +32,7 @@ public class SeedUtilsTest {
     }
 
     @Test
-    public void fromString_withoutHost() throws Exception {
+    public void fromString_withoutHost() {
         final String port = ":9090";
         final List<Node> seeds = SeedUtils.fromString(port);
 
@@ -40,7 +40,7 @@ public class SeedUtilsTest {
     }
 
     @Test
-    public void fromString_multiple() throws Exception {
+    public void fromString_multiple() {
         final String host = "0.0.0.0";
         final int port = 9090;
         final List<Node> seeds = SeedUtils.fromString(host + ":" + port + "," + host + ":" + port + ","

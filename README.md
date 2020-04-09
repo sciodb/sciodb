@@ -39,7 +39,7 @@ and if you want to stop a node:
 ```
 ./stop.sh 9090
 ```
-If you want to learn more about how to start the system, take a looke to the [documentation](doc/Readme.md).
+If you want to learn more about how to start the system, take a look to the [documentation](doc/Readme.md).
 
 Enjoy it!
 
