@@ -14,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 public class GUIDTest {
 
     @Test
-    public void get() throws Exception {
+    public void get() {
         int max = 128;
         final List<String> cache = new ArrayList<>(max);
 
@@ -28,7 +28,7 @@ public class GUIDTest {
     }
 
     @Test
-    public void distance() throws Exception {
+    public void distance() {
         final String A = GUID.get();
         final String B = GUID.get();
 
