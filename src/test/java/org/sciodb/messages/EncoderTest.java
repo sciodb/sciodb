@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class EncoderTest {
 
     @Test
-    public void in_int() throws Exception {
+    public void in_int() {
         final Encoder e = new Encoder();
         final int number = 100;
         e.in(number);
@@ -24,7 +24,7 @@ public class EncoderTest {
     }
 
     @Test
-    public void in_long() throws Exception {
+    public void in_long() {
         final Encoder e = new Encoder();
         final long number = 100L;
         e.in(number);
@@ -36,7 +36,7 @@ public class EncoderTest {
     }
 
     @Test
-    public void in_string() throws Exception {
+    public void in_string() {
         final Encoder e = new Encoder();
         final String text = "hello world!";
         e.in(text);
@@ -56,7 +56,7 @@ public class EncoderTest {
     }
 
     @Test
-    public void container() throws Exception {
+    public void container() {
         final Encoder e = new Encoder();
         e.in(100);
         e.in(100L);

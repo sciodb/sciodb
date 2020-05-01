@@ -31,9 +31,8 @@ public class RoutingTable {
                 .collect(Collectors.toList());
     }
 
-    public boolean add(final Node node, final long distance) {
+    public void add(final Node node, final long distance) {
         final RoutingNode wrapper = new RoutingNode(node, distance);
-        boolean result = true;
 
         if (!contains(node)) {
             logger.info("New node available - " + node.url());
@@ -44,12 +43,8 @@ public class RoutingTable {
             if (nodes.size() > bits) {
                 final RoutingNode n = nodes.removeLast();
                 logger.info("Deleting the last element " + n.getNode().url());
-                if (n.getNode().getGuid().equals(node.getGuid())) result = false;
             }
-        } else {
-            result = false;
         }
-        return result;
     }
 
     public void remove(final Node node) {

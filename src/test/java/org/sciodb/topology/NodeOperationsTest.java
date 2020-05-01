@@ -29,18 +29,6 @@ public class NodeOperationsTest {
 
     @Ignore
     @Test
-    public void discoverPeer() {
-        final Node me = new Node("localhost", 9091);
-        final Node seed = new Node("localhost", 9090);
-
-        for(int i = 0; i < 100; i++) {
-//            operations.discoverPeer(me, seed);
-        }
-
-    }
-
-    @Ignore
-    @Test
     public void isAlive() {
         final Node target = new Node("localhost", 9091);
 
@@ -48,5 +36,4 @@ public class NodeOperationsTest {
             assertTrue(operations.ping(target));
         }
     }
-
 }

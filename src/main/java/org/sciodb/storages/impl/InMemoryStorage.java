@@ -5,7 +5,6 @@ import org.sciodb.storages.StorageEngine;
 import org.sciodb.storages.models.CollectionInfo;
 import org.sciodb.storages.models.DatabaseInfo;
 
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -27,10 +26,7 @@ public class InMemoryStorage implements StorageEngine {
     }
 
     private static String createDoc(int size) {
-        final StringBuilder sb = new StringBuilder(size);
-        for (int i = 0; i < size; i++) sb.append("x");
-
-        return sb.toString();
+        return "x".repeat(Math.max(0, size));
     }
 
     @Override

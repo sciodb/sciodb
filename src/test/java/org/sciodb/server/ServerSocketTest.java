@@ -1,7 +1,6 @@
 package org.sciodb.server;
 
 import org.junit.Before;
-import org.junit.Test;
 
 import java.io.IOException;
 

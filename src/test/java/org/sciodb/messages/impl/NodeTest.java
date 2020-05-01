@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class NodeTest {
 
     @Test
-    public void encode() throws Exception {
+    public void encode() {
         final Node node = new Node("host", 200);
         final String guid = GUID.get();
         node.setGuid(guid);
@@ -28,7 +28,7 @@ public class NodeTest {
     }
 
     @Test
-    public void decode() throws Exception {
+    public void decode() {
         // TODO replace this code with at by-hand byte array.
         final Node node = new Node("host", 200);
         final String guid = GUID.get();
