@@ -5,12 +5,29 @@ import org.sciodb.storages.StorageEngine;
 import org.sciodb.storages.models.CollectionInfo;
 import org.sciodb.storages.models.DatabaseInfo;
 
+import java.util.Hashtable;
 import java.util.List;
 
 /**
  * @author Jesús Navarrete (24/03/16)
  */
 public class InMemoryStorage implements StorageEngine {
+
+
+    public static void main(String[] args) {
+        final int size = 10000000;
+        final String doc = createDoc(size);
+
+        final Hashtable<Integer, String> memory = new Hashtable<>();
+
+        for (int i = 0; i < size * 10; i++) {
+            memory.put(i, doc);
+        }
+    }
+
+    private static String createDoc(int size) {
+        return "x".repeat(Math.max(0, size));
+    }
 
     @Override
     public void init() throws StorageException {

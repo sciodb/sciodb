@@ -1,13 +1,13 @@
 ScioDB Documentation (draft)
 =====
 
-At this moment there is no package that you can download, if you want to play a bit with the current version you have to
+At this moment there is no package you can download, if you want to play a bit with the current version you have to
 compile by yourself using maven. It is pretty simple, you just need to clone or download a copy of the current repository
 and execute:
 ```
 mvn install
 ```
-That will download all the needed libraries and it will copy the jar files to the lib folder. After that you can start
+That will download all the needed libraries, and it will copy the jar files to the lib folder. After that you can start
 Scio DB or multiple Scio DB nodes to play a bit with the system.
 
 How to start a single node

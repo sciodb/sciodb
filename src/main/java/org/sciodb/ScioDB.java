@@ -61,7 +61,7 @@ public class ScioDB {
                 logger.info("v. 0.1");
             } else {
                 final String p = cmd.getOptionValue("p");
-                int port = p != null ? Integer.valueOf(p) : Configuration.getInstance().getPort();
+                int port = p != null ? Integer.parseInt(p) : Configuration.getInstance().getPort();
 
                 final Node node = new Node();
                 try {
@@ -96,7 +96,7 @@ public class ScioDB {
         }
     }
 
-    private class Shutdown implements Runnable {
+    private static class Shutdown implements Runnable {
         @Override
         public void run() {
             TopologyContainer.getInstance().leaveNetwork();

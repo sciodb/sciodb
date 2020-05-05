@@ -31,16 +31,13 @@ public class ServerSocket implements Runnable {
     private final InetAddress hostAddress;
     private final int port;
 
-    // The selector we'll be monitoring
-    private Selector selector;
+    private final Selector selector;
 
-    // A list of PendingChange instances
     final private List<ChangeRequest> pendingChanges = new LinkedList<>();
 
-    // Maps a SocketChannel to a list of ByteBuffer instances
     final private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<>();
 
-    private SocketsThreadPool pool;
+    private final SocketsThreadPool pool;
 
     public ServerSocket(final InetAddress hostAddress, final int port) throws IOException {
         this.hostAddress = hostAddress;
@@ -53,15 +50,12 @@ public class ServerSocket implements Runnable {
     public void send(final SocketChannel socket, final byte[] data) {
         synchronized (this.pendingChanges) {
             // Indicate we want the interest ops set changed
-            this.pendingChanges.add(new ChangeRequest(socket, ChangeRequest.CHANGEOPS, SelectionKey.OP_WRITE));
+            this.pendingChanges.add(new ChangeRequest(socket, ChangeRequest.CHANGE_OPS, SelectionKey.OP_WRITE));
 
             // And queue the data we want written
             synchronized (this.pendingData) {
-                List<ByteBuffer> queue = this.pendingData.get(socket);
-                if (queue == null) {
-                    queue = new ArrayList<>();
-                    this.pendingData.put(socket, queue);
-                }
+                final List<ByteBuffer> queue = this.pendingData.computeIfAbsent(socket, k -> new ArrayList<>());
+
                 queue.add(ByteBuffer.wrap(data));
             }
         }
@@ -77,7 +71,7 @@ public class ServerSocket implements Runnable {
                 // Process any pending changes
                 synchronized (this.pendingChanges) {
                     for (ChangeRequest change : this.pendingChanges) {
-                        if (change.type == ChangeRequest.CHANGEOPS) {
+                        if (change.type == ChangeRequest.CHANGE_OPS) {
                             final SelectionKey key = change.socket.keyFor(this.selector);
                             key.interestOps(change.ops);
                         }
@@ -122,7 +116,6 @@ public class ServerSocket implements Runnable {
         socketChannel.register(this.selector, SelectionKey.OP_READ);
     }
 
-
     private void read(final SelectionKey key) {
         try {
             final byte[] size = read(key, HEADER_SIZE, false);
@@ -148,7 +141,7 @@ public class ServerSocket implements Runnable {
 
     }
 
-    private byte[] read(final SelectionKey key, final int msgSize, final boolean cancelation) throws IOException {
+    private byte[] read(final SelectionKey key, final int msgSize, final boolean cancellation) throws IOException {
         final SocketChannel channel = (SocketChannel) key.channel();
 
         final ByteBuffer buffer = ByteBuffer.allocate(msgSize);
@@ -161,7 +154,7 @@ public class ServerSocket implements Runnable {
                 int currentSize = channel.read(messageBuffer);
 
                 if (currentSize == -1) {
-                    if (cancelation) {
+                    if (cancellation) {
                         channel.close();
                         key.cancel();
                     }
@@ -187,11 +180,11 @@ public class ServerSocket implements Runnable {
         final SocketChannel socketChannel = (SocketChannel) key.channel();
 
         synchronized (this.pendingData) {
-            final List queue = this.pendingData.get(socketChannel);
+            final List<ByteBuffer> queue = this.pendingData.get(socketChannel);
 
             // Write until there's not more data ...
             while (!queue.isEmpty()) {
-                ByteBuffer buf = (ByteBuffer) queue.get(0);
+                final ByteBuffer buf = queue.get(0);
                 socketChannel.write(buf);
                 if (buf.remaining() > 0) {
                     // ... or the socket's buffer fills up

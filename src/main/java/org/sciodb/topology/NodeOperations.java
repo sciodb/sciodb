@@ -66,13 +66,6 @@ public class NodeOperations {
         }
     }
 
-//        behaves like FIND NODE—returning
-//        <IP address, UDP port, Node ID> triples—with one
-//        exception. If the RPC recipient has received a STORE
-//        RPC for the key, it just returns the stored value.
-    public static void findValue() {
-    }
-
     private ContainerMessage getMessage(final int op, final byte[] encoded) {
         final ContainerMessage container = new ContainerMessage();
 
@@ -114,15 +107,14 @@ public class NodeOperations {
     /**
      * The ping operation probes if a node is online, no response is required.
      */
-    public boolean leave(final Node peer) {
+    public void leave(final Node peer) {
         final ContainerMessage container = getMessage(Operations.LEAVE.getValue(), me.encode());
 
         try {
             TcpClient.sendToSocket(peer.getHost(), peer.getPort(), container, false);
 
-            return true;
         } catch (final CommunicationException e) {
-            return false;
+            /* not important */
         }
     }
 

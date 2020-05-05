@@ -31,9 +31,7 @@ done
 
 CLASSPATH=$CLASSPATH:../target/classes/
 
-java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.ScioDB "$@"
+nohup java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.ScioDB "$@" > logs/node.log 2>&1 &
+pid=$!
 
-#nohup java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.ScioDB "$@" > logs/node.log 2>&1 &
-#pid=$!
-
-#echo "ScioDB is running with pid $pid"
+echo "ScioDB is running with pid $pid"

@@ -31,9 +31,7 @@ public class TcpClient {
 
         long init = System.currentTimeMillis();
 
-        SocketChannel client = null;
-        try {
-            client = getSocketChannel(host, port);
+        try (SocketChannel client = getSocketChannel(host, port)) {
             final ByteBuffer buffer = ByteBuffer.wrap(input);
 
             client.write(messageLength(input.length));

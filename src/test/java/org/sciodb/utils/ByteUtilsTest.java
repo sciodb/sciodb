@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class ByteUtilsTest {
 
     @Test
-    public void split() throws Exception {
+    public void split() {
         byte[] i = new byte[]{100, 101, 102};
 
         assertEquals(2, ByteUtils.split(i, 1, 2).length);

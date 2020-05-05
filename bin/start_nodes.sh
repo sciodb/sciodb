@@ -14,6 +14,5 @@ port=9000
 
 for i in $(seq 0 $1) ; do
   ./startup.sh $port 0.0.0.0:9090
-  #echo $port
   port=$((port+1))
 done
