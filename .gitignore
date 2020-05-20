@@ -3,6 +3,9 @@
 target/*
 logs/*
 pids/*
+src/main/shellscript/logs/*
+src/main/shellscript/pids/*
+
 lib/*
 data/*
 bin/logs/*
