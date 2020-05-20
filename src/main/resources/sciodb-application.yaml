@@ -1,0 +1,15 @@
+database:
+  port: 9090
+  data:
+    folder: /Users/jenaiz/sciodb/sciodb/data
+  temp:
+    folder: /tmp/sciodb-logs/
+
+topology:
+  seeds: 0.0.0.0:9091,0.0.0.0:9092,0.0.0.0:9093
+  retry:
+    time: 1000
+  nodes_check:
+    time: 4000
+  nodes_persist:
+    time: 1800000

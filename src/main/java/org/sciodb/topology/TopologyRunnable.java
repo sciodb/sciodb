@@ -6,9 +6,12 @@ import org.sciodb.messages.impl.Node;
 import org.sciodb.utils.Configuration;
 import org.sciodb.utils.FileUtils;
 import org.sciodb.utils.GUID;
+import org.sciodb.utils.NodeMapper;
 import org.sciodb.utils.StringUtils;
 import org.sciodb.utils.ThreadUtils;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,6 +71,8 @@ public class TopologyRunnable implements Runnable {
 
         if (!isJoined) {
             me.setGuid(GUID.get());
+        } else {
+            FileUtils.persistNodes(me.getPort());
         }
 
         long lastUpdate = System.currentTimeMillis();
@@ -93,22 +98,24 @@ public class TopologyRunnable implements Runnable {
 
     }
 
-//    private void parseHistoricalNodes() {
-//        final String fileName = Configuration.getInstance().getTempFolder() + FileUtils.OUTPUT_FILE;
-//
-//        try {
-//            final String previousInfo = FileUtils.read(fileName, FileUtils.ENCODING);
-//            if (previousInfo != null && !"".equals(previousInfo)) {
-//                final List<Node> previousNodes = NodeMapper.fromString(previousInfo);
-//
-//                for (final Node node : previousNodes) {
-//                    container.join(node);
-//                }
-//            }
-//
-//        } catch (IOException e) {
-//            logger.error("Error reading the file", e);
-//        }
-//    }
+    private List<Node> parseHistoricalNodes() {
+        final String fileName = Configuration.getInstance().getTempFolder() + FileUtils.OUTPUT_FILE;
+
+        final List<Node> oldNodes = new ArrayList<>();
+        try {
+            final String previousInfo = FileUtils.read(fileName, FileUtils.ENCODING);
+            if (!"".equals(previousInfo)) {
+                oldNodes.addAll(NodeMapper.fromString(previousInfo));
+
+                for (final Node node : oldNodes) {
+                    container.join(node);
+                }
+            }
+
+        } catch (IOException e) {
+            logger.error("Error reading the file", e);
+        }
+        return oldNodes;
+    }
 
 }
