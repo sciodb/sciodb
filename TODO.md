@@ -8,7 +8,12 @@ Currently working:
     * Improve data structure Routing Table, replace LinkedList
     * check the protocol methods of kademlia and the implementation
 - Request Dispatcher (WAITING)
+- TEST & IMPL: Cut connection between nodes and check the reconnection with the network again.
+- logs are too verbose
 
+Bug:
+---
+- when it tries to connect to itselft it gives an error in guid
 
 In the Roadmap
 --------------
