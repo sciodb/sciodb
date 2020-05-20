@@ -56,8 +56,6 @@ public class TcpClient {
             return data;
 
         } catch (IOException e) {
-            try { if (client != null) client.close(); } catch (IOException ignored) {}
-
             throw new CommunicationException("Error connecting with node " + host + ":" + port, e);
         } finally {
             long end = System.currentTimeMillis() - init;
