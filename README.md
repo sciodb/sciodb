@@ -48,4 +48,4 @@ LICENSE
 
 See the file LICENSE.
 
-Copyright (c) 2016-2020 Jesús Navarrete <jesus.navarrete@gmail.org>, released under the GPLv3 license
+Copyright (c) 2016-2021 Jesús Navarrete <jesus.navarrete@gmail.org>, released under the GPLv3 license

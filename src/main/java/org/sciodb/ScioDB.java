@@ -1,11 +1,6 @@
 package org.sciodb;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.server.ServerSocket;
@@ -23,7 +18,7 @@ import java.util.List;
  *
  * @author Jesús Navarrete (21/02/16)
  *
- * Copyright (C) 2016-2019 Jesús Navarrete <jesus.navarrete@gmail.com>
+ * Copyright (C) 2016-2021 Jesús Navarrete <jesus.navarrete@gmail.com>
  *
  * This source code is licensed under the GNU General Public License,
  * Version 3.  See the file LICENSE for more details.
