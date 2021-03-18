@@ -13,7 +13,7 @@ Currently working:
 
 Bug:
 ---
-- when it tries to connect to itselft it gives an error in guid
+- when it tries to connect to itself it gives an error in guid
 
 In the Roadmap
 --------------
