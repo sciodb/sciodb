@@ -3,6 +3,24 @@ ScioDB
 
 [![Build Status](https://travis-ci.org/sciodb/sciodb.svg?branch=master)](https://travis-ci.org/sciodb/sciodb)
 
+TODO add description
+
+
+What is ScioDB
+---
+TODO add description
+
+Quickstart
+---
+TODO add description
+
+Clients
+---
+TODO add description
+
+Contributing
+---
+# ???
 How to compile:
 
 ```
