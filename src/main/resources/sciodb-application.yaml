@@ -1,9 +1,7 @@
 database:
   port: 9090
-  data:
-    folder: /Users/jenaiz/sciodb/sciodb/data
-  temp:
-    folder: /tmp/sciodb-logs/
+  data: /Users/jenaiz/sciodb/sciodb/data
+  temp: /tmp/sciodb-logs/
 
 topology:
   seeds: 0.0.0.0:9091,0.0.0.0:9092,0.0.0.0:9093
