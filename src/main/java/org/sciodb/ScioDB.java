@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author Jesús Navarrete (21/02/16)
  *
- * Copyright (C) 2016-2021 Jesús Navarrete <jesus.navarrete@gmail.com>
+ * Copyright (C) 2016-2022 Jesús Navarrete <jesus.navarrete@gmail.com>
  *
  * This source code is licensed under the GNU General Public License,
  * Version 3.  See the file LICENSE for more details.
@@ -33,7 +33,7 @@ public class ScioDB {
         logger.info("Starting ScioDB...");
 
         final ScioDB scio = new ScioDB();
-        scio.commandLine(args);
+        scio.commandLine(args); // 20 - 880, 30 - 1320, 50 - 2200
     }
 
     private void commandLine(final String[] args) {
