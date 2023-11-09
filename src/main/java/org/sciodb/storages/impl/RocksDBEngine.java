@@ -38,8 +38,7 @@ public class RocksDBEngine implements StorageEngine {
 
         // loads the RocksDB C++ library
         RocksDB.loadLibrary();
-        options = new Options()
-                        .setCreateIfMissing(true);
+        options = new Options().setCreateIfMissing(true);
     }
 
     @Override
@@ -152,7 +151,7 @@ public class RocksDBEngine implements StorageEngine {
     @Override
     public void delete(byte[] key) throws StorageException {
         try {
-            db.remove(key);
+            db.delete(key);
         } catch (RocksDBException e) {
             throw new StorageException("Not possible to remove key", e);
         }
@@ -161,8 +160,7 @@ public class RocksDBEngine implements StorageEngine {
     @Override
     public void close() {
         if (db != null) db.close();
-        // TODO look for the right method to kill the C++ stuff
-        options.dispose();
+        options.close();
     }
 
     @Override
