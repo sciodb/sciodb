@@ -1,6 +1,7 @@
 package org.sciodb.utils;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sciodb.exceptions.CommunicationException;
 import org.sciodb.messages.Message;
 
@@ -20,7 +21,7 @@ import static org.sciodb.utils.ScioDBConstants.MAX_ANSWER_BYTES;
  */
 public class TcpClient {
 
-    final static private Logger logger = Logger.getLogger(TcpClient.class);
+    final static private Logger logger = LogManager.getLogger(TcpClient.class);
 
     final static private Map<String, SocketChannel> cache = new HashMap<>();
 

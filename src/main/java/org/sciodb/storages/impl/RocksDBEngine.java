@@ -1,6 +1,7 @@
 package org.sciodb.storages.impl;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.rocksdb.ColumnFamilyDescriptor;
 import org.rocksdb.ColumnFamilyHandle;
 import org.rocksdb.ColumnFamilyOptions;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class RocksDBEngine implements StorageEngine {
 
-    private static final Logger logger = Logger.getLogger(RocksDBEngine.class);
+    private static final Logger logger = LogManager.getLogger(RocksDBEngine.class);
 
     private final Options options;
 

@@ -1,7 +1,8 @@
 package org.sciodb;
 
 import org.apache.commons.cli.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.server.ServerSocket;
 import org.sciodb.topology.TopologyContainer;
@@ -18,7 +19,7 @@ import java.util.List;
  *
  * @author Jesús Navarrete (21/02/16)
  *
- * Copyright (C) 2016-2022 Jesús Navarrete <jesus.navarrete@gmail.com>
+ * Copyright (C) 2016-2023 Jesús Navarrete <jesus.navarrete@gmail.com>
  *
  * This source code is licensed under the GNU General Public License,
  * Version 3.  See the file LICENSE for more details.
@@ -26,7 +27,7 @@ import java.util.List;
  */
 public class ScioDB {
 
-    private final static Logger logger = Logger.getLogger(ScioDB.class);
+    private final static Logger logger = LogManager.getLogger(ScioDB.class);
 
     public static void main(String[] args) {
 

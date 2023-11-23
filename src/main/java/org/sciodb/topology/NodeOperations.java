@@ -1,6 +1,7 @@
 package org.sciodb.topology;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sciodb.exceptions.CommunicationException;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
@@ -17,7 +18,7 @@ import java.util.UUID;
  */
 public class NodeOperations {
 
-    private final static Logger logger = Logger.getLogger(NodeOperations.class);
+    private final static Logger logger = LogManager.getLogger(NodeOperations.class);
 
     private final Node me;
 

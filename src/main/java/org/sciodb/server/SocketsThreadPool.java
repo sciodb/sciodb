@@ -1,6 +1,7 @@
 package org.sciodb.server;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.Operations;
 import org.sciodb.messages.impl.ContainerMessage;
@@ -21,7 +22,7 @@ import java.util.concurrent.Executors;
  */
 public class SocketsThreadPool {
 
-    private final static Logger logger = Logger.getLogger(SocketsThreadPool.class);
+    private final static Logger logger = LogManager.getLogger(SocketsThreadPool.class);
 
     private final ExecutorService service;
     private final Dispatcher dispatcher;
