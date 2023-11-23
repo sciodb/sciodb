@@ -1,6 +1,7 @@
 package org.sciodb.utils;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.topology.TopologyContainer;
 
@@ -21,7 +22,7 @@ import java.util.Scanner;
  */
 public class FileUtils {
 
-    private static final Logger logger = Logger.getLogger(FileUtils.class);
+    private static final Logger logger = LogManager.getLogger(FileUtils.class);
 
     public static final String OUTPUT_FILE = "sciodb-nodes.json";
     public static final Charset ENCODING = StandardCharsets.UTF_8;

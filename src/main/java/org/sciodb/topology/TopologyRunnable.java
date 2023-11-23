@@ -1,6 +1,7 @@
 package org.sciodb.topology;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sciodb.exceptions.CommunicationException;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.utils.Configuration;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class TopologyRunnable implements Runnable {
 
-    private final Logger logger = Logger.getLogger(TopologyRunnable.class);
+    private final Logger logger = LogManager.getLogger(TopologyRunnable.class);
 
     private static int persistTime;
     private static int waitingTime;

@@ -1,6 +1,7 @@
 package org.sciodb.topology;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sciodb.exceptions.EmptyDataException;
 import org.sciodb.messages.impl.Node;
 import org.sciodb.topology.impl.RoutingTable;
@@ -25,7 +26,7 @@ public class TopologyContainer {
 
     private static int retryTime;
 
-    private final Logger logger = Logger.getLogger(TopologyContainer.class);
+    private final Logger logger = LogManager.getLogger(TopologyContainer.class);
 
     private Node me;
     private boolean networkUpdated;

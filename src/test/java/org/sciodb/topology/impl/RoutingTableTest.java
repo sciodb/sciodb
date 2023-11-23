@@ -50,7 +50,7 @@ public class RoutingTableTest {
         int amount = 5;
         final RoutingTable table = new RoutingTable(amount);
 
-        addNodes(table, 10, source);
+        addNodes(table, amount + 1, source);
 
         assertEquals(table.size(), amount);
     }
@@ -76,9 +76,6 @@ public class RoutingTableTest {
 
     @Test(expected = EmptyDataException.class)
     public void closest_empty() throws Exception {
-        final Node source = new Node("0.0.0.0", 9090);
-        source.setGuid(GUID.get());
-
         int amount = 1;
         final RoutingTable table = new RoutingTable(amount);
 

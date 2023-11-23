@@ -1,0 +1,20 @@
+<!-- ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF  :: never forget!! -->
+<Configuration status="debug" name="sciodb" packages="">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5p %c{1}:%L - %m%n"/>
+        </Console>
+
+    </Appenders>
+    <Loggers>
+        <Logger name="org.sciodb.utils.TcpClient" level="error" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.sciodb.server.NodeCommunicationReader" level="error" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,6 +1,7 @@
 package org.sciodb.server;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sciodb.utils.ByteUtils;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ import static org.sciodb.utils.ScioDBConstants.HEADER_SIZE;
  */
 public class ServerSocket implements Runnable {
 
-    final static private Logger logger = Logger.getLogger(ServerSocket.class);
+    final static private Logger logger = LogManager.getLogger(ServerSocket.class);
 
     private final InetAddress hostAddress;
     private final int port;
@@ -60,7 +61,7 @@ public class ServerSocket implements Runnable {
             }
         }
 
-        // Finally, wake up our selecting thread so it can make the required changes
+        // Finally, wake up our selecting thread, so it can make the required changes
         this.selector.wakeup();
     }
 

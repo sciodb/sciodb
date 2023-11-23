@@ -1,6 +1,7 @@
 package org.sciodb.storages.impl;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.rocksdb.ColumnFamilyDescriptor;
 import org.rocksdb.ColumnFamilyHandle;
 import org.rocksdb.ColumnFamilyOptions;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class RocksDBEngine implements StorageEngine {
 
-    private static final Logger logger = Logger.getLogger(RocksDBEngine.class);
+    private static final Logger logger = LogManager.getLogger(RocksDBEngine.class);
 
     private final Options options;
 
@@ -38,8 +39,7 @@ public class RocksDBEngine implements StorageEngine {
 
         // loads the RocksDB C++ library
         RocksDB.loadLibrary();
-        options = new Options()
-                        .setCreateIfMissing(true);
+        options = new Options().setCreateIfMissing(true);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class RocksDBEngine implements StorageEngine {
     @Override
     public void delete(byte[] key) throws StorageException {
         try {
-            db.remove(key);
+            db.delete(key);
         } catch (RocksDBException e) {
             throw new StorageException("Not possible to remove key", e);
         }
@@ -161,8 +161,7 @@ public class RocksDBEngine implements StorageEngine {
     @Override
     public void close() {
         if (db != null) db.close();
-        // TODO look for the right method to kill the C++ stuff
-        options.dispose();
+        options.close();
     }
 
     @Override

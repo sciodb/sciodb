@@ -1,6 +1,7 @@
 package org.sciodb.utils;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.nio.ByteBuffer;
 
@@ -11,7 +12,7 @@ import static org.sciodb.utils.ScioDBConstants.MAX_SIZE;
  */
 public class ByteUtils {
 
-    final static private Logger logger = Logger.getLogger(ByteUtils.class);
+    final static private Logger logger = LogManager.getLogger(ByteUtils.class);
 
     public static byte[] split(final byte[] source, final int from, final int to) {
 

@@ -3,6 +3,24 @@ ScioDB
 
 [![Build Status](https://travis-ci.org/sciodb/sciodb.svg?branch=master)](https://travis-ci.org/sciodb/sciodb)
 
+TODO add description
+
+
+What is ScioDB
+---
+TODO add description
+
+Quickstart
+---
+TODO add description
+
+Clients
+---
+TODO add description
+
+Contributing
+---
+# ???
 How to compile:
 
 ```
@@ -48,4 +66,4 @@ LICENSE
 
 See the file LICENSE.
 
-Copyright (c) 2016-2021 Jesús Navarrete <jesus.navarrete@gmail.org>, released under the GPLv3 license
+Copyright (c) 2016-2023 Jesús Navarrete <jesus.navarrete@gmail.org>, released under the GPLv3 license
