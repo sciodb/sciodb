@@ -15,7 +15,7 @@ function check_java_version {
         version=$("$_java" -version 2>&1 | awk -F '"' '/version/ {print $2}')
         echo "Current Java version $version"
         if [[ "$version" < "1.8" ]]; then
-            echo "[ERROR] Scio DB requires JDK version 1.8 or later, the current version is $version "
+            echo "[ERROR] ScioDB requires JDK version 1.8 or later, the current version is $version "
             exit 1
         fi
     fi
@@ -31,6 +31,7 @@ done
 
 CLASSPATH=$CLASSPATH:../target/classes/
 
+#java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.ScioDB "$@"
 nohup java $JAVA_OPTS_SCIODB -cp $CLASSPATH org.sciodb.ScioDB "$@" > logs/node.log 2>&1 &
 pid=$!
 
