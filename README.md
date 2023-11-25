@@ -3,63 +3,39 @@ ScioDB
 
 [![Build Status](https://travis-ci.org/sciodb/sciodb.svg?branch=master)](https://travis-ci.org/sciodb/sciodb)
 
-TODO add description
+
+ScioDB is a NoSQL distributed database prototype, it is designed to scale horizontally to thousands of nodes.
 
 
 What is ScioDB
 ---
-TODO add description
+ScioDB is an open-source distributed database designed to horizontally scale to thousands of nodes. It has a distributed
+architecture using P2P.
+
 
 Quickstart
 ---
-TODO add description
 
-Clients
----
-TODO add description
-
-Contributing
----
-# ???
-How to compile:
+At this moment there is no package you can download, if you want to play a bit with the current version you have to
+compile by yourself using maven. It is pretty simple, you just need to clone or download a copy of the current repository
+and execute:
 
 ```
-mvn clean package
+mvn install
 ```
 
-it will compile, package and copy all the libraries in the *lib* folder.
+That will download all the needed libraries, and it will copy the jar files to the lib folder. After that you can start
+Scio DB or multiple Scio DB nodes to play a bit with the system.
 
-How to run the system, you should go to the *bin* folder and execute
+And then start a single node that will start up a single node from the bin folder:
+
 ```
 ./sciodb.sh
 ```
-
-This should start the ScioDB, and you will be able to add or remove nodes to the sciodb.
-For the moment it is only for testing, the system is not functional.
-
-If you want to see multiple nodes working, you can execute:
-
-```
-./startup.sh {PORT} {SEED}
-```
-
-For example:
-```
-./startup.sh 9090
-```
-will start a node without seeds. Or if you want to start nodes with a seed to connect:
-
-```
-./startup.sh 9091 0.0.0.0:9090
-```
-
-if you want to stop a node:
-```
-./stop.sh 9090
-```
-If you want to learn more about how to start the system, take a look to the [documentation](doc/Readme.md).
+Read [our documentation](./doc/Readme.md) for more details, about how to start up multiple nodes.
 
 Enjoy it!
+
 
 LICENSE
 -------
