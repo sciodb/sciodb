@@ -1,6 +1,18 @@
 TODO
 ====
 
+
+Release v1.0.0:
+
+  - Distributed nodes, working with P2P algorithm Kademlia.
+  - Sharding/Partition data
+    - schemas
+    - tables
+    - sql language
+  - analytics
+  - vector
+  - Consensus algorithm
+
 Currently working:
 
 - Implementation of Kademlia algorithm for P2P network topology
