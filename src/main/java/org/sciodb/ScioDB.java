@@ -8,10 +8,10 @@ import org.sciodb.server.ServerSocket;
 import org.sciodb.topology.TopologyContainer;
 import org.sciodb.topology.TopologyRunnable;
 import org.sciodb.utils.Configuration;
+import org.sciodb.utils.LocalIPChecker;
 import org.sciodb.utils.SeedUtils;
 
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
+import java.net.SocketException;
 import java.util.List;
 
 /**
@@ -61,8 +61,8 @@ public class ScioDB {
 
                 final Node node = new Node();
                 try {
-                    node.setHost(Inet4Address.getLocalHost().getHostAddress());
-                } catch (final UnknownHostException e) {
+                    node.setHost(LocalIPChecker.getIP());
+                } catch (final SocketException e) {
                     node.setHost("0.0.0.0");
                 }
                 node.setPort(port);
