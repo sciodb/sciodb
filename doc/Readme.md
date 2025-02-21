@@ -37,4 +37,4 @@ to stop the nodes, you just need to use the port number:
 ./stop.sh 9090
 ```
 
-Copyright (c) 2016-2023 Jesús Navarrete <jesus.navarrete@gmail.org>, released under the GPLv2 license
+Copyright (c) 2016-2025 Jesús Navarrete <jesus.navarrete@gmail.org>, released under the GPLv2 license
