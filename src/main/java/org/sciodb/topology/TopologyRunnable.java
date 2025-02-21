@@ -38,7 +38,7 @@ public class TopologyRunnable implements Runnable {
         this.me = me;
         this.seeds = seeds;
         container = TopologyContainer.getInstance();
-        if (seeds.size() == 0) me.setGuid(GUID.get());
+        if (seeds.isEmpty()) me.setGuid(GUID.get());
     }
 
     @Override

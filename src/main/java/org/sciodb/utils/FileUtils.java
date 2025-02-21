@@ -54,7 +54,7 @@ public class FileUtils {
         final List<Node> nodes = new ArrayList<>(TopologyContainer.getInstance().getAvailableNodes());
 
         try {
-            if (nodes.size() > 0) {
+            if (!nodes.isEmpty()) {
                 final String output = NodeMapper.toString(nodes);
 
                 final String fileName = Configuration.getInstance().getTempFolder() + number + "_" + OUTPUT_FILE;
