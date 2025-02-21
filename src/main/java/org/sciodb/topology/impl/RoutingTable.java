@@ -36,14 +36,14 @@ public class RoutingTable {
         final RoutingNode wrapper = new RoutingNode(node, distance);
 
         if (!contains(node)) {
-            logger.info("New node available - " + node.url());
+            logger.info("New node available - {}", node.url());
 
             nodes.add(wrapper);
 
             nodes.sort(Comparator.comparingLong(RoutingNode::getDistance));
             if (nodes.size() > bits) {
                 final RoutingNode n = nodes.removeLast();
-                logger.info("Deleting the last element " + n.getNode().url());
+                logger.info("Deleting the last element {}", n.getNode().url());
             }
         }
     }
@@ -58,7 +58,7 @@ public class RoutingTable {
     }
 
     public Node closest() throws EmptyDataException {
-        if (nodes.size() > 0) {
+        if (!nodes.isEmpty()) {
             return nodes.getFirst().getNode();
         } else {
             throw new EmptyDataException("Not element found");
