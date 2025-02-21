@@ -61,7 +61,7 @@ public class TcpClient {
         } finally {
             long end = System.currentTimeMillis() - init;
 
-            logger.debug(" Connection [" + host + ":" + port + "] took " + end + "ms");
+            logger.debug(" Connection [{}:{}] took {}ms", host, port, end);
         }
     }
 
@@ -82,7 +82,7 @@ public class TcpClient {
             try {
                 channel.close();
             } catch (IOException e) {
-                logger.warn("Error clossing cached socket : " + e.getLocalizedMessage());
+                logger.warn("Error clossing cached socket : {}", e.getLocalizedMessage());
             }
         }
 

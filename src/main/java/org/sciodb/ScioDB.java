@@ -79,7 +79,7 @@ public class ScioDB {
     }
 
     private void starting(final Node node, final List<Node> seeds) {
-        logger.info(node.getHost() + " - " + node.getPort());
+        logger.info("{} - {}", node.getHost(), node.getPort());
         try {
             new Thread(new ServerSocket(null, node.getPort())).start();
             new Thread(new TopologyRunnable(node, seeds)).start();

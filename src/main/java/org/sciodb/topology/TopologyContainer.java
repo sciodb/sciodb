@@ -55,7 +55,7 @@ public class TopologyContainer {
                 networkUpdated = false;
 
             } else {
-                logger.warn("Node not added (empty guid)- " + node.url());
+                logger.warn("Node not added (empty guid)- {}", node.url());
             }
 
         }
@@ -71,11 +71,11 @@ public class TopologyContainer {
             boolean alive = checkNode(me, node);
 
             if (alive) {
-                logger.info(node.url() + " - available");
+                logger.info("{} - available", node.url());
             } else {
                 iterator.remove();
                 table.remove(node);
-                logger.error(node.url() + " - not available ");
+                logger.error("{} - not available ", node.url());
             }
         }
     }
@@ -88,7 +88,7 @@ public class TopologyContainer {
                 execute = true;
                 break;
             }
-            logger.info(String.format("Retry connecting with node, try %d", i));
+            logger.info("Retry connecting with node, try {}", i);
             ThreadUtils.sleep(retryTime);
         }
         return execute;
@@ -144,7 +144,7 @@ public class TopologyContainer {
 
     public void leave(final Node node) {
         if (table.contains(node)) {
-            logger.info(node.url() + " leaving the network.");
+            logger.info("{} leaving the network.", node.url());
             table.remove(node);
         }
     }

@@ -32,7 +32,7 @@ public class ByteUtils {
             dst = length;
         } else {
             dst = MAX_SIZE;
-            logger.warn("Maximum value exceeded, current " + length + ", allowed 16Mb.");
+            logger.warn("Maximum value exceeded, current {}, allowed 16Mb.", length);
 
         }
 //        else {

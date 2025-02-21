@@ -52,7 +52,7 @@ public class RocksDBEngine implements StorageEngine {
             boolean newDB = !f.exists();
             if (newDB) {
                 f.mkdirs();
-                logger.info("Created database folder : " + dataPath);
+                logger.info("Created database folder : {}", dataPath);
                 descriptors.add(new ColumnFamilyDescriptor(RocksDB.DEFAULT_COLUMN_FAMILY, new ColumnFamilyOptions()));
 
             } else {

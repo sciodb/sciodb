@@ -2,7 +2,6 @@ package org.sciodb.server;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.sciodb.utils.ByteUtils;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -139,7 +138,7 @@ public class ServerSocket implements Runnable {
             }
 
         } catch (IOException e) {
-            logger.info("There was an error reading the buffer: " + e.getLocalizedMessage());
+            logger.info("There was an error reading the buffer: {}", e.getLocalizedMessage());
             closeConnection(key);
         }
 
@@ -148,11 +147,11 @@ public class ServerSocket implements Runnable {
     private void closeConnection(SelectionKey key) {
         try {
             SocketChannel channel = (SocketChannel) key.channel();
-            logger.info("Closing connection with:" + channel.getRemoteAddress());
+            logger.info("Closing connection with:{}", channel.getRemoteAddress());
             key.cancel();
             channel.close();
         } catch (IOException e) {
-            logger.info("Error closing connection: " + e.getMessage());
+            logger.info("Error closing connection: {}", e.getLocalizedMessage());
         }
     }
 

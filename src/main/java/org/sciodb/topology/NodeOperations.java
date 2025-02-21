@@ -62,7 +62,7 @@ public class NodeOperations {
 
             return msg.getGuid();
         } catch (final CommunicationException e) {
-            logger.error("Node not added to Seed, reason " + e.getLocalizedMessage());
+            logger.error("Node not added to Seed, reason {}", e.getLocalizedMessage());
             return "";
         }
     }

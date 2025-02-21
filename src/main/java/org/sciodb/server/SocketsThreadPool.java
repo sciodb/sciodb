@@ -54,7 +54,7 @@ public class SocketsThreadPool {
             if (operationId == Operations.PING.getValue()) {
                 server.send(channel, new byte[0]);
                 final Node source = readNodeFromRequest(request);
-                logger.info("PING operation executed from - " + source.url());
+                logger.info("PING operation executed from - {}", source.url());
             } else if(operationId == Operations.LEAVE.getValue()) {
                 final Node source = readNodeFromRequest(request);
 
