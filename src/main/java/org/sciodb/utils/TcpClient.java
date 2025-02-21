@@ -75,10 +75,16 @@ public class TcpClient {
         final String key = host + "_" + port;
         final SocketChannel channel = cache.get(key);
 
-        if (channel != null && channel.isConnected()) {
+        if (channel != null && channel.isOpen() && channel.isConnected()) {
             return channel;
         }
-        if (channel != null) channel.close();
+        if (channel != null) {
+            try {
+                channel.close();
+            } catch (IOException e) {
+                logger.warn("Error clossing cached socket : " + e.getLocalizedMessage());
+            }
+        }
 
         final InetSocketAddress hostAddress = new InetSocketAddress(host, port);
 

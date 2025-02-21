@@ -40,6 +40,8 @@ public class ServerSocket implements Runnable {
 
     private final SocketsThreadPool pool;
 
+    private volatile boolean enable = true;
+
     public ServerSocket(final InetAddress hostAddress, final int port) throws IOException {
         this.hostAddress = hostAddress;
         this.port = port;
@@ -67,7 +69,7 @@ public class ServerSocket implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (enable) {
             try {
                 // Process any pending changes
                 synchronized (this.pendingChanges) {
@@ -136,13 +138,25 @@ public class ServerSocket implements Runnable {
                 }
             }
 
-        } catch (Exception e) {
-            logger.error("There was an error reading the buffer: " + e.getLocalizedMessage(), e);
+        } catch (IOException e) {
+            logger.info("There was an error reading the buffer: " + e.getLocalizedMessage());
+            closeConnection(key);
         }
 
     }
 
-    private byte[] read(final SelectionKey key, final int msgSize, final boolean cancellation) throws IOException {
+    private void closeConnection(SelectionKey key) {
+        try {
+            SocketChannel channel = (SocketChannel) key.channel();
+            logger.info("Closing connection with:" + channel.getRemoteAddress());
+            key.cancel();
+            channel.close();
+        } catch (IOException e) {
+            logger.info("Error closing connection: " + e.getMessage());
+        }
+    }
+
+    /*private byte[] read(final SelectionKey key, final int msgSize, final boolean cancellation) throws IOException {
         final SocketChannel channel = (SocketChannel) key.channel();
 
         final ByteBuffer buffer = ByteBuffer.allocate(msgSize);
@@ -175,7 +189,33 @@ public class ServerSocket implements Runnable {
         } else {
             return new byte[0];
         }
+    }*/
+    private byte[] read(final SelectionKey key, final int msgSize, final boolean cancellation) throws IOException {
+        final SocketChannel channel = (SocketChannel) key.channel();
+        final ByteBuffer buffer = ByteBuffer.allocate(msgSize);
+
+        int total = 0;
+        while (total < msgSize) {
+            int bytesRead = channel.read(buffer);
+
+            if (bytesRead == -1) {
+                if (cancellation) {
+                    channel.close();
+                    key.cancel();
+                }
+                return new byte[0]; // Retorna un array vacío si se cierra la conexión
+            }
+
+            total += bytesRead;
+        }
+
+        buffer.flip(); // Asegura que los datos están en modo lectura
+        byte[] data = new byte[buffer.remaining()];
+        buffer.get(data); // Copia los datos correctamente
+
+        return data;
     }
+
 
     private void write(final SelectionKey key) throws IOException {
         final SocketChannel socketChannel = (SocketChannel) key.channel();
@@ -217,4 +257,7 @@ public class ServerSocket implements Runnable {
         return socketSelector;
     }
 
+    void stopRunning() {
+        enable = false;
+    }
 }
