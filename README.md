@@ -1,8 +1,6 @@
 ScioDB
 =====
 
-[![Build Status](https://travis-ci.org/sciodb/sciodb.svg?branch=master)](https://travis-ci.org/sciodb/sciodb)
-
 
 ScioDB is a NoSQL distributed database prototype, it is designed to scale horizontally to thousands of nodes.
 
