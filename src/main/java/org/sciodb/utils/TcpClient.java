@@ -31,8 +31,8 @@ public class TcpClient {
         final byte[] input = message.encode();
 
         long init = System.currentTimeMillis();
-
-        try (SocketChannel client = getSocketChannel(host, port)) {
+        final InetSocketAddress hostAddress = new InetSocketAddress(host, port);
+        try (SocketChannel client = SocketChannel.open(hostAddress)) { //getSocketChannel(host, port)) {
             final ByteBuffer buffer = ByteBuffer.wrap(input);
 
             client.write(messageLength(input.length));
@@ -54,6 +54,8 @@ public class TcpClient {
             } else {
                 data = new byte[0];
             }
+            
+            client.close();
             return data;
 
         } catch (IOException e) {
@@ -82,7 +84,7 @@ public class TcpClient {
             try {
                 channel.close();
             } catch (IOException e) {
-                logger.warn("Error clossing cached socket : {}", e.getLocalizedMessage());
+                logger.warn("Error closing cached socket : {}", e.getLocalizedMessage());
             }
         }
 

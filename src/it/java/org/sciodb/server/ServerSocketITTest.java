@@ -1,6 +1,7 @@
 package org.sciodb.server;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import java.util.UUID;
  */
 public class ServerSocketITTest {
 
-    final static private Logger logger = Logger.getLogger(ServerSocketITTest.class);
+    private final Logger logger = LogManager.getLogger(ServerSocketITTest.class);
 
     @Before
     public void setUp() throws Exception {
@@ -50,7 +51,7 @@ public class ServerSocketITTest {
         threads(20000);
     }
 
-//    @Test
+    @Test
     public void test_echoMessages_1M() throws Exception {
         threads(1000000);
     }
@@ -68,12 +69,12 @@ public class ServerSocketITTest {
         }
 
         long end = System.currentTimeMillis() - init;
-        logger.info(limit + " message in " + end + "ms");
+        logger.info("{} message in {}ms", limit, end);
 
         client.close();
     }
 
-    public void sendMsg(final SocketChannel client, final String input) throws IOException {
+    public void sendMsg(final SocketChannel client, final String input) {
 
         new Thread(input){
             @Override
@@ -97,7 +98,7 @@ public class ServerSocketITTest {
                     System.arraycopy(response.array(), 0, data, 0, currentSize);
 
                     final String str = new String(data);
-                    logger.debug("Got: " + str);
+                    logger.debug("Got: {}", str);
                 } catch (IOException e) {
                     logger.error("Error in the thread", e);
                 }

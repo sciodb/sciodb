@@ -45,7 +45,7 @@ public class TopologyRunnable implements Runnable {
     public void run() {
 
         container.setMe(me);
-
+        seeds.addAll(parseHistoricalNodes());
         // bootstrap
         final NodeOperations op = new NodeOperations(me);
         boolean isJoined = false;
@@ -100,15 +100,16 @@ public class TopologyRunnable implements Runnable {
     }
 
     private List<Node> parseHistoricalNodes() {
-        final String fileName = Configuration.getInstance().getTempFolder() + FileUtils.OUTPUT_FILE;
+        final String fileName = Configuration.getInstance().getTempFolder()  + me.getPort() + "_" + FileUtils.OUTPUT_FILE;
 
         final List<Node> oldNodes = new ArrayList<>();
         try {
             final String previousInfo = FileUtils.read(fileName, FileUtils.ENCODING);
-            if (!"".equals(previousInfo)) {
+            if (!previousInfo.isEmpty()) {
                 oldNodes.addAll(NodeMapper.fromString(previousInfo));
 
                 for (final Node node : oldNodes) {
+                    node.setGuid(null);
                     container.join(node);
                 }
             }

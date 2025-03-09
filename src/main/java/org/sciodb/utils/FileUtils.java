@@ -32,7 +32,7 @@ public class FileUtils {
         if (f.exists()) {
             final Path path = Paths.get(aFileName);
             final StringBuilder sb = new StringBuilder();
-            try (Scanner scanner =  new Scanner(path, ENCODING.name())){
+            try (Scanner scanner =  new Scanner(path, ENCODING)){
                 while (scanner.hasNextLine()){
                     sb.append(scanner.nextLine());
                 }
