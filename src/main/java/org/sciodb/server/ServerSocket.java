@@ -147,11 +147,11 @@ public class ServerSocket implements Runnable {
     private void closeConnection(SelectionKey key) {
         try {
             SocketChannel channel = (SocketChannel) key.channel();
-            logger.info("Closing connection with:{}", channel.getRemoteAddress());
+            //logger.debug("Closing connection with:{}", channel.getRemoteAddress());
             key.cancel();
             channel.close();
         } catch (IOException e) {
-            logger.info("Error closing connection: {}", e.getLocalizedMessage());
+            //logger.warn("Error closing connection: {}", e.getLocalizedMessage());
         }
     }
 
