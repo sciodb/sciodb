@@ -31,7 +31,15 @@ public class ScioDB {
 
     public static void main(String[] args) {
 
-        logger.info("Starting ScioDB...");
+        logger.info("***************************************************");
+        logger.info("    ███████╗                     ███████╗ ██████╗");
+        logger.info("    ██╔════╝        ██║          ██╔═══██╗██╔══██╗");
+        logger.info("    ███████╗ ██████╗    ██████═╗ ██║   ██║██████╔╝");
+        logger.info("       ╚═██║██║     ██║██║   ██║ ██║   ██║██╔══██╗");
+        logger.info("    ███████║╚██████╗██║╚██████╔╝ ███████╔╝██████╔╝");
+        logger.info("    ╚══════╝ ╚═════╝╚═╝ ╚═════╝  ╚══════╝ ╚═════╝");
+        logger.info("    Starting ScioDB...");
+        logger.info("***************************************************");
 
         final ScioDB scio = new ScioDB();
         scio.commandLine(args); // 20 - 880, 30 - 1320, 50 - 2200
