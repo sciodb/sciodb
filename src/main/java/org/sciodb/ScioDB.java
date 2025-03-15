@@ -30,15 +30,14 @@ public class ScioDB {
     private final static Logger logger = LogManager.getLogger(ScioDB.class);
 
     public static void main(String[] args) {
-
         logger.info("***************************************************");
-        logger.info("    ███████╗                     ███████╗ ██████╗");
-        logger.info("    ██╔════╝        ██║          ██╔═══██╗██╔══██╗");
-        logger.info("    ███████╗ ██████╗    ██████═╗ ██║   ██║██████╔╝");
-        logger.info("       ╚═██║██║     ██║██║   ██║ ██║   ██║██╔══██╗");
-        logger.info("    ███████║╚██████╗██║╚██████╔╝ ███████╔╝██████╔╝");
-        logger.info("    ╚══════╝ ╚═════╝╚═╝ ╚═════╝  ╚══════╝ ╚═════╝");
-        logger.info("    Starting ScioDB...");
+        logger.info("    Starting ...");
+        logger.info("    ███████╗  ██████╗ ██║  ██████═╗ ███████╗  ██████╗");
+        logger.info("    ██╔════╝ ██║      ██║ ██║   ██║ ██╔═══██╗ ██╔══██╗");
+        logger.info("    ███████╗ ██║      ██║ ██║   ██║ ██║   ██║ ██████╔╝");
+        logger.info("       ╚═██║ ██║      ██║ ██║   ██║ ██║   ██║ ██╔══██╗");
+        logger.info("    ███████║ ╚██████╗ ██║ ╚██████╔╝ ███████╔╝ ██████╔╝");
+        logger.info("    ╚══════╝  ╚═════╝ ╚═╝  ╚═════╝  ╚══════╝  ╚═════╝");
         logger.info("***************************************************");
 
         final ScioDB scio = new ScioDB();
